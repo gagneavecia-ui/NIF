@@ -15,6 +15,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
   
   <style>
+    /* === TOUT VOTRE CSS EXISTANT === */
     :root {
       --primary: #D4AF37;
       --primary-dark: #AA8417;
@@ -61,7 +62,6 @@
                   linear-gradient(180deg, #0A1128 0%, #070C1E 100%);
     }
 
-    /* HEADER */
     .header {
       display: flex;
       justify-content: space-between;
@@ -156,7 +156,6 @@
       padding: 20px 16px 80px;
     }
 
-    /* HERO SECTION */
     .hero-section {
       margin-bottom: 24px;
     }
@@ -202,7 +201,6 @@
       color: var(--text-dim);
     }
 
-    /* CARTE SOLDE */
     .dashboard-stats-container {
       margin-bottom: 28px;
     }
@@ -253,7 +251,6 @@
       gap: 6px;
     }
 
-    /* SECTIONS */
     .section-header {
       margin-bottom: 16px;
       display: flex;
@@ -294,7 +291,6 @@
       gap: 4px;
     }
 
-    /* FORMATIONS STYLE ORIGINAL AVEC IMAGES */
     .formations-list-horizontal {
       display: flex;
       flex-direction: column;
@@ -417,7 +413,6 @@
       transform: translateX(2px);
     }
 
-    /* PLACEMENTS STYLE ORIGINAL */
     .features-grid {
       display: flex;
       flex-direction: column;
@@ -582,7 +577,6 @@
       transform: translateX(3px);
     }
 
-    /* TÉMOIGNAGES EN DÉFILEMENT */
     .testimonials-section {
       margin: 32px 0 24px;
     }
@@ -679,7 +673,6 @@
       gap: 12px;
     }
 
-    /* FOOTER */
     .footer {
       border-top: 1px solid rgba(212, 175, 55, 0.08);
       padding: 32px 0 20px;
@@ -734,7 +727,6 @@
       color: var(--text-dim);
     }
 
-    /* NOTIFICATION */
     .gain-notification {
       position: fixed;
       bottom: 20px;
@@ -819,7 +811,7 @@
   <a href="#" class="logo"><div class="logo-text">N.I.<span>F</span></div></a>
   <div class="header-actions">
     <a href="#" class="user-profile" id="userProfileBtn">
-      <div class="user-avatar" id="userAvatar">M</div>
+      <div class="user-avatar" id="userAvatar">N</div>
       <span class="user-name" id="userName">Chargement...</span>
     </a>
     <div class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></div>
@@ -833,7 +825,6 @@
     <p class="hero-description">Optimisez votre capital, accédez à des portefeuilles à haut rendement.</p>
   </div>
 
-  <!-- CARTE SOLDE -->
   <div class="dashboard-stats-container">
     <div class="main-stat-card">
       <div class="main-stat-header">
@@ -847,8 +838,7 @@
     </div>
   </div>
 
-  <!-- FORMATIONS (STYLE ORIGINAL AVEC IMAGES) -->
-    <div class="section-header">
+   <div class="section-header">
     <div class="section-header-left">
       <div class="section-subtitle">Haute École de Finance</div>
       <h2 class="section-title">Programmes de <span>Formation</span></h2>
@@ -888,7 +878,6 @@
     </a>
   </div>
 
-  <!-- PLACEMENTS (STYLE ORIGINAL) -->
   <div class="section-header">
     <div class="section-header-left">
       <div class="section-subtitle">Solutions de Placement</div>
@@ -928,8 +917,6 @@
     </a>
   </div>
   
-  
-  <!-- TÉMOIGNAGES AVEC DÉFILEMENT HORIZONTAL -->
   <div class="testimonials-section">
     <div class="section-header">
       <div class="section-header-left">
@@ -1001,6 +988,8 @@
       <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
       <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
       <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
+      <!-- 🔒 BOUTON ADMIN SECRET -->
+      <a href="#" class="social-link" id="adminLockBtn" style="display: none;"><i class="fas fa-lock"></i></a>
     </div>
     <div class="footer-bottom">© 2026 N.I.F - Niger Investment & Finance</div>
   </footer>
@@ -1069,6 +1058,23 @@
     lastBalance = currentBalance;
   }
 
+  // ========== BOUTON ADMIN SECRET ==========
+  function checkAndShowAdminButton() {
+    const adminBtn = document.getElementById('adminLockBtn');
+    if (!adminBtn) return;
+    const user = auth.currentUser;
+    if (user && user.email === 'gagneavecia@gmail.com') {
+      adminBtn.style.display = 'flex';
+      adminBtn.onclick = (e) => { 
+        e.preventDefault(); 
+        window.location.href = 'admin.html'; 
+      };
+      console.log('🔒 Bouton admin activé');
+    } else {
+      adminBtn.style.display = 'none';
+    }
+  }
+
   function initApp(user) {
     if (!user) {
       window.location.href = "login.html";
@@ -1081,6 +1087,9 @@
         updateUI(docSnap.data());
       }
     });
+    
+    // Vérifier si l'utilisateur est admin
+    checkAndShowAdminButton();
   }
 
   function setupNavigation() {
@@ -1150,7 +1159,6 @@ window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
   
-  // Afficher un bouton d'installation (optionnel)
   const installBtn = document.createElement('button');
   installBtn.innerHTML = '<i class="fas fa-download"></i> Installer l\'application';
   installBtn.style.cssText = 'position:fixed;bottom:20px;left:20px;right:20px;background:#D4AF37;color:#0A1128;border:none;border-radius:50px;padding:14px;font-weight:bold;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,0.3);cursor:pointer';

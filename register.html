@@ -8,10 +8,29 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
+  <link rel="apple-touch-icon" href="/icon-192.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
   <style>
+    :root {
+      --primary: #D4AF37;
+      --primary-dark: #AA8417;
+      --primary-light: #F3E5AB;
+      --bg-dark: #0A1128;
+      --bg-surface: #111A36;
+      --text-light: #FFFFFF;
+      --text-dim: #94A3B8;
+      --card-bg: rgba(17, 26, 54, 0.65);
+      --card-border: rgba(212, 175, 55, 0.12);
+      --success: #10B981;
+      --danger: #EF4444;
+      --warning: #F59E0B;
+      --transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      --glass-bg: rgba(212, 175, 55, 0.03);
+      --glass-border: rgba(212, 175, 55, 0.08);
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -20,10 +39,13 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background: #0A1128;
-      color: #FFFFFF;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      font-size: 14px;
+      line-height: 1.5;
       min-height: 100vh;
-      padding: 20px 0;
+      display: flex;
+      flex-direction: column;
     }
 
     .gradient-bg {
@@ -38,66 +60,103 @@
                   linear-gradient(180deg, #0A1128 0%, #070C1E 100%);
     }
 
-    .register-container {
+    /* HEADER */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 5%;
+      background: rgba(10, 17, 40, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: 700;
+      font-family: 'Playfair Display', serif;
+      letter-spacing: 2px;
+      color: var(--text-light);
+      text-decoration: none;
+    }
+
+    .logo-text span {
+      color: var(--primary);
+    }
+
+    .login-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 30px;
+      transition: var(--transition);
+    }
+
+    .login-link:active {
+      transform: scale(0.97);
+    }
+
+    /* CONTAINER */
+    .container {
       max-width: 500px;
-      width: 90%;
       margin: 0 auto;
-      animation: fadeInUp 0.5s ease-out;
+      padding: 20px 16px 40px;
+      width: 100%;
+      flex: 1;
     }
 
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
+    /* CARD */
     .register-card {
       background: rgba(17, 26, 54, 0.8);
       backdrop-filter: blur(20px);
       border: 1px solid rgba(212, 175, 55, 0.2);
-      border-radius: 32px;
+      border-radius: 28px;
       padding: 32px 24px;
+      animation: fadeInUp 0.5s ease-out;
     }
 
-    .logo {
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .register-header {
       text-align: center;
-      margin-bottom: 24px;
-    }
-
-    .logo-text {
-      font-size: 28px;
-      font-weight: 700;
-      font-family: 'Playfair Display', serif;
-      letter-spacing: 3px;
-      color: #FFFFFF;
-    }
-
-    .logo-text span {
-      color: #D4AF37;
+      margin-bottom: 28px;
     }
 
     .register-title {
       font-size: 24px;
-      font-weight: 600;
-      text-align: center;
-      margin-bottom: 8px;
+      font-weight: 700;
+      font-family: 'Playfair Display', serif;
     }
 
     .register-title span {
-      color: #D4AF37;
+      color: var(--primary);
       font-style: italic;
     }
 
     .register-subtitle {
       font-size: 13px;
-      color: #94A3B8;
-      text-align: center;
-      margin-bottom: 28px;
+      color: var(--text-dim);
+      margin-top: 6px;
     }
 
+    /* MESSAGE BANNER */
     .message-banner {
       border-radius: 16px;
       padding: 12px 16px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       display: flex;
       align-items: center;
       gap: 12px;
@@ -122,19 +181,11 @@
       color: #FDE68A;
     }
 
-    .hidden {
+    .message-banner.hidden {
       display: none;
     }
 
-    .row-2cols {
-      display: flex;
-      gap: 14px;
-    }
-
-    .row-2cols .form-group {
-      flex: 1;
-    }
-
+    /* FORM */
     .form-group {
       margin-bottom: 18px;
     }
@@ -143,7 +194,7 @@
       display: block;
       font-size: 11px;
       font-weight: 500;
-      color: #94A3B8;
+      color: var(--text-dim);
       margin-bottom: 6px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -158,7 +209,7 @@
     .input-icon {
       position: absolute;
       left: 14px;
-      color: #94A3B8;
+      color: var(--text-dim);
       font-size: 13px;
     }
 
@@ -168,24 +219,44 @@
       background: rgba(10, 17, 40, 0.8);
       border: 1px solid rgba(212, 175, 55, 0.2);
       border-radius: 12px;
-      color: #FFFFFF;
+      color: var(--text-light);
       font-size: 14px;
-      transition: all 0.3s;
+      transition: var(--transition);
     }
 
     .input-wrapper input:focus {
       outline: none;
-      border-color: #D4AF37;
+      border-color: var(--primary);
       background: rgba(10, 17, 40, 0.95);
+    }
+
+    .input-wrapper input::placeholder {
+      color: var(--text-dim);
+      opacity: 0.6;
+    }
+
+    .row-2cols {
+      display: flex;
+      gap: 14px;
+    }
+
+    .row-2cols .form-group {
+      flex: 1;
     }
 
     .toggle-password {
       position: absolute;
       right: 14px;
-      color: #94A3B8;
+      color: var(--text-dim);
       cursor: pointer;
+      font-size: 14px;
     }
 
+    .toggle-password:hover {
+      color: var(--primary);
+    }
+
+    /* REFERRAL CODE */
     .referral-code-group {
       background: rgba(212, 175, 55, 0.05);
       border: 1px solid rgba(212, 175, 55, 0.15);
@@ -196,11 +267,13 @@
 
     .referral-label {
       font-size: 11px;
-      color: #D4AF37;
+      color: var(--primary);
       margin-bottom: 8px;
       display: flex;
       align-items: center;
       gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .referral-input {
@@ -209,8 +282,14 @@
       background: rgba(10, 17, 40, 0.6);
       border: 1px solid rgba(212, 175, 55, 0.15);
       border-radius: 12px;
-      color: #FFFFFF;
+      color: var(--text-light);
       font-size: 13px;
+      transition: var(--transition);
+    }
+
+    .referral-input:focus {
+      outline: none;
+      border-color: var(--primary);
     }
 
     .referral-info {
@@ -222,17 +301,22 @@
     }
 
     .referral-info.valid {
-      color: #10B981;
+      color: var(--success);
     }
 
     .referral-info.invalid {
-      color: #F59E0B;
+      color: var(--warning);
     }
 
+    .referral-info.hidden {
+      display: none;
+    }
+
+    /* SUBMIT BUTTON */
     .submit-btn {
       width: 100%;
       padding: 14px;
-      background: linear-gradient(135deg, #D4AF37, #AA8417);
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       border: none;
       border-radius: 14px;
       color: #0A1128;
@@ -243,7 +327,7 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      transition: all 0.3s;
+      transition: var(--transition);
     }
 
     .submit-btn:active {
@@ -268,30 +352,32 @@
       to { transform: rotate(360deg); }
     }
 
-    .login-link {
+    /* LOGIN LINK */
+    .login-footer {
       text-align: center;
       margin-top: 28px;
       font-size: 13px;
-      color: #94A3B8;
+      color: var(--text-dim);
     }
 
-    .login-link a {
-      color: #D4AF37;
+    .login-footer a {
+      color: var(--primary);
       text-decoration: none;
       font-weight: 600;
     }
 
+    /* TOAST PWA */
     .pwa-install-btn {
       position: fixed;
       bottom: 20px;
       left: 20px;
       right: 20px;
-      background: #D4AF37;
+      background: var(--primary);
       color: #0A1128;
       border: none;
       border-radius: 50px;
       padding: 14px;
-      font-weight: bold;
+      font-weight: 700;
       z-index: 1000;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       cursor: pointer;
@@ -307,9 +393,14 @@
       .register-card {
         padding: 24px 18px;
       }
+      
       .row-2cols {
         flex-direction: column;
         gap: 0;
+      }
+      
+      .register-title {
+        font-size: 20px;
       }
     }
   </style>
@@ -318,93 +409,105 @@
 
 <div class="gradient-bg"></div>
 
-<div class="register-container">
+<header class="header">
+  <a href="index.html" class="logo-text">N.I.<span>F</span></a>
+  <a href="login.html" class="login-link"><i class="fas fa-sign-in-alt"></i> Connexion</a>
+</header>
+
+<main class="container">
   <div class="register-card">
-    <div class="logo">
-      <div class="logo-text">N.I.<span>F</span></div>
+    <div class="register-header">
+      <h1 class="register-title">Créer un <span>Compte</span></h1>
+      <p class="register-subtitle">Rejoignez la plateforme d'investissement N.I.F</p>
     </div>
 
-    <h1 class="register-title">Créer un <span>Compte</span></h1>
-    <p class="register-subtitle">Rejoignez la plateforme d'investissement N.I.F</p>
-
+    <!-- Message Banner -->
     <div id="messageBanner" class="message-banner hidden">
       <i id="messageIcon" class="fas fa-info-circle"></i>
       <span id="messageText"></span>
     </div>
 
     <form id="registerForm">
+      <!-- Nom et Prénom -->
       <div class="row-2cols">
         <div class="form-group">
           <label>Nom</label>
           <div class="input-wrapper">
             <i class="fas fa-user input-icon"></i>
-            <input type="text" id="nom" placeholder="Nom" autocomplete="off">
+            <input type="text" id="nom" placeholder="Votre nom" autocomplete="off" required>
           </div>
         </div>
         <div class="form-group">
           <label>Prénom</label>
           <div class="input-wrapper">
             <i class="fas fa-user input-icon"></i>
-            <input type="text" id="prenom" placeholder="Prénom" autocomplete="off">
+            <input type="text" id="prenom" placeholder="Votre prénom" autocomplete="off" required>
           </div>
         </div>
       </div>
 
+      <!-- Email -->
       <div class="form-group">
         <label>Email</label>
         <div class="input-wrapper">
           <i class="fas fa-envelope input-icon"></i>
-          <input type="email" id="email" placeholder="exemple@email.com" autocomplete="off">
+          <input type="email" id="email" placeholder="exemple@email.com" autocomplete="off" required>
         </div>
       </div>
 
+      <!-- Téléphone -->
       <div class="form-group">
         <label>Téléphone</label>
         <div class="input-wrapper">
           <i class="fas fa-phone input-icon"></i>
-          <input type="tel" id="phone" placeholder="90 12 34 56" autocomplete="off">
+          <input type="tel" id="phone" placeholder="90 12 34 56" autocomplete="off" required>
         </div>
       </div>
 
+      <!-- Mot de passe -->
       <div class="form-group">
         <label>Mot de passe</label>
         <div class="input-wrapper">
           <i class="fas fa-lock input-icon"></i>
-          <input type="password" id="password" placeholder="6 caractères minimum">
+          <input type="password" id="password" placeholder="6 caractères minimum" required>
           <i class="fas fa-eye toggle-password" id="togglePassword"></i>
         </div>
       </div>
 
+      <!-- Confirmation -->
       <div class="form-group">
-        <label>Confirmer</label>
+        <label>Confirmer le mot de passe</label>
         <div class="input-wrapper">
           <i class="fas fa-lock input-icon"></i>
-          <input type="password" id="confirmPassword" placeholder="Répétez le mot de passe">
+          <input type="password" id="confirmPassword" placeholder="Répétez le mot de passe" required>
         </div>
       </div>
 
+      <!-- Code de parrainage -->
       <div class="referral-code-group">
         <div class="referral-label">
           <i class="fas fa-gift"></i> Code de parrainage (optionnel)
         </div>
         <input type="text" id="referralCode" class="referral-input" placeholder="Code de votre parrain" autocomplete="off">
-        <div id="referralInfo" class="referral-info" style="display: none;">
+        <div id="referralInfo" class="referral-info hidden">
           <i class="fas fa-spinner fa-spin"></i>
           <span id="referralMessage">Vérification...</span>
         </div>
       </div>
 
+      <!-- Bouton d'inscription -->
       <button type="submit" class="submit-btn" id="registerBtn">
         <i class="fas fa-user-plus"></i> Créer mon compte
       </button>
     </form>
 
-    <div class="login-link">
+    <div class="login-footer">
       Déjà membre ? <a href="login.html">Connectez-vous</a>
     </div>
   </div>
-</div>
+</main>
 
+<!-- PWA Install Button -->
 <button class="pwa-install-btn" id="pwaInstallBtn">
   <i class="fas fa-download"></i> Installer l'application
 </button>
@@ -421,7 +524,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+  import { getAuth, createUserWithEmailAndPassword, setPersistence, browserLocalPersistence, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
   import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -436,12 +539,25 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
+  
+  // Persistance locale
   setPersistence(auth, browserLocalPersistence);
 
-  // Toggle password visibility
+  // DOM Elements
+  const registerForm = document.getElementById('registerForm');
+  const registerBtn = document.getElementById('registerBtn');
+  const messageBanner = document.getElementById('messageBanner');
+  const messageIcon = document.getElementById('messageIcon');
+  const messageText = document.getElementById('messageText');
   const togglePassword = document.getElementById('togglePassword');
   const passwordInput = document.getElementById('password');
-  
+  const referralCodeInput = document.getElementById('referralCode');
+  const referralInfo = document.getElementById('referralInfo');
+  const referralMessage = document.getElementById('referralMessage');
+
+  let referralCheckStatus = { valid: false, parrainId: null, checked: false };
+
+  // ========== TOGGLE PASSWORD ==========
   togglePassword.addEventListener('click', () => {
     const type = passwordInput.type === 'password' ? 'text' : 'password';
     passwordInput.type = type;
@@ -449,51 +565,62 @@
     togglePassword.classList.toggle('fa-eye-slash');
   });
 
+  // ========== AFFICHER MESSAGE ==========
   function showMessage(text, type = 'error') {
-    const banner = document.getElementById('messageBanner');
-    const icon = document.getElementById('messageIcon');
-    const msgSpan = document.getElementById('messageText');
+    messageBanner.className = `message-banner ${type}`;
+    messageIcon.className = type === 'error' ? 'fas fa-exclamation-circle' : 
+                           (type === 'success' ? 'fas fa-check-circle' : 'fas fa-info-circle');
+    messageText.textContent = text;
+    messageBanner.classList.remove('hidden');
     
-    icon.className = type === 'error' ? 'fas fa-exclamation-circle' : (type === 'success' ? 'fas fa-check-circle' : 'fas fa-info-circle');
-    banner.className = `message-banner ${type}`;
-    msgSpan.innerText = text;
-    banner.classList.remove('hidden');
-    setTimeout(() => banner.classList.add('hidden'), 5000);
+    // Auto-hide après 5 secondes pour les succès
+    if (type === 'success') {
+      setTimeout(() => messageBanner.classList.add('hidden'), 5000);
+    }
   }
 
+  function hideMessage() {
+    messageBanner.classList.add('hidden');
+  }
+
+  // ========== VÉRIFICATION CODE PARRAIN ==========
   async function checkReferralCode(code) {
-    const referralInfoDiv = document.getElementById('referralInfo');
-    const messageSpan = document.getElementById('referralMessage');
-    
     if (!code || code.length < 4) {
-      referralInfoDiv.style.display = 'none';
+      referralInfo.classList.add('hidden');
+      referralCheckStatus = { valid: false, parrainId: null, checked: false };
       return null;
     }
     
-    referralInfoDiv.style.display = 'flex';
-    messageSpan.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Vérification...';
+    referralInfo.classList.remove('hidden');
+    referralMessage.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Vérification...';
+    referralInfo.className = 'referral-info';
     
     try {
+      const normalizedCode = code.trim().toUpperCase();
       const usersRef = collection(db, "users");
-      const q = query(usersRef, where("referralCode", "==", code.trim().toUpperCase()));
+      const q = query(usersRef, where("referralCode", "==", normalizedCode));
       const querySnapshot = await getDocs(q);
       
       if (!querySnapshot.empty) {
         const parrainId = querySnapshot.docs[0].id;
-        messageSpan.innerHTML = '<i class="fas fa-check-circle"></i> ✅ Code valide !';
-        referralInfoDiv.className = 'referral-info valid';
+        referralMessage.innerHTML = '<i class="fas fa-check-circle"></i> ✅ Code valide !';
+        referralInfo.className = 'referral-info valid';
+        referralCheckStatus = { valid: true, parrainId, checked: true };
         return parrainId;
       } else {
-        messageSpan.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ⚠️ Code invalide';
-        referralInfoDiv.className = 'referral-info invalid';
+        referralMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ⚠️ Code invalide';
+        referralInfo.className = 'referral-info invalid';
+        referralCheckStatus = { valid: false, parrainId: null, checked: true };
         return null;
       }
     } catch (error) {
-      messageSpan.innerHTML = '<i class="fas fa-exclamation-circle"></i> Erreur';
+      console.error("Erreur vérification code:", error);
+      referralMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Erreur de vérification';
       return null;
     }
   }
 
+  // ========== GÉNÉRER CODE PARRAIN UNIQUE ==========
   async function generateUniqueReferralCode(uid, prenom, nom) {
     const base = (prenom.substring(0, 3) + nom.substring(0, 3) + uid.substring(0, 4)).toUpperCase().replace(/[^A-Z0-9]/g, '');
     let code = base.length >= 4 ? base.substring(0, 8) : base + uid.substring(0, 4);
@@ -517,18 +644,28 @@
     return finalCode;
   }
 
+  // ========== CRÉDITER LE PARRAIN ==========
   async function creditReferralReward(parrainUid) {
     if (!parrainUid) return false;
     try {
       const parrainRef = doc(db, "users", parrainUid);
       const parrainDoc = await getDoc(parrainRef);
       if (!parrainDoc.exists()) return false;
+      
       const oldData = parrainDoc.data();
+      const newReferrals = oldData.referrals || [];
+      newReferrals.push({
+        date: new Date().toISOString(),
+        amount: 500,
+        type: 'inscription'
+      });
+
       await updateDoc(parrainRef, {
         balance: (oldData.balance || 0) + 500,
         referralBalance: (oldData.referralBalance || 0) + 500,
         referralsCount: (oldData.referralsCount || 0) + 1,
         referralEarnings: (oldData.referralEarnings || 0) + 500,
+        referrals: newReferrals,
         lastReferral: new Date().toISOString()
       });
       return true;
@@ -538,15 +675,14 @@
     }
   }
 
-  // Vérification code parrain en temps réel
-  const referralCodeInput = document.getElementById('referralCode');
+  // ========== ÉCOUTE CODE PARRAIN ==========
   let debounceTimer;
   referralCodeInput.addEventListener('input', (e) => {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => checkReferralCode(e.target.value), 500);
   });
 
-  // Récupérer code depuis URL
+  // ========== RÉCUPÉRER CODE DEPUIS URL ==========
   const urlParams = new URLSearchParams(window.location.search);
   const refCode = urlParams.get('ref');
   if (refCode) {
@@ -554,13 +690,12 @@
     setTimeout(() => checkReferralCode(refCode), 300);
   }
 
-  // Formulaire d'inscription
-  const registerForm = document.getElementById('registerForm');
-  const registerBtn = document.getElementById('registerBtn');
-
+  // ========== INSCRIPTION ==========
   registerForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+    hideMessage();
     
+        // Récupérer les valeurs
     const nom = document.getElementById('nom').value.trim();
     const prenom = document.getElementById('prenom').value.trim();
     const email = document.getElementById('email').value.trim();
@@ -569,19 +704,23 @@
     const confirmPassword = document.getElementById('confirmPassword').value;
     const referralCode = document.getElementById('referralCode').value.trim().toUpperCase();
     
+    // Validations
     if (!nom || !prenom || !email || !phone || !password) {
       showMessage('Veuillez remplir tous les champs.', 'error');
       return;
     }
+    
     if (password.length < 6) {
-      showMessage('Mot de passe (minimum 6 caractères).', 'error');
+      showMessage('Le mot de passe doit contenir au moins 6 caractères.', 'error');
       return;
     }
+    
     if (password !== confirmPassword) {
       showMessage('Les mots de passe ne correspondent pas.', 'error');
       return;
     }
     
+    // Vérifier le code parrain si présent
     let parrainId = null;
     if (referralCode && referralCode.length >= 4) {
       parrainId = await checkReferralCode(referralCode);
@@ -590,16 +729,20 @@
       }
     }
     
+    // Désactiver le bouton
     registerBtn.disabled = true;
     registerBtn.innerHTML = '<div class="btn-spinner"></div> Création du compte...';
     
     try {
+      // 1. Créer l'utilisateur Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       
+      // 2. Générer un code de parrainage unique
       const generatedReferralCode = await generateUniqueReferralCode(user.uid, prenom, nom);
       const now = new Date().toISOString();
       
+      // 3. Structure complète de l'utilisateur
       const userData = {
         uid: user.uid,
         email: email,
@@ -607,41 +750,66 @@
         prenom: prenom,
         fullName: `${prenom} ${nom}`,
         phone: phone,
+        
+        // Comptes financiers
         balance: 0,
         realBalance: 0,
         referralBalance: 0,
         gainsTotal: 0,
         totalInvested: 0,
         totalWithdrawn: 0,
+        
+        // Statut
         status: "active",
         role: "user",
         hasDeposited: false,
         hasInvested: false,
         activeInvestmentsCount: 0,
+        
+        // Dates
         registrationDate: now,
         createdAt: now,
         lastGainDate: now,
         lastInvestment: null,
         lastWithdrawal: null,
+        
+        // Investissements
         investments: [],
         userAssets: [],
         gainsHistory: [],
+        
+        // Parrainage
         referralCode: generatedReferralCode,
         referredBy: referralCode || null,
         referralsCount: 0,
         referralEarnings: 0,
         referralHistory: [],
-        subscriptionEnd: null
+        referrals: [],
+        
+        // Autres
+        subscriptionEnd: null,
+        lastLogin: now,
+        notificationPreferences: {
+          gains: true,
+          investments: true,
+          promotions: true
+        }
       };
       
+      // 4. Enregistrer dans Firestore
       await setDoc(doc(db, "users", user.uid), userData);
+      
+      // 5. Sauvegarder dans localStorage
+      localStorage.setItem(`nif_user_${user.uid}`, JSON.stringify(userData));
       localStorage.setItem('NIF_current_user', user.uid);
       
+      // 6. Créditer le parrain si existant
       if (parrainId) {
         await creditReferralReward(parrainId);
       }
       
-      showMessage('✅ Compte créé avec succès ! Redirection...', 'success');
+      // 7. Succès
+      showMessage('✅ Compte créé avec succès ! Redirection en cours...', 'success');
       
       setTimeout(() => {
         window.location.href = 'index.html';
@@ -649,17 +817,37 @@
       
     } catch (error) {
       console.error("Erreur inscription:", error);
+      
       let errorMsg = 'Erreur lors de la création du compte.';
-      if (error.code === 'auth/email-already-in-use') errorMsg = 'Cet email est déjà utilisé.';
-      else if (error.code === 'auth/invalid-email') errorMsg = 'Email invalide.';
-      else if (error.code === 'auth/weak-password') errorMsg = 'Mot de passe trop faible.';
+      if (error.code === 'auth/email-already-in-use') {
+        errorMsg = 'Cet email est déjà utilisé.';
+      } else if (error.code === 'auth/invalid-email') {
+        errorMsg = 'Email invalide.';
+      } else if (error.code === 'auth/weak-password') {
+        errorMsg = 'Mot de passe trop faible.';
+      } else if (error.code === 'auth/operation-not-allowed') {
+        errorMsg = 'L\'inscription est temporairement désactivée.';
+      } else if (error.code === 'auth/network-request-failed') {
+        errorMsg = 'Erreur réseau. Vérifiez votre connexion.';
+      }
+      
       showMessage(errorMsg, 'error');
+      
+      // Réactiver le bouton
       registerBtn.disabled = false;
       registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> Créer mon compte';
     }
   });
 
-  // PWA Installation
+  // ========== VÉRIFIER SI DÉJÀ CONNECTÉ ==========
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      localStorage.setItem('NIF_current_user', user.uid);
+      window.location.href = 'index.html';
+    }
+  });
+
+  // ========== PWA INSTALLATION ==========
   let deferredPrompt;
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
@@ -671,11 +859,21 @@
       if (deferredPrompt) {
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
+        console.log(`Installation ${outcome}`);
         deferredPrompt = null;
         installBtn.style.display = 'none';
       }
     };
   });
+
+  // ========== SERVICE WORKER ==========
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('Service Worker enregistré'))
+        .catch(err => console.log('Erreur Service Worker:', err));
+    });
+  }
 </script>
 
 </body>

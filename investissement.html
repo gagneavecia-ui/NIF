@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <meta name="theme-color" content="#0A1128">
+  <meta name="description" content="N.I.F - Investissement et gains quotidiens">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  
+  <style>
+    :root {
+      --primary: #D4AF37;
+      --primary-dark: #AA8417;
+      --primary-light: #F3E5AB;
+      --bg-dark: #0A1128;
+      --bg-surface: #111A36;
+      --text-light: #FFFFFF;
+      --text-dim: #94A3B8;
+      --card-bg: rgba(17, 26, 54, 0.65);
+      --card-border: rgba(212, 175, 55, 0.12);
+      --success: #10B981;
+      --danger: #EF4444;
+      --warning: #F59E0B;
+      --transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      --glass-bg: rgba(212, 175, 55, 0.03);
+      --glass-border: rgba(212, 175, 55, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      font-size: 14px;
+      line-height: 1.5;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    .gradient-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      background: radial-gradient(ellipse 60% 50% at 15% 15%, rgba(212, 175, 55, 0.06) 0%, transparent 70%),
+                  radial-gradient(ellipse 50% 40% at 85% 85%, rgba(16, 185, 129, 0.03) 0%, transparent 60%),
+                  linear-gradient(180deg, #0A1128 0%, #070C1E 100%);
+    }
+
+    /* HEADER */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 5%;
+      background: rgba(10, 17, 40, 0.95);
+      backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: 700;
+      font-family: 'Playfair Display', serif;
+      letter-spacing: 2px;
+      color: var(--text-light);
+    }
+
+    .logo-text span {
+      color: var(--primary);
+    }
+
+    .back-btn {
+      width: 40px;
+      height: 40px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-dim);
+      cursor: pointer;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .back-btn:hover, .back-btn:active {
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 12px 5px 5px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 40px;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .user-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 11px;
+      background: var(--primary);
+      color: #0A1128;
+    }
+
+    .user-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-light);
+      max-width: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* CONTAINER */
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px 16px 80px;
+    }
+
+    /* PAGE TITLE */
+    .page-title {
+      font-size: 24px;
+      font-weight: 700;
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 6px;
+    }
+
+    .page-title span {
+      color: var(--primary);
+      font-style: italic;
+    }
+
+    .page-subtitle {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-bottom: 24px;
+    }
+
+    /* SOLDE CARD */
+    .balance-card {
+      background: linear-gradient(135deg, rgba(17, 26, 54, 0.9), rgba(10, 17, 40, 0.95));
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 20px;
+      padding: 18px 20px;
+      margin-bottom: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .balance-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .balance-label {
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .balance-amount {
+      font-size: 24px;
+      font-weight: 700;
+      font-family: 'Playfair Display', serif;
+      color: var(--primary);
+    }
+
+    .balance-icon {
+      font-size: 32px;
+      color: var(--primary);
+      opacity: 0.5;
+    }
+
+    /* SECTIONS HEADER */
+    .section-header-left {
+      border-left: 2px solid var(--primary);
+      padding-left: 12px;
+      margin-bottom: 16px;
+    }
+
+    .section-subtitle {
+      color: var(--primary);
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .section-title span {
+      font-style: italic;
+    }
+
+    /* CARTES INVESTISSEMENT (style formations) */
+    .investments-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+
+    .investment-card {
+      display: flex;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: var(--transition);
+      height: 145px;
+      cursor: pointer;
+    }
+
+    .investment-card:hover {
+      border-color: rgba(212, 175, 55, 0.3);
+      transform: translateY(-2px);
+      background: rgba(17, 26, 54, 0.85);
+    }
+
+    .investment-card:active {
+      transform: scale(0.98);
+    }
+
+    .investment-img-wrap {
+      position: relative;
+      width: 110px;
+      min-width: 110px;
+      height: 100%;
+    }
+
+    .investment-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.7);
+      transition: var(--transition);
+    }
+
+    .investment-card:hover .investment-img {
+      filter: brightness(0.9);
+      transform: scale(1.03);
+    }
+
+    .investment-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(10, 17, 40, 0.85);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: var(--primary-light);
+      font-size: 9px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .investment-badge.popular {
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .investment-badge.best {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .investment-content {
+      flex: 1;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .investment-title {
+      font-size: 14px;
+      font-weight: 700;
+      font-family: 'Playfair Display', serif;
+      color: var(--text-light);
+      line-height: 1.3;
+      margin-bottom: 2px;
+    }
+
+    .investment-desc {
+      color: var(--text-dim);
+      font-size: 11px;
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+
+    .investment-stats {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+
+    .investment-stat {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    .investment-stat i {
+      color: var(--primary);
+      font-size: 10px;
+    }
+
+    .investment-stat strong {
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
+    .investment-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .investment-price {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .investment-action {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: var(--transition);
+    }
+
+    .investment-card:hover .investment-action i {
+      transform: translateX(2px);
+    }
+
+    /* CARTES INVESTISSEMENTS ACTIFS */
+    .active-investments-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .active-investment-card {
+      background: linear-gradient(135deg, rgba(17, 26, 54, 0.8), rgba(10, 17, 40, 0.9));
+      border: 1px solid rgba(212, 175, 55, 0.15);
+      border-radius: 16px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .active-investment-card:hover {
+      border-color: rgba(212, 175, 55, 0.35);
+      transform: translateX(4px);
+    }
+
+    .active-investment-card:active {
+      transform: scale(0.98);
+    }
+
+    .active-investment-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .active-investment-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    .active-investment-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .active-investment-info h4 {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .active-investment-info .sub {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .active-investment-info .sub span {
+      color: var(--primary-light);
+    }
+
+    .active-investment-progress {
+      margin-top: 6px;
+      width: 100%;
+      max-width: 180px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .active-investment-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      border-radius: 2px;
+      transition: width 0.5s;
+    }
+
+    .active-investment-right {
+      text-align: right;
+      min-width: 60px;
+    }
+
+    .active-investment-days {
+      font-size: 22px;
+      font-weight: 800;
+      font-family: monospace;
+      color: var(--primary);
+    }
+
+    .active-investment-label {
+      font-size: 9px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .active-investment-gain {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--success);
+    }
+
+    .active-investment-chart-link {
+      font-size: 10px;
+      color: var(--primary);
+      margin-top: 4px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+
+    .empty-state i {
+      font-size: 40px;
+      color: var(--text-dim);
+      opacity: 0.3;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    /* MODALE D'INVESTISSEMENT */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(7, 12, 30, 0.95);
+      backdrop-filter: blur(16px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+      animation: fadeInUp 0.3s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-invest {
+      background: linear-gradient(145deg, #0A1128, #070C1E);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 28px;
+      padding: 32px 24px;
+      width: 100%;
+      max-width: 380px;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: none;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+      background: rgba(212, 175, 55, 0.15);
+      color: var(--primary);
+    }
+
+    .modal-icon {
+      font-size: 40px;
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 4px;
+    }
+
+    .modal-title span {
+      color: var(--primary);
+    }
+
+    .modal-subtitle {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+    }
+
+    .modal-details {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .modal-detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .modal-detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .modal-detail-row span {
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .modal-detail-row strong {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary-light);
+    }
+
+    .modal-detail-row .highlight {
+      color: var(--success);
+    }
+
+    .modal-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border: none;
+      border-radius: 50px;
+      color: #0A1128;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .modal-btn:active {
+      transform: scale(0.97);
+    }
+
+    .modal-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .modal-error {
+      color: var(--danger);
+      font-size: 12px;
+      text-align: center;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .modal-error.show {
+      display: block;
+    }
+
+    /* MODALE GRAPHIQUE */
+    .modal-graph-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(7, 12, 30, 0.97);
+      backdrop-filter: blur(20px);
+      z-index: 3000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-graph-overlay.show {
+      display: flex;
+      animation: fadeInUp 0.3s ease-out;
+    }
+
+    .modal-graph {
+      background: linear-gradient(145deg, #0A1128, #070C1E);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 28px;
+      padding: 24px;
+      width: 100%;
+      max-width: 420px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .modal-graph-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(255,255,255,0.05);
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+
+    .modal-graph-close:hover {
+      background: rgba(212, 175, 55, 0.15);
+      color: var(--primary);
+    }
+
+    .modal-graph-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .modal-graph-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: rgba(212, 175, 55, 0.1);
+      flex-shrink: 0;
+    }
+
+    .modal-graph-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .modal-graph-header h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .modal-graph-header p {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .modal-graph-stats {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .graph-stat {
+      flex: 1;
+      background: rgba(255,255,255,0.03);
+      border-radius: 12px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .graph-stat-label {
+      font-size: 9px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .graph-stat strong {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .graph-container {
+      background: rgba(255,255,255,0.02);
+      border-radius: 16px;
+      padding: 12px;
+      margin-bottom: 16px;
+      height: 200px;
+      position: relative;
+    }
+
+    #graphCanvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .graph-info {
+      display: flex;
+      gap: 12px;
+    }
+
+    .graph-info-item {
+      flex: 1;
+      background: rgba(255,255,255,0.02);
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .graph-info-item span {
+      font-size: 9px;
+      color: var(--text-dim);
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .graph-info-item strong {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* TOAST NOTIFICATION */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 16px;
+      right: 16px;
+      background: #0D1633;
+      border: 1px solid var(--primary);
+      border-radius: 14px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 4000;
+      transform: translateY(200px);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+    }
+
+    .toast-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(16, 185, 129, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--success);
+    }
+
+    .toast-icon.error {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+    }
+
+    .toast-content h4 {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .toast-content p {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    /* FOOTER */
+    .footer {
+      border-top: 1px solid rgba(212, 175, 55, 0.08);
+      padding: 32px 0 20px;
+      text-align: center;
+      margin-top: 24px;
+    }
+
+    .footer-logo {
+      font-size: 20px;
+      font-weight: 700;
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 10px;
+    }
+
+    .footer-logo span {
+      color: var(--primary);
+    }
+
+    .footer-text {
+      color: var(--text-dim);
+      font-size: 11px;
+      margin-bottom: 16px;
+    }
+
+    .footer-bottom {
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    @media (max-width: 550px) {
+      .investment-card {
+        height: 130px;
+      }
+      
+      .investment-img-wrap {
+        width: 90px;
+        min-width: 90px;
+      }
+      
+      .container {
+        padding: 16px 14px 80px;
+      }
+      
+      .modal-invest {
+        padding: 24px 18px;
+      }
+      
+      .modal-graph {
+        padding: 18px;
+      }
+      
+      .balance-amount {
+        font-size: 20px;
+      }
+      
+      .modal-graph-stats {
+        flex-wrap: wrap;
+      }
+      
+      .graph-stat {
+        min-width: calc(33% - 8px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="gradient-bg"></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon" id="toastIcon"><i class="fas fa-check-circle"></i></div>
+  <div class="toast-content">
+    <h4 id="toastTitle">Succès</h4>
+    <p id="toastMessage">Action effectuée</p>
+  </div>
+</div>
+
+<header class="header">
+  <a href="index.html" class="logo"><div class="logo-text">N.I.<span>F</span></div></a>
+  <div class="header-actions">
+    <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+    <a href="profil.html" class="user-profile">
+      <div class="user-avatar" id="userAvatar">M</div>
+      <span class="user-name" id="userName">Chargement...</span>
+    </a>
+  </div>
+</header>
+
+<main class="container">
+  <h1 class="page-title">Investir dans <span>l'avenir</span></h1>
+  <p class="page-subtitle">Choisissez votre pack et gagnez des gains quotidiens</p>
+
+  <!-- SOLDE -->
+  <div class="balance-card">
+    <div class="balance-info">
+      <span class="balance-label">Solde disponible</span>
+      <span class="balance-amount" id="userBalance">0 FCFA</span>
+    </div>
+    <div class="balance-icon"><i class="fas fa-coins"></i></div>
+  </div>
+
+  <!-- LISTE DES PACKS -->
+  <div class="section-header-left">
+    <div class="section-subtitle">Packs d'investissement</div>
+    <h2 class="section-title">Choisissez votre <span>pack</span></h2>
+  </div>
+  <div class="investments-list" id="investmentsList"></div>
+
+  <!-- MES INVESTISSEMENTS ACTIFS -->
+  <div class="section-header-left">
+    <div class="section-subtitle">Portefeuille</div>
+    <h2 class="section-title">Mes investissements <span>actifs</span></h2>
+  </div>
+  <div class="active-investments-list" id="activeInvestmentsContainer">
+    <div class="empty-state">
+      <i class="fas fa-wallet"></i>
+      <p>Aucun investissement actif</p>
+      <span style="font-size:11px;color:var(--text-dim);">Investissez dans un pack ci-dessus</span>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-logo">N.I.<span>F</span></div>
+    <div class="footer-text">Cabinet d'investissement et de formation</div>
+    <div class="footer-bottom">© 2026 N.I.F - Niger Investment & Finance</div>
+  </footer>
+</main>
+
+<!-- MODALE D'INVESTISSEMENT -->
+<div class="modal-overlay" id="investModal">
+  <div class="modal-invest">
+    <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
+    <div class="modal-icon"><i class="fas fa-chart-line"></i></div>
+    <h3 class="modal-title" id="modalTitle">Pack <span>Start</span></h3>
+    <p class="modal-subtitle" id="modalSubtitle">Investissement avec gains quotidiens</p>
+    <div class="modal-details">
+      <div class="modal-detail-row">
+        <span>💰 Montant</span>
+        <strong id="modalAmount">0 FCFA</strong>
+      </div>
+      <div class="modal-detail-row">
+        <span>📈 Gain/jour</span>
+        <strong id="modalDaily">0 FCFA</strong>
+      </div>
+      <div class="modal-detail-row">
+        <span>⏱️ Durée</span>
+        <strong id="modalDuration">0 jours</strong>
+      </div>
+      <div class="modal-detail-row">
+        <span>💵 Gain total</span>
+        <strong id="modalTotal" class="highlight">0 FCFA</strong>
+      </div>
+      <div class="modal-detail-row">
+        <span>📊 ROI</span>
+        <strong id="modalRoi" class="highlight">0%</strong>
+      </div>
+    </div>
+    <button class="modal-btn" id="modalInvestBtn">Investir</button>
+    <div class="modal-error" id="modalError">Solde insuffisant</div>
+  </div>
+</div>
+
+<!-- MODALE GRAPHIQUE -->
+<div class="modal-graph-overlay" id="modalGraph">
+  <div class="modal-graph">
+    <button class="modal-graph-close" id="modalGraphClose"><i class="fas fa-times"></i></button>
+    <div class="modal-graph-header">
+      <div class="modal-graph-icon" id="graphIcon"><img src="" alt="pack"></div>
+      <div>
+        <h3 id="graphTitle">Pack Start</h3>
+        <p id="graphSubtitle">Évolution des gains</p>
+      </div>
+    </div>
+    <div class="modal-graph-stats">
+      <div class="graph-stat">
+        <span class="graph-stat-label">Investi</span>
+        <strong id="graphInvested">0 FCFA</strong>
+      </div>
+      <div class="graph-stat">
+        <span class="graph-stat-label">Gain total</span>
+        <strong id="graphTotalGain" style="color:var(--success);">0 FCFA</strong>
+      </div>
+      <div class="graph-stat">
+        <span class="graph-stat-label">Valeur actuelle</span>
+        <strong id="graphCurrentValue">0 FCFA</strong>
+      </div>
+    </div>
+    <div class="graph-container">
+      <canvas id="graphCanvas"></canvas>
+    </div>
+    <div class="graph-info">
+      <div class="graph-info-item">
+        <span>Début</span>
+        <strong id="graphStartDate">-</strong>
+      </div>
+      <div class="graph-info-item">
+        <span>Fin prévue</span>
+        <strong id="graphEndDate">-</strong>
+      </div>
+      <div class="graph-info-item">
+        <span>Progression</span>
+        <strong id="graphProgress">0%</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="importmap">
+  {
+    "imports": {
+      "firebase/app": "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js",
+      "firebase/auth": "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js",
+      "firebase/firestore": "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js"
+    }
+  }
+</script>
+  
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+  import { getFirestore, doc, getDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAVlK5ivp2dCWyr22gkeGSLbRdwTIVMrEE",
+    authDomain: "earnzone-9e82e.firebaseapp.com",
+    projectId: "earnzone-9e82e",
+    storageBucket: "earnzone-9e82e.firebasestorage.app",
+    messagingSenderId: "1076831479440",
+    appId: "1:1076831479440:web:8da3b161e9683dd98e1a15"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let currentUser = null;
+  let userData = null;
+  let unsubscribeUser = null;
+  let selectedPack = null;
+  let graphChart = null;
+
+  // Packs d'investissement avec images
+  const packs = [
+    { 
+      id: "start", 
+      name: "Pack Start", 
+      amount: 3000, 
+      dailyReturn: 500, 
+      duration: 90, 
+      totalReturn: 45000, 
+      badge: "POPULAIRE", 
+      icon: "🌱", 
+      img: "https://images.pexels.com/photos/844124/pexels-photo-844124.jpeg?auto=compress&cs=tinysrgb&w=300&h=350&fit=crop"
+    },
+    { 
+      id: "bronze", 
+      name: "Pack Bronze", 
+      amount: 10000, 
+      dailyReturn: 1000, 
+      duration: 90, 
+      totalReturn: 90000, 
+      badge: "RECOMMANDÉ", 
+      icon: "🥉", 
+      img: "https://images.pexels.com/photos/259027/pexels-photo-259027.jpeg?auto=compress&cs=tinysrgb&w=300&h=350&fit=crop"
+    },
+    { 
+      id: "silver", 
+      name: "Pack Silver", 
+      amount: 15000, 
+      dailyReturn: 1500, 
+      duration: 90, 
+      totalReturn: 135000, 
+      badge: null, 
+      icon: "🥈", 
+      img: "https://images.pexels.com/photos/48148/document-agreement-documents-sign-48148.jpeg?auto=compress&cs=tinysrgb&w=300&h=350&fit=crop"
+    },
+    { 
+      id: "gold", 
+      name: "Pack Gold", 
+      amount: 25000, 
+      dailyReturn: 2500, 
+      duration: 90, 
+      totalReturn: 225000, 
+      badge: "BEST VALUE", 
+      icon: "🥇", 
+      img: "https://images.pexels.com/photos/4386363/pexels-photo-4386363.jpeg?auto=compress&cs=tinysrgb&w=300&h=350&fit=crop"
+    },
+    { 
+      id: "platinum", 
+      name: "Pack Platinum", 
+      amount: 50000, 
+      dailyReturn: 5000, 
+      duration: 90, 
+      totalReturn: 450000, 
+      badge: "PREMIUM", 
+      icon: "💎", 
+      img: "https://images.pexels.com/photos/209224/pexels-photo-209224.jpeg?auto=compress&cs=tinysrgb&w=300&h=350&fit=crop"
+    },
+    { 
+      id: "diamond", 
+      name: "Pack Diamond", 
+      amount: 75000, 
+      dailyReturn: 7500, 
+      duration: 90, 
+      totalReturn: 675000, 
+      badge: "VIP", 
+      icon: "💠", 
+      img: "https://images.pexels.com/photos/5980852/pexels-photo-5980852.jpeg?auto=compress&cs=tinysrgb&w=300&h=350&fit=crop"
+    },
+    { 
+      id: "elite", 
+      name: "Pack Elite", 
+      amount: 100000, 
+      dailyReturn: 10000, 
+      duration: 90, 
+      totalReturn: 900000, 
+      badge: "ELITE", 
+      icon: "👑", 
+      img: "https://images.pexels.com/photos/4386364/pexels-photo-4386364.jpeg?auto=compress&cs=tinysrgb&w=300&h=350&fit=crop"
+    },
+    { 
+      id: "prestige", 
+      name: "Pack Prestige", 
+      amount: 150000, 
+      dailyReturn: 15000, 
+      duration: 90, 
+      totalReturn: 1350000, 
+      badge: "PRESTIGE", 
+      icon: "🏆", 
+      img: "https://images.pexels.com/photos/210578/pexels-photo-210578.jpeg?auto=compress&cs=tinysrgb&w=300&h=350&fit=crop"
+    },
+    { 
+      id: "imperial", 
+      name: "Pack Imperial", 
+      amount: 250000, 
+      dailyReturn: 25000, 
+      duration: 90, 
+      totalReturn: 2250000, 
+      badge: "IMPÉRIAL", 
+      icon: "⚜️", 
+      img: "https://images.pexels.com/photos/6646915/pexels-photo-6646915.jpeg?auto=compress&cs=tinysrgb&w=300&h=350&fit=crop"
+    },
+    { 
+      id: "royal", 
+      name: "Pack Royal", 
+      amount: 500000, 
+      dailyReturn: 50000, 
+      duration: 90, 
+      totalReturn: 4500000, 
+      badge: "ROYAL", 
+      icon: "🌙", 
+      img: "https://images.pexels.com/photos/4386362/pexels-photo-4386362.jpeg?auto=compress&cs=tinysrgb&w=300&h=350&fit=crop"
+    }
+  ];
+
+  // DOM Elements
+  const investmentsList = document.getElementById('investmentsList');
+  const userBalanceEl = document.getElementById('userBalance');
+  const userAvatarEl = document.getElementById('userAvatar');
+  const userNameEl = document.getElementById('userName');
+  const activeInvestmentsContainer = document.getElementById('activeInvestmentsContainer');
+  const investModal = document.getElementById('investModal');
+  const modalClose = document.getElementById('modalClose');
+  const modalInvestBtn = document.getElementById('modalInvestBtn');
+  const modalError = document.getElementById('modalError');
+  const modalGraph = document.getElementById('modalGraph');
+  const modalGraphClose = document.getElementById('modalGraphClose');
+
+  // Toast
+  const toast = document.getElementById('toast');
+  const toastIcon = document.getElementById('toastIcon');
+  const toastTitle = document.getElementById('toastTitle');
+  const toastMessage = document.getElementById('toastMessage');
+
+  function showToast(title, message, isError = false) {
+    toastTitle.textContent = title;
+    toastMessage.textContent = message;
+    toastIcon.className = isError ? 'toast-icon error' : 'toast-icon';
+    toastIcon.innerHTML = isError ? '<i class="fas fa-exclamation-circle"></i>' : '<i class="fas fa-check-circle"></i>';
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3500);
+  }
+
+  // Rendre les packs
+  function renderPacks() {
+    investmentsList.innerHTML = packs.map(pack => `
+      <div class="investment-card" data-pack='${JSON.stringify(pack)}'>
+        <div class="investment-img-wrap">
+          <img src="${pack.img}" alt="${pack.name}" class="investment-img" loading="lazy">
+          <span class="investment-badge ${pack.badge ? (pack.badge === 'POPULAIRE' ? 'popular' : 'best') : ''}">${pack.badge || pack.icon}</span>
+        </div>
+        <div class="investment-content">
+          <div>
+            <h3 class="investment-title">${pack.name}</h3>
+            <p class="investment-desc">${pack.icon} Investissement avec gains quotidiens</p>
+          </div>
+          <div>
+            <div class="investment-stats">
+              <span class="investment-stat"><i class="fas fa-coins"></i> <strong>${pack.dailyReturn.toLocaleString('fr-FR')} FCFA</strong>/jour</span>
+              <span class="investment-stat"><i class="fas fa-calendar"></i> <strong>${pack.duration}</strong> jours</span>
+              <span class="investment-stat"><i class="fas fa-arrow-up"></i> <strong>${Math.round((pack.totalReturn / pack.amount) * 100)}%</strong> ROI</span>
+            </div>
+            <div class="investment-footer">
+              <span class="investment-price">${pack.amount.toLocaleString('fr-FR')} FCFA</span>
+              <span class="investment-action">Investir <i class="fas fa-chevron-right"></i></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    document.querySelectorAll('.investment-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const pack = JSON.parse(card.dataset.pack);
+        openInvestModal(pack);
+      });
+    });
+  }
+
+  // Ouvrir modale d'investissement
+  function openInvestModal(pack) {
+    selectedPack = pack;
+    document.getElementById('modalTitle').innerHTML = `Pack <span>${pack.name}</span>`;
+    document.getElementById('modalSubtitle').textContent = `${pack.icon} Investissement avec gains quotidiens`;
+    document.getElementById('modalAmount').textContent = `${pack.amount.toLocaleString('fr-FR')} FCFA`;
+    document.getElementById('modalDaily').textContent = `${pack.dailyReturn.toLocaleString('fr-FR')} FCFA`;
+    document.getElementById('modalDuration').textContent = `${pack.duration} jours`;
+    document.getElementById('modalTotal').textContent = `${pack.totalReturn.toLocaleString('fr-FR')} FCFA`;
+    document.getElementById('modalRoi').textContent = `${Math.round((pack.totalReturn / pack.amount) * 100)}%`;
+    modalError.classList.remove('show');
+    modalInvestBtn.disabled = false;
+    modalInvestBtn.textContent = 'Investir';
+    investModal.classList.add('show');
+  }
+
+  function closeInvestModal() {
+    investModal.classList.remove('show');
+    selectedPack = null;
+  }
+
+  modalClose.addEventListener('click', closeInvestModal);
+  investModal.addEventListener('click', (e) => {
+    if (e.target === investModal) closeInvestModal();
+  });
+
+  // Investir
+  modalInvestBtn.addEventListener('click', async () => {
+    if (!selectedPack || !currentUser) return;
+    
+    const pack = selectedPack;
+    modalInvestBtn.disabled = true;
+    modalInvestBtn.textContent = 'Traitement...';
+    modalError.classList.remove('show');
+
+    try {
+      const userRef = doc(db, 'users', currentUser.uid);
+      const userDoc = await getDoc(userRef);
+      
+      if (!userDoc.exists()) {
+        showToast('Erreur', 'Utilisateur non trouvé', true);
+        return;
+      }
+
+      const userData = userDoc.data();
+      const balance = userData.balance || 0;
+
+      if (balance < pack.amount) {
+        modalError.textContent = `Solde insuffisant. Vous avez ${balance.toLocaleString('fr-FR')} FCFA`;
+        modalError.classList.add('show');
+        modalInvestBtn.disabled = false;
+        modalInvestBtn.textContent = 'Investir';
+        return;
+      }
+
+      const now = new Date();
+      const endDate = new Date(now.getTime() + pack.duration * 24 * 60 * 60 * 1000);
+
+      const newInvestment = {
+        id: Date.now().toString(),
+        packId: pack.id,
+        packName: pack.name,
+        icon: pack.icon,
+        iconImg: pack.img,
+        amount: pack.amount,
+        dailyReturn: pack.dailyReturn,
+        totalDays: pack.duration,
+        currentDay: 0,
+        totalEarned: 0,
+        startDate: now.toISOString(),
+        endDate: endDate.toISOString(),
+        status: 'active',
+        lastPayout: now.toISOString()
+      };
+
+      const investments = userData.investments || [];
+      investments.push(newInvestment);
+
+      await updateDoc(userRef, {
+        balance: balance - pack.amount,
+        investments: investments,
+        totalInvested: (userData.totalInvested || 0) + pack.amount,
+        activeInvestmentsCount: (userData.activeInvestmentsCount || 0) + 1,
+        hasInvested: true,
+        lastInvestment: now.toISOString()
+      });
+
+      closeInvestModal();
+      showToast('Succès', `Investissement de ${pack.amount.toLocaleString('fr-FR')} FCFA réussi !`);
+      
+      loadUserData(currentUser.uid);
+
+    } catch (error) {
+      console.error('Erreur investissement:', error);
+      modalError.textContent = 'Erreur lors de l\'investissement';
+      modalError.classList.add('show');
+      modalInvestBtn.disabled = false;
+      modalInvestBtn.textContent = 'Investir';
+    }
+  });
+
+  // Ouvrir graphique
+  function openGraph(investmentId) {
+    if (!userData) return;
+    const inv = userData.investments.find(i => i.id === investmentId);
+    if (!inv) return;
+
+    // Remplir les infos
+    document.getElementById('graphIcon').innerHTML = `<img src="${inv.iconImg || 'https://images.pexels.com/photos/844124/pexels-photo-844124.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop'}" alt="${inv.packName}">`;
+    document.getElementById('graphTitle').textContent = `${inv.icon || '📊'} ${inv.packName}`;
+    document.getElementById('graphSubtitle').textContent = `Gains quotidiens de ${inv.dailyReturn.toLocaleString('fr-FR')} FCFA`;
+    document.getElementById('graphInvested').textContent = `${inv.amount.toLocaleString('fr-FR')} FCFA`;
+    
+    const totalGain = inv.currentDay * inv.dailyReturn;
+    document.getElementById('graphTotalGain').textContent = `${totalGain.toLocaleString('fr-FR')} FCFA`;
+    document.getElementById('graphCurrentValue').textContent = `${(inv.amount + totalGain).toLocaleString('fr-FR')} FCFA`;
+    
+    const startDate = new Date(inv.startDate);
+    const endDate = new Date(inv.endDate);
+    document.getElementById('graphStartDate').textContent = startDate.toLocaleDateString('fr-FR');
+    document.getElementById('graphEndDate').textContent = endDate.toLocaleDateString('fr-FR');
+    
+    const progress = Math.min(100, Math.round((inv.currentDay / inv.totalDays) * 100));
+    document.getElementById('graphProgress').textContent = `${progress}%`;
+
+    // Générer les données du graphique
+    const days = Math.min(inv.currentDay + 1, 30);
+    const labels = [];
+    const data = [];
+    let value = inv.amount;
+    
+    for (let i = 0; i < days; i++) {
+      labels.push(`J${i+1}`);
+      if (i < inv.currentDay) {
+        value += inv.dailyReturn;
+      } else {
+        value += inv.dailyReturn;
+      }
+      data.push(Math.round(value));
+    }
+
+    // Créer le graphique
+    const ctx = document.getElementById('graphCanvas').getContext('2d');
+    
+    if (graphChart) graphChart.destroy();
+    
+    graphChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Valeur (FCFA)',
+          data: data,
+          borderColor: '#D4AF37',
+          backgroundColor: 'rgba(212, 175, 55, 0.1)',
+          fill: true,
+          tension: 0.4,
+          pointRadius: 3,
+          pointBackgroundColor: '#D4AF37'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(0,0,0,0.85)',
+            titleColor: '#D4AF37',
+            bodyColor: '#94A3B8',
+            borderColor: '#D4AF37',
+            borderWidth: 1,
+            callbacks: {
+              label: function(context) {
+                return `${context.raw.toLocaleString('fr-FR')} FCFA`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            ticks: { color: '#94A3B8', maxTicksLimit: 10 }
+          },
+          y: {
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            ticks: { 
+              color: '#94A3B8',
+              callback: function(value) {
+                return value.toLocaleString('fr-FR');
+              }
+            }
+          }
+        }
+      }
+    });
+
+    modalGraph.classList.add('show');
+  }
+
+  function closeGraphModal() {
+    modalGraph.classList.remove('show');
+    if (graphChart) {
+      graphChart.destroy();
+      graphChart = null;
+    }
+  }
+
+  modalGraphClose.addEventListener('click', closeGraphModal);
+  modalGraph.addEventListener('click', (e) => {
+    if (e.target === modalGraph) closeGraphModal();
+  });
+
+  // Rendre les investissements actifs
+  function renderActiveInvestments(investments) {
+    const active = investments.filter(i => i.status === 'active');
+    
+    if (active.length === 0) {
+      activeInvestmentsContainer.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-wallet"></i>
+          <p>Aucun investissement actif</p>
+          <span style="font-size:11px;color:var(--text-dim);">Investissez dans un pack ci-dessus</span>
+        </div>
+      `;
+      return;
+    }
+
+    activeInvestmentsContainer.innerHTML = active.map(inv => {
+      const endDate = new Date(inv.endDate);
+      const daysLeft = Math.max(0, Math.ceil((endDate - new Date()) / (1000 * 60 * 60 * 24)));
+      const progress = Math.min(100, Math.round((inv.currentDay / inv.totalDays) * 100));
+      const totalGain = inv.currentDay * inv.dailyReturn;
+      
+      return `
+        <div class="active-investment-card" onclick="window.openGraph('${inv.id}')">
+          <div class="active-investment-left">
+            <div class="active-investment-icon">
+              <img src="${inv.iconImg || 'https://images.pexels.com/photos/844124/pexels-photo-844124.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop'}" alt="${inv.packName}">
+            </div>
+            <div class="active-investment-info">
+              <h4>${inv.icon || '📊'} ${inv.packName}</h4>
+              <div class="sub">
+                ${inv.amount.toLocaleString('fr-FR')} FCFA • 
+                <span>+${inv.dailyReturn.toLocaleString('fr-FR')} FCFA/jour</span>
+              </div>
+              <div class="active-investment-progress">
+                <div class="active-investment-progress-bar" style="width: ${progress}%;"></div>
+              </div>
+              <div class="sub" style="font-size:10px;">
+                ${inv.currentDay}/${inv.totalDays} jours • 
+                Gain: ${totalGain.toLocaleString('fr-FR')} FCFA
+              </div>
+            </div>
+          </div>
+          <div class="active-investment-right">
+            <div class="active-investment-days">${daysLeft}j</div>
+            <div class="active-investment-label">restants</div>
+            <div class="active-investment-gain">+${inv.dailyReturn.toLocaleString('fr-FR')}</div>
+            <div class="active-investment-chart-link">
+              <i class="fas fa-chart-line"></i> Voir
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Exposer openGraph globalement pour onclick
+  window.openGraph = openGraph;
+
+  // Charger les données utilisateur
+  async function loadUserData(uid) {
+    try {
+      const userRef = doc(db, 'users', uid);
+      const userDoc = await getDoc(userRef);
+      
+      if (userDoc.exists()) {
+        userData = userDoc.data();
+        if (userBalanceEl) {
+          userBalanceEl.textContent = `${(userData.balance || 0).toLocaleString('fr-FR')} FCFA`;
+        }
+        if (userAvatarEl) {
+          const name = userData.fullName || userData.prenom || 'M';
+          userAvatarEl.textContent = name.charAt(0).toUpperCase();
+        }
+        if (userNameEl) {
+          userNameEl.textContent = userData.fullName || userData.prenom || 'Membre';
+        }
+        renderActiveInvestments(userData.investments || []);
+      }
+    } catch (error) {
+      console.error('Erreur chargement:', error);
+    }
+  }
+
+  // Écouter les changements en temps réel
+  function listenToUser(uid) {
+    const userRef = doc(db, 'users', uid);
+    unsubscribeUser = onSnapshot(userRef, (docSnap) => {
+      if (docSnap.exists()) {
+        userData = docSnap.data();
+        if (userBalanceEl) {
+          userBalanceEl.textContent = `${(userData.balance || 0).toLocaleString('fr-FR')} FCFA`;
+        }
+        if (userAvatarEl) {
+          const name = userData.fullName || userData.prenom || 'M';
+          userAvatarEl.textContent = name.charAt(0).toUpperCase();
+        }
+        if (userNameEl) {
+          userNameEl.textContent = userData.fullName || userData.prenom || 'Membre';
+        }
+        renderActiveInvestments(userData.investments || []);
+      }
+    });
+  }
+
+  // Auth
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      currentUser = user;
+      renderPacks();
+      loadUserData(user.uid);
+      listenToUser(user.uid);
+    } else {
+      const savedUid = localStorage.getItem('NIF_current_user');
+      if (savedUid) {
+        setTimeout(async () => {
+          if (!auth.currentUser) {
+            window.location.href = 'login.html';
+          }
+        }, 1000);
+      } else {
+        window.location.href = 'login.html';
+      }
+    }
+  });
+
+  // Cleanup
+  window.addEventListener('beforeunload', () => {
+    if (unsubscribeUser) unsubscribeUser();
+    if (graphChart) {
+      graphChart.destroy();
+      graphChart = null;
+    }
+  });
+</script>
+
+</body>
+</html>
