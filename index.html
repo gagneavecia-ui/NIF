@@ -770,6 +770,27 @@
       font-size: 11px;
       color: var(--text-dim);
     }
+  
+  /* ===== BOUTON RECHARGER ===== */
+.btn-recharge {
+  background: var(--primary);
+  color: var(--bg-dark);
+  border: none;
+  border-radius: 30px;
+  padding: 6px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: var(--transition);
+}
+
+.btn-recharge:hover {
+  background: var(--primary-dark);
+  transform: scale(1.05);
+}
 
     @media (max-width: 550px) {
       .hero-title {
@@ -826,16 +847,19 @@
   </div>
 
   <div class="dashboard-stats-container">
-    <div class="main-stat-card">
-      <div class="main-stat-header">
-        <span class="main-stat-label">Actifs Disponibles</span>
-        <span class="main-stat-badge"><i class="fas fa-lock"></i> Sécurisé</span>
-      </div>
-      <div class="main-stat-value" id="statBalance">0 FCFA</div>
-      <div class="main-stat-footer">
-        <i class="fas fa-vault"></i> Compartiment N.I.F
-      </div>
+  <!-- SOLDE PRINCIPAL -->
+  <div class="main-stat-card">
+    <div class="main-stat-header">
+      <span class="main-stat-label">💰 Portefeuille N.I.F</span>
+      <button class="btn-recharge" onclick="window.location.href='recharger.html'">
+        <i class="fas fa-plus"></i> Recharger
+      </button>
     </div>
+    <div class="main-stat-value" id="statBalance">0 FCFA</div>
+    <div class="main-stat-footer">
+      <i class="fas fa-wallet"></i> Solde disponible
+    </div>
+  </div>
   </div>
 
    <div class="section-header">
@@ -843,8 +867,7 @@
       <div class="section-subtitle">Haute École de Finance</div>
       <h2 class="section-title">Programmes de <span>Formation</span></h2>
     </div>
-    <a href="#" class="section-link" id="allFormationsLink">Voir tout <i class="fas fa-arrow-right"></i></a>
-  </div>
+   </div>
   
   <div class="formations-list-horizontal">
     <a href="#" class="formation-card-horizontal formation-link" data-formation="strategie">
@@ -883,39 +906,41 @@
       <div class="section-subtitle">Solutions de Placement</div>
       <h2 class="section-title">Gestion de <span>Fortune</span></h2>
     </div>
-    <a href="#" class="section-link" id="allInvestmentsLink">Voir tout <i class="fas fa-arrow-right"></i></a>
   </div>
   
   <div class="features-grid">
-    <a href="#" class="feature-card-premium" id="capitalGrowthBtn">
-      <div class="card-inner-header">
-        <div class="feature-icon"><i class="fas fa-arrow-trend-up"></i></div>
-        <div class="feature-badge-gold">+40%</div>
-      </div>
-      <h3 class="feature-title">Capital Croissance Sahel</h3>
-      <p class="feature-description">Placement stratégique avec distribution de dividendes quotidiens.</p>
-      <span class="feature-link">Consulter l'offre <i class="fas fa-arrow-right"></i></span>
-    </a>
+  <!-- BOUTON 1 : ACHETER DES FORMATIONS -->
+  <a href="boutique.html" class="feature-card-premium" id="boutiqueBtn">
+    <div class="card-inner-header">
+      <div class="feature-icon"><i class="fas fa-shopping-bag"></i></div>
+      <div class="feature-badge-gold">📚 Catalogue</div>
+    </div>
+    <h3 class="feature-title">🛒 Acheter des Formations</h3>
+    <p class="feature-description">Découvrez notre catalogue de formations premium en finance, marketing et entrepreneuriat.</p>
+    <span class="feature-link">Explorer la boutique <i class="fas fa-arrow-right"></i></span>
+  </a>
 
-    <a href="#" class="feature-card-express" id="expressBtn">
-      <div class="card-inner-header">
-        <div class="feature-icon-express"><i class="fas fa-bolt-lightning"></i></div>
-        <div class="feature-badge-express">Optimisé</div>
-      </div>
-      <h3 class="feature-title">Rendement Express</h3>
-      <p class="feature-description">Allocation de liquidité court terme avec bonus sous 24h.</p>
-      <span class="feature-link-express">Découvrir <i class="fas fa-bolt"></i></span>
-    </a>
+  <!-- BOUTON 2 : VENDRE MA FORMATION -->
+  <a href="vendre.html" class="feature-card-express" id="vendreBtn">
+    <div class="card-inner-header">
+      <div class="feature-icon-express"><i class="fas fa-upload"></i></div>
+      <div class="feature-badge-express">💰 90%</div>
+    </div>
+    <h3 class="feature-title">📤 Vendre ma Formation</h3>
+    <p class="feature-description">Publiez votre formation et gagnez de l'argent. Touchez 90% du prix de vente.</p>
+    <span class="feature-link-express">Commencer la vente <i class="fas fa-arrow-right"></i></span>
+  </a>
 
-    <a href="#" class="feature-card-horizontal" id="parrainageBtn">
-      <div class="horizontal-icon"><i class="fas fa-network-wired"></i></div>
-      <div class="horizontal-body">
-        <h3 class="feature-title">Affiliation & Réseau d'Affaires</h3>
-        <p class="feature-description">Recommandez N.I.F et percevez des commissions directes.</p>
-      </div>
-      <div class="horizontal-arrow"><i class="fas fa-chevron-right"></i></div>
-    </a>
-  </div>
+  <!-- BOUTON 3 : MON ACTIVITÉ -->
+  <a href="activite.html" class="feature-card-horizontal" id="activiteBtn">
+    <div class="horizontal-icon"><i class="fas fa-chart-pie"></i></div>
+    <div class="horizontal-body">
+      <h3 class="feature-title">📊 Mon Activité</h3>
+      <p class="feature-description">Suivez vos ventes, achats, dépôts, retraits et votre progression globale.</p>
+    </div>
+    <div class="horizontal-arrow"><i class="fas fa-chevron-right"></i></div>
+  </a>
+</div>
   
   <div class="testimonials-section">
     <div class="section-header">
@@ -1042,21 +1067,23 @@
   }
 
   function updateUI(userData) {
-    const displayName = userData.fullName || userData.prenom || "Investisseur";
-    if (userNameEl) userNameEl.textContent = displayName;
-    if (userAvatarEl) userAvatarEl.textContent = displayName.charAt(0).toUpperCase();
+  const displayName = userData.fullName || userData.prenom || "Investisseur";
+  if (userNameEl) userNameEl.textContent = displayName;
+  if (userAvatarEl) userAvatarEl.textContent = displayName.charAt(0).toUpperCase();
 
-    const currentBalance = userData.balance || 0;
-    if (statBalanceEl) {
-      statBalanceEl.textContent = `${currentBalance.toLocaleString('fr-FR')} FCFA`;
-    }
-
-    if (lastBalance !== null && currentBalance > lastBalance) {
-      const diff = currentBalance - lastBalance;
-      showNotification("Rendement Crédité", `+${diff.toLocaleString('fr-FR')} FCFA`);
-    }
-    lastBalance = currentBalance;
+  // Solde
+  const currentBalance = userData.balance || 0;
+  if (statBalanceEl) {
+    statBalanceEl.textContent = `${currentBalance.toLocaleString('fr-FR')} FCFA`;
   }
+
+  // Notification de gain (si solde augmente)
+  if (lastBalance !== null && currentBalance > lastBalance) {
+    const diff = currentBalance - lastBalance;
+    showNotification("💰 Nouveau crédit", `+${diff.toLocaleString('fr-FR')} FCFA`);
+  }
+  lastBalance = currentBalance;
+}
 
   // ========== BOUTON ADMIN SECRET ==========
   function checkAndShowAdminButton() {
@@ -1093,32 +1120,47 @@
   }
 
   function setupNavigation() {
-    const capitalGrowthBtn = document.getElementById('capitalGrowthBtn');
-    const expressBtn = document.getElementById('expressBtn');
-    const parrainageBtn = document.getElementById('parrainageBtn');
-    const formationLinks = document.querySelectorAll('.formation-link');
-    const allFormationsLink = document.getElementById('allFormationsLink');
-    const allInvestmentsLink = document.getElementById('allInvestmentsLink');
-    const allReviewsLink = document.getElementById('allReviewsLink');
-    const allReviewsBtn = document.getElementById('allReviewsBtn');
-    const userProfileBtn = document.getElementById('userProfileBtn');
-    const menuBtn = document.getElementById('menuBtn');
+  // NOUVEAUX BOUTONS
+  const boutiqueBtn = document.getElementById('boutiqueBtn');
+  const vendreBtn = document.getElementById('vendreBtn');
+  const activiteBtn = document.getElementById('activiteBtn');
+  
+  const formationLinks = document.querySelectorAll('.formation-link');
+  const allFormationsLink = document.getElementById('allFormationsLink');
+  const allInvestmentsLink = document.getElementById('allInvestmentsLink');
+  const allReviewsLink = document.getElementById('allReviewsLink');
+  const allReviewsBtn = document.getElementById('allReviewsBtn');
+  const userProfileBtn = document.getElementById('userProfileBtn');
+  const menuBtn = document.getElementById('menuBtn');
 
-    if (capitalGrowthBtn) capitalGrowthBtn.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'investissement.html'; });
-    if (expressBtn) expressBtn.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'nex.html'; });
-    if (parrainageBtn) parrainageBtn.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'parrainage.html'; });
-    
-    formationLinks.forEach(link => {
-      link.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'formations.html'; });
-    });
-    
-    if (allFormationsLink) allFormationsLink.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'formations.html'; });
-    if (allInvestmentsLink) allInvestmentsLink.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'investissement.html'; });
-    if (allReviewsLink) allReviewsLink.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'avis.html'; });
-    if (allReviewsBtn) allReviewsBtn.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'avis.html'; });
-    if (userProfileBtn) userProfileBtn.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'profil.html'; });
-    if (menuBtn) menuBtn.addEventListener('click', () => { window.location.href = 'menu.html'; });
-  }
+  // Navigation des 3 nouveaux boutons
+  if (boutiqueBtn) boutiqueBtn.addEventListener('click', (e) => { 
+    e.preventDefault(); 
+    window.location.href = 'boutique.html'; 
+  });
+  
+  if (vendreBtn) vendreBtn.addEventListener('click', (e) => { 
+    e.preventDefault(); 
+    window.location.href = 'vendre.html'; 
+  });
+  
+  if (activiteBtn) activiteBtn.addEventListener('click', (e) => { 
+    e.preventDefault(); 
+    window.location.href = 'activite.html'; 
+  });
+  
+  // Anciens liens (formations, avis, etc.)
+  formationLinks.forEach(link => {
+    link.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'formations.html'; });
+  });
+  
+  if (allFormationsLink) allFormationsLink.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'formations.html'; });
+  if (allInvestmentsLink) allInvestmentsLink.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'boutique.html'; });
+  if (allReviewsLink) allReviewsLink.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'avis.html'; });
+  if (allReviewsBtn) allReviewsBtn.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'avis.html'; });
+  if (userProfileBtn) userProfileBtn.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'profil.html'; });
+  if (menuBtn) menuBtn.addEventListener('click', () => { window.location.href = 'menu.html'; });
+}
 
   onAuthStateChanged(auth, (user) => {
     if (user) {

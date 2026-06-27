@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Recharger - N.I.F</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#0A1128">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #D4AF37;
+      --primary-dark: #AA8417;
+      --primary-light: #F3E5AB;
+      --bg-dark: #0A1128;
+      --bg-surface: #111A36;
+      --text-light: #FFFFFF;
+      --text-dim: #94A3B8;
+      --card-bg: rgba(17, 26, 54, 0.65);
+      --card-border: rgba(212, 175, 55, 0.12);
+      --success: #10B981;
+      --glass-bg: rgba(212, 175, 55, 0.03);
+      --glass-border: rgba(212, 175, 55, 0.08);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    .gradient-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      background: radial-gradient(ellipse 60% 50% at 15% 15%, rgba(212, 175, 55, 0.06) 0%, transparent 70%),
+                  linear-gradient(180deg, #0A1128 0%, #070C1E 100%);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 5%;
+      background: rgba(10, 17, 40, 0.95);
+      backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text-light);
+      font-size: 20px;
+      font-weight: 700;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .logo span { color: var(--primary); }
+
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover { border-color: var(--primary); }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    /* ===== ID CARD ===== */
+    .id-card {
+      background: linear-gradient(135deg, rgba(17, 26, 54, 0.9), rgba(10, 17, 40, 0.95));
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .id-card-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 6px;
+}
+
+    .id-card-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 2px;
+  padding: 10px;
+  background: rgba(212, 175, 55, 0.06);
+  border-radius: 12px;
+  border: 1px dashed rgba(212, 175, 55, 0.2);
+}
+
+    .id-card-copy {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: none;
+      border: none;
+    }
+
+    .id-card-copy:hover { opacity: 0.8; }
+    .id-card-copy.copied { color: var(--success); }
+
+    /* ===== INSTRUCTIONS ===== */
+    .instructions-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 24px;
+    }
+
+    .instructions-card h3 {
+      font-size: 15px;
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .instructions-card h3 i { color: var(--primary); }
+
+    .step-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .step-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    .step-list li:last-child { border-bottom: none; }
+
+    .step-number {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  background: rgba(212, 175, 55, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  font-family: 'Playfair Display', serif;
+}
+
+    .step-highlight {
+  color: var(--primary);
+  font-weight: 600;
+  font-family: 'Playfair Display', serif;
+}
+
+    /* ===== FORMULAIRE MONTANT ===== */
+    .form-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-light);
+  display: block;
+  margin-bottom: 8px;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.3px;
+}
+  
+    .form-label i { color: var(--primary); margin-right: 6px; }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 0 16px;
+      transition: all 0.3s ease;
+    }
+
+    .input-group:focus-within {
+      border-color: var(--primary);
+      background: rgba(212, 175, 55, 0.04);
+    }
+
+    .input-group .currency {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+
+    .input-group input {
+  width: 100%;
+  padding: 14px 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-light);
+  font-size: 20px;
+  font-weight: 600;
+  font-family: 'Playfair Display', serif;
+}
+  
+    .input-group input::placeholder {
+      color: var(--text-dim);
+      font-weight: 400;
+      font-size: 15px;
+    }
+
+    .input-group input::-webkit-outer-spin-button,
+    .input-group input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .input-group input[type=number] {
+      -moz-appearance: textfield;
+    }
+
+    /* ===== CALCUL DES FRAIS ===== */
+    .calculation-box {
+      background: rgba(212, 175, 55, 0.04);
+      border: 1px solid rgba(212, 175, 55, 0.08);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .calc-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 0;
+      font-size: 13px;
+    }
+
+    .calc-row .label {
+      color: var(--text-dim);
+    }
+
+    .calc-row .value {
+      font-weight: 600;
+    }
+
+    .calc-row .value.primary { color: var(--primary); }
+    .calc-row .value.success { color: var(--success); }
+    .calc-row .value.danger { color: #EF4444; }
+
+    .calc-divider {
+      border: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      margin: 8px 0;
+    }
+
+    .calc-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0 0;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .calc-total .label {
+      color: var(--text-light);
+    }
+
+    .calc-total .value {
+      color: var(--success);
+      font-size: 20px;
+      font-family: 'Playfair Display', serif;
+    }
+
+    /* ===== MOYENS DE PAIEMENT ===== */
+    .payment-methods {
+      margin-bottom: 20px;
+    }
+
+    .payment-methods .title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-light);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .payment-methods .title i { color: var(--primary); margin-right: 6px; }
+
+    .payment-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .payment-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      flex: 0 0 auto;
+    }
+
+    .payment-item:hover {
+      border-color: rgba(212, 175, 55, 0.3);
+      background: rgba(17, 26, 54, 0.85);
+    }
+
+    .payment-item img {
+      height: 24px;
+      width: auto;
+      object-fit: contain;
+    }
+
+   .payment-item .name {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-dim);
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.2px;
+}
+
+    /* ===== BOUTON WHATSAPP ===== */
+    .btn-whatsapp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 16px;
+  background: #25D366;
+  color: #FFF;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  margin-bottom: 16px;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+    .btn-whatsapp:hover {
+      background: #1DA851;
+      transform: scale(1.02);
+    }
+
+    .btn-whatsapp i {
+      font-size: 22px;
+    }
+
+    .btn-whatsapp:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ===== NOTE ===== */
+    .admin-note {
+  background: rgba(16, 185, 129, 0.05);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 12px;
+  color: var(--text-dim);
+  text-align: center;
+  line-height: 1.6;
+  font-family: 'Inter', sans-serif;
+}
+
+    .admin-note i { color: var(--success); margin-right: 6px; }
+
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 16px;
+      right: 16px;
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 500;
+      transform: translateY(120px);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 999;
+      text-align: center;
+    }
+
+    .toast.show { transform: translateY(0); }
+    .toast.success { background: #0D2A1F; border: 1px solid var(--success); color: var(--success); }
+    .toast.error { background: #2A0D0D; border: 1px solid #EF4444; color: #EF4444; }
+
+    @media (max-width: 500px) {
+      .id-card-number { font-size: 24px; letter-spacing: 1px; }
+      .payment-grid { gap: 8px; }
+      .payment-item { padding: 8px 12px; }
+      .payment-item img { height: 20px; }
+      .payment-item .name { font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="gradient-bg"></div>
+
+<!-- HEADER -->
+<header class="header">
+  <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+  <a href="index.html" class="logo">N.I.<span>F</span></a>
+  <div style="width:36px;"></div>
+</header>
+
+<main class="container">
+
+  <!-- ID UTILISATEUR (UNIQUEMENT CHIFFRES) -->
+  <div class="id-card">
+    <div class="id-card-label"><i class="fas fa-id-card"></i> VOTRE ID UNIQUE</div>
+    <div class="id-card-number" id="userIdDisplay">CHARGEMENT...</div>
+    <button class="id-card-copy" id="copyIdBtn">
+      <i class="fas fa-copy"></i> Copier mon ID
+    </button>
+  </div>
+
+  <!-- INSTRUCTIONS RAPIDES -->
+  <div class="instructions-card">
+    <h3><i class="fas fa-info-circle"></i> Recharge en 3 étapes</h3>
+    <ol class="step-list">
+      <li>
+        <span class="step-number">1</span>
+        <span>Saisissez le montant que vous souhaitez recharger</span>
+      </li>
+      <li>
+        <span class="step-number">2</span>
+        <span>Envoyez le paiement via l'un des moyens ci-dessous avec votre <span class="step-highlight">ID</span> en référence</span>
+      </li>
+      <li>
+        <span class="step-number">3</span>
+        <span>Votre compte sera crédité dans les <span class="step-highlight">15-30 minutes</span></span>
+      </li>
+    </ol>
+  </div>
+
+  <!-- FORMULAIRE MONTANT -->
+  <div class="form-card">
+    <label class="form-label"><i class="fas fa-coins"></i> Montant à recharger</label>
+    <div class="input-group">
+      <span class="currency">F</span>
+      <input type="number" id="amountInput" placeholder="Ex: 5000" min="100" step="100">
+    </div>
+
+    <!-- CALCUL DES FRAIS -->
+    <div class="calculation-box" id="calculationBox">
+      <div class="calc-row">
+        <span class="label">Montant envoyé</span>
+        <span class="value" id="calcSent">0 F</span>
+      </div>
+      <div class="calc-row">
+        <span class="label">Frais de traitement (10%)</span>
+        <span class="value danger" id="calcFee">0 F</span>
+      </div>
+      <hr class="calc-divider">
+      <div class="calc-total">
+        <span class="label">💰 Vous recevrez</span>
+        <span class="value" id="calcReceived">0 F</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOYENS DE PAIEMENT (LOGOS) -->
+  <div class="payment-methods">
+    <span class="title"><i class="fas fa-credit-card"></i> Moyens de paiement acceptés</span>
+    <div class="payment-grid">
+      <!-- Orange Money -->
+      <div class="payment-item">
+        <img src="images2.png" alt="Orange Money" loading="lazy">
+        <span class="name">Orange Money</span>
+      </div>
+      <!-- Wave -->
+      <div class="payment-item">
+        <img src="images.png" alt="Wave" loading="lazy">
+        <span class="name">Wave</span>
+      </div>
+      <!-- Moov Money -->
+      <div class="payment-item">
+        <img src="images3.png" alt="Moov Money" loading="lazy">
+        <span class="name">Moov Money</span>
+      </div>
+      <!-- Airtel Money -->
+      <div class="payment-item">
+        <img src="images1.png" alt="Airtel Money" loading="lazy">
+        <span class="name">Airtel Money</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOUTON WHATSAPP -->
+  <a href="#" class="btn-whatsapp" id="whatsappBtn" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+    Envoyer la demande via WhatsApp
+  </a>
+
+  <!-- NOTE -->
+  <div class="admin-note">
+    <i class="fas fa-shield-alt"></i>
+    Toute demande est traitée manuellement. 
+    <strong>Conservez votre reçu de paiement</strong>.
+  </div>
+
+</main>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script type="importmap">
+  {
+    "imports": {
+      "firebase/app": "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js",
+      "firebase/auth": "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js",
+      "firebase/firestore": "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js"
+    }
+  }
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+  import { getFirestore } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAVlK5ivp2dCWyr22gkeGSLbRdwTIVMrEE",
+    authDomain: "earnzone-9e82e.firebaseapp.com",
+    projectId: "earnzone-9e82e",
+    storageBucket: "earnzone-9e82e.firebasestorage.app",
+    messagingSenderId: "1076831479440",
+    appId: "1:1076831479440:web:8da3b161e9683dd98e1a15"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // ===== ÉLÉMENTS =====
+  const userIdDisplay = document.getElementById('userIdDisplay');
+  const copyIdBtn = document.getElementById('copyIdBtn');
+  const amountInput = document.getElementById('amountInput');
+  const calcSent = document.getElementById('calcSent');
+  const calcFee = document.getElementById('calcFee');
+  const calcReceived = document.getElementById('calcReceived');
+  const whatsappBtn = document.getElementById('whatsappBtn');
+  const toast = document.getElementById('toast');
+
+  let currentUserId = null;
+
+  // ===== AFFICHER L'ID =====
+  function displayUserId(user) {
+    if (user) {
+      // Générer un ID numérique à partir du UID Firebase
+      // On prend les chiffres du UID et on les concatène
+      const uid = user.uid;
+      const numericId = uid.replace(/[^0-9]/g, '');
+      // Si l'ID numérique est trop court, on complète avec des chiffres du timestamp
+      let finalId = numericId;
+      if (finalId.length < 10) {
+        const timestamp = Date.now().toString().slice(-6);
+        finalId = finalId + timestamp;
+      }
+      // Prendre les 10 premiers chiffres
+      currentUserId = finalId.slice(0, 10);
+      userIdDisplay.textContent = currentUserId;
+    } else {
+      window.location.href = 'login.html';
+    }
+  }
+
+  // ===== COPIER L'ID =====
+  copyIdBtn.addEventListener('click', async () => {
+    const id = userIdDisplay.textContent;
+    if (!id || id === 'CHARGEMENT...') return;
+
+    try {
+      await navigator.clipboard.writeText(id);
+      copyIdBtn.innerHTML = '<i class="fas fa-check"></i> ID copié !';
+      copyIdBtn.classList.add('copied');
+      showToast('✅ ID copié dans le presse-papier', 'success');
+      
+      setTimeout(() => {
+        copyIdBtn.innerHTML = '<i class="fas fa-copy"></i> Copier mon ID';
+        copyIdBtn.classList.remove('copied');
+      }, 3000);
+    } catch {
+      // Fallback mobile
+      const textarea = document.createElement('textarea');
+      textarea.value = id;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      showToast('✅ ID copié !', 'success');
+    }
+  });
+
+  // ===== CALCUL DES FRAIS =====
+  function calculateFees() {
+    const amount = parseInt(amountInput.value) || 0;
+    const fee = Math.round(amount * 0.1);
+    const received = amount - fee;
+
+    calcSent.textContent = amount.toLocaleString('fr-FR') + ' F';
+    calcFee.textContent = fee.toLocaleString('fr-FR') + ' F';
+    calcReceived.textContent = received.toLocaleString('fr-FR') + ' F';
+
+    // Mettre à jour le lien WhatsApp
+    updateWhatsAppLink(amount);
+  }
+
+  // ===== METTRE À JOUR LE LIEN WHATSAPP =====
+  function updateWhatsAppLink(amount) {
+    if (!currentUserId) return;
+    
+    const amountValue = amount || parseInt(amountInput.value) || 0;
+    if (amountValue < 100) {
+      whatsappBtn.disabled = true;
+      whatsappBtn.style.opacity = '0.5';
+      return;
+    }
+
+    whatsappBtn.disabled = false;
+    whatsappBtn.style.opacity = '1';
+    
+    const message = `Bonjour NIF, je souhaite recharger mon compte de ${amountValue.toLocaleString('fr-FR')} FCFA. Mon ID est : ${currentUserId}`;
+    // 🔴 REMPLACE LE NUMÉRO CI-DESSOUS PAR LE TIEN
+    whatsappBtn.href = `https://wa.me/22790000000?text=${encodeURIComponent(message)}`;
+  }
+
+  // ===== TOAST =====
+  function showToast(message, type = 'success') {
+    toast.textContent = message;
+    toast.className = `toast ${type}`;
+    setTimeout(() => toast.classList.add('show'), 50);
+    setTimeout(() => toast.classList.remove('show'), 4000);
+  }
+
+  // ===== ÉVÉNEMENTS =====
+  amountInput.addEventListener('input', calculateFees);
+
+  // ===== AUTH =====
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      displayUserId(user);
+      
+      // Sauvegarder l'UID pour la reconnexion
+      localStorage.setItem('NIF_current_user', user.uid);
+    } else {
+      const savedUid = localStorage.getItem('NIF_current_user');
+      if (savedUid) {
+        setTimeout(() => {
+          if (!auth.currentUser) {
+            window.location.href = 'login.html';
+          }
+        }, 1500);
+      } else {
+        window.location.href = 'login.html';
+      }
+    }
+  });
+
+</script>
+
+</body>
+</html>

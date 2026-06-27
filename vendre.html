@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Vendre ma formation - N.I.F</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#0A1128">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #D4AF37;
+      --primary-dark: #AA8417;
+      --primary-light: #F3E5AB;
+      --bg-dark: #0A1128;
+      --bg-surface: #111A36;
+      --text-light: #FFFFFF;
+      --text-dim: #94A3B8;
+      --card-bg: rgba(17, 26, 54, 0.65);
+      --card-border: rgba(212, 175, 55, 0.12);
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --glass-bg: rgba(212, 175, 55, 0.03);
+      --glass-border: rgba(212, 175, 55, 0.08);
+      --transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    .gradient-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      background: radial-gradient(ellipse 60% 50% at 15% 15%, rgba(212, 175, 55, 0.06) 0%, transparent 70%),
+                  linear-gradient(180deg, #0A1128 0%, #070C1E 100%);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 5%;
+      background: rgba(10, 17, 40, 0.95);
+      backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text-light);
+      font-size: 20px;
+      font-weight: 700;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .logo span { color: var(--primary); }
+
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover { border-color: var(--primary); }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    /* ===== HEADER PAGE ===== */
+    .page-header {
+      margin-bottom: 24px;
+    }
+
+    .page-header .subtitle {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .page-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .page-header h1 span { color: var(--primary); font-style: italic; }
+
+    .page-header p {
+      color: var(--text-dim);
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    /* ===== FORMULAIRE ===== */
+    .form-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group:last-child { margin-bottom: 0; }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-light);
+      margin-bottom: 6px;
+    }
+
+    .form-label i { color: var(--primary); margin-right: 6px; }
+    .form-label .required { color: var(--danger); margin-left: 2px; }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      color: var(--text-light);
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      transition: var(--transition);
+      outline: none;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+      background: rgba(212, 175, 55, 0.04);
+    }
+
+    .form-control::placeholder {
+      color: var(--text-dim);
+    }
+
+    .form-control:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    select.form-control {
+      appearance: none;
+      cursor: pointer;
+    }
+
+    select.form-control option {
+      background: var(--bg-dark);
+      color: var(--text-light);
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 80px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .form-hint {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    .form-hint i { margin-right: 4px; }
+
+    /* ===== UPLOAD PDF ===== */
+    .upload-zone {
+      border: 2px dashed rgba(212, 175, 55, 0.2);
+      border-radius: 12px;
+      padding: 30px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .upload-zone:hover {
+      border-color: var(--primary);
+      background: rgba(212, 175, 55, 0.04);
+    }
+
+    .upload-zone.dragover {
+      border-color: var(--primary);
+      background: rgba(212, 175, 55, 0.08);
+    }
+
+    .upload-zone.has-file {
+      border-color: var(--success);
+      background: rgba(16, 185, 129, 0.04);
+    }
+
+    .upload-zone i {
+      font-size: 36px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .upload-zone .upload-text {
+      font-size: 14px;
+      color: var(--text-dim);
+    }
+
+    .upload-zone .upload-text strong {
+      color: var(--primary);
+    }
+
+    .upload-zone .file-info {
+      display: none;
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--success);
+    }
+
+    .upload-zone.has-file .file-info {
+      display: block;
+    }
+
+    .upload-zone.has-file i {
+      color: var(--success);
+    }
+
+    .upload-zone input[type="file"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    /* ===== BARRE DE PROGRÈS ===== */
+    .progress-container {
+      display: none;
+      margin-top: 12px;
+    }
+
+    .progress-container.show {
+      display: block;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+      border-radius: 10px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 4px;
+      text-align: right;
+    }
+
+    /* ===== RÈGLES DE PUBLICATION ===== */
+    .rules-box {
+      background: rgba(245, 158, 11, 0.04);
+      border: 1px solid rgba(245, 158, 11, 0.1);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+    }
+
+    .rules-box .title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--warning);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .rules-box .title i { font-size: 16px; }
+
+    .rules-box ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .rules-box ul li {
+      font-size: 12px;
+      color: var(--text-dim);
+      padding: 3px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .rules-box ul li i {
+      color: var(--primary);
+      font-size: 10px;
+      margin-top: 3px;
+    }
+
+    /* ===== TARIFS PUBLICATION ===== */
+    .tarifs-box {
+      background: rgba(212, 175, 55, 0.04);
+      border: 1px solid rgba(212, 175, 55, 0.1);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+    }
+
+    .tarifs-box .title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .tarifs-box .title i { font-size: 16px; }
+
+    .tarif-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .tarif-item {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
+      padding: 8px 12px;
+      text-align: center;
+    }
+
+    .tarif-item .pages {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .tarif-item .prix {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* ===== BOUTON PUBLIER ===== */
+    .btn-publier {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px;
+      background: var(--primary);
+      color: var(--bg-dark);
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-publier:hover {
+      background: var(--primary-dark);
+      transform: scale(1.02);
+    }
+
+    .btn-publier:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-publier i { font-size: 18px; }
+
+    /* ===== MES FORMATIONS PUBLIÉES ===== */
+    .mes-formations {
+      margin-top: 32px;
+    }
+
+    .mes-formations .title {
+      font-size: 16px;
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 12px;
+    }
+
+    .mes-formations .title span { color: var(--primary); }
+
+    .formation-publiee {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      transition: var(--transition);
+    }
+
+    .formation-publiee:hover {
+      border-color: rgba(212, 175, 55, 0.2);
+    }
+
+    .formation-publiee .info {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .formation-publiee .info .name {
+      font-size: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .formation-publiee .info .details {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .formation-publiee .statut {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+      margin-left: 8px;
+    }
+
+    .formation-publiee .statut.en-attente {
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .formation-publiee .statut.publie {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .formation-publiee .statut.refuse {
+      background: rgba(239, 68, 68, 0.12);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 30px 20px;
+      color: var(--text-dim);
+    }
+
+    .empty-state i {
+      font-size: 32px;
+      opacity: 0.3;
+      margin-bottom: 8px;
+    }
+
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 16px;
+      right: 16px;
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 500;
+      transform: translateY(120px);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 999;
+      text-align: center;
+    }
+
+    .toast.show { transform: translateY(0); }
+    .toast.success { background: #0D2A1F; border: 1px solid var(--success); color: var(--success); }
+    .toast.error { background: #2A0D0D; border: 1px solid var(--danger); color: var(--danger); }
+    .toast.info { background: #1A1A2E; border: 1px solid var(--primary); color: var(--primary-light); }
+    .toast.warning { background: #1A1A0D; border: 1px solid var(--warning); color: var(--warning); }
+
+    @media (max-width: 500px) {
+      .page-header h1 { font-size: 24px; }
+      .tarif-grid { grid-template-columns: 1fr 1fr; }
+      .upload-zone { padding: 20px; }
+      .formation-publiee { flex-wrap: wrap; gap: 8px; }
+      .formation-publiee .statut { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="gradient-bg"></div>
+
+<!-- HEADER -->
+<header class="header">
+  <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+  <a href="index.html" class="logo">N.I.<span>F</span></a>
+  <div style="width:36px;"></div>
+</header>
+
+<main class="container">
+
+  <!-- HEADER PAGE -->
+  <div class="page-header">
+    <div class="subtitle"><i class="fas fa-upload"></i> Publier votre formation</div>
+    <h1>📤 Vendre une <span>Formation</span></h1>
+    <p>Partagez votre expertise et gagnez de l'argent. Publication payante selon le nombre de pages.</p>
+  </div>
+
+  <!-- RÈGLES -->
+  <div class="rules-box">
+    <div class="title"><i class="fas fa-shield-alt"></i> Règles de publication</div>
+    <ul>
+      <li><i class="fas fa-check-circle"></i> Vous devez être l'auteur du PDF</li>
+      <li><i class="fas fa-check-circle"></i> Format PDF uniquement</li>
+      <li><i class="fas fa-check-circle"></i> Taille maximale : 20 Mo</li>
+      <li><i class="fas fa-check-circle"></i> Validation manuelle par l'admin (24h)</li>
+      <li><i class="fas fa-check-circle"></i> Remboursement si la formation est refusée</li>
+    </ul>
+  </div>
+
+  <!-- TARIFS -->
+  <div class="tarifs-box">
+    <div class="title"><i class="fas fa-coins"></i> Frais de publication</div>
+    <div class="tarif-grid">
+      <div class="tarif-item">
+        <span class="pages">📄 1 - 70 pages</span>
+        <span class="prix">500 FCFA</span>
+      </div>
+      <div class="tarif-item">
+        <span class="pages">📚 71 - 300 pages</span>
+        <span class="prix">1 000 FCFA</span>
+      </div>
+    </div>
+    <div style="font-size:10px;color:var(--text-dim);margin-top:8px;text-align:center;">
+      <i class="fas fa-info-circle"></i> Les frais sont à payer après validation admin
+    </div>
+  </div>
+
+  <!-- FORMULAIRE -->
+  <form id="formationForm" class="form-card">
+    <div class="form-group">
+      <label class="form-label"><i class="fas fa-tag"></i> Titre de la formation <span class="required">*</span></label>
+      <input type="text" class="form-control" id="titre" placeholder="Ex: Formation Marketing Digital" required>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label"><i class="fas fa-align-left"></i> Description <span class="required">*</span></label>
+      <textarea class="form-control" id="description" placeholder="Décrivez votre formation en quelques lignes..." required></textarea>
+      <div class="form-hint"><i class="fas fa-info-circle"></i> 50-200 caractères recommandés</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label"><i class="fas fa-layer-group"></i> Catégorie <span class="required">*</span></label>
+      <select class="form-control" id="categorie" required>
+        <option value="">Sélectionner une catégorie</option>
+        <option value="Finance">Finance & Investissement</option>
+        <option value="Marketing">Marketing & Communication</option>
+        <option value="Entrepreneuriat">Entrepreneuriat</option>
+        <option value="Strategie">Stratégie & Développement</option>
+        <option value="Technologie">Technologie & Digital</option>
+        <option value="Personnel">Développement Personnel</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label"><i class="fas fa-coins"></i> Prix de vente (FCFA) <span class="required">*</span></label>
+      <input type="number" class="form-control" id="prix" placeholder="Ex: 15000" min="1000" step="500" required>
+      <div class="form-hint"><i class="fas fa-info-circle"></i> Prix minimum : 1 000 FCFA</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label"><i class="fas fa-file-pdf"></i> Fichier PDF <span class="required">*</span></label>
+      <div class="upload-zone" id="uploadZone">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <div class="upload-text">
+          <strong>Cliquez ici</strong> ou glissez votre PDF
+        </div>
+        <div class="file-info" id="fileInfo">
+          <i class="fas fa-check-circle"></i> Fichier sélectionné : <span id="fileName">-</span>
+        </div>
+        <input type="file" id="pdfFile" accept=".pdf" required>
+      </div>
+      <div class="progress-container" id="progressContainer">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">0%</div>
+      </div>
+      <div class="form-hint"><i class="fas fa-info-circle"></i> Taille maximale : 20 Mo</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label"><i class="fas fa-image"></i> Image de couverture (URL)</label>
+      <input type="url" class="form-control" id="image" placeholder="https://exemple.com/couverture.jpg">
+      <div class="form-hint"><i class="fas fa-info-circle"></i> Optionnel - Lien vers une image de couverture</div>
+    </div>
+  </form>
+
+  <!-- BOUTON PUBLIER -->
+  <button class="btn-publier" id="publierBtn">
+    <i class="fas fa-cloud-upload-alt"></i> Publier la formation
+  </button>
+
+  <!-- MES FORMATIONS PUBLIÉES -->
+  <div class="mes-formations">
+    <div class="title">📚 Mes <span>formations</span> publiées</div>
+    <div id="mesFormationsList">
+      <div class="empty-state">
+        <i class="fas fa-plus-circle"></i>
+        <p>Vous n'avez pas encore publié de formation.</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script type="importmap">
+  {
+    "imports": {
+      "firebase/app": "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js",
+      "firebase/auth": "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js",
+      "firebase/firestore": "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js",
+      "firebase/storage": "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js"
+    }
+  }
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+  import { getFirestore, doc, getDoc, addDoc, collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+  import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAVlK5ivp2dCWyr22gkeGSLbRdwTIVMrEE",
+    authDomain: "earnzone-9e82e.firebaseapp.com",
+    projectId: "earnzone-9e82e",
+    storageBucket: "earnzone-9e82e.firebasestorage.app",
+    messagingSenderId: "1076831479440",
+    appId: "1:1076831479440:web:8da3b161e9683dd98e1a15"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+
+  // ===== ÉLÉMENTS =====
+  const form = document.getElementById('formationForm');
+  const publierBtn = document.getElementById('publierBtn');
+  const mesFormationsList = document.getElementById('mesFormationsList');
+  const toast = document.getElementById('toast');
+
+  const titreInput = document.getElementById('titre');
+  const descriptionInput = document.getElementById('description');
+  const categorieInput = document.getElementById('categorie');
+  const prixInput = document.getElementById('prix');
+  const imageInput = document.getElementById('image');
+  const pdfFileInput = document.getElementById('pdfFile');
+  const uploadZone = document.getElementById('uploadZone');
+  const fileInfo = document.getElementById('fileInfo');
+  const fileName = document.getElementById('fileName');
+  const progressContainer = document.getElementById('progressContainer');
+  const progressFill = document.getElementById('progressFill');
+  const progressText = document.getElementById('progressText');
+
+  let currentUser = null;
+  let selectedFile = null;
+  let uploadTask = null;
+
+  // ===== UPLOAD ZONE =====
+  uploadZone.addEventListener('click', () => pdfFileInput.click());
+
+  uploadZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadZone.classList.add('dragover');
+  });
+
+  uploadZone.addEventListener('dragleave', () => {
+    uploadZone.classList.remove('dragover');
+  });
+
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length) {
+      handleFile(e.dataTransfer.files[0]);
+    }
+  });
+
+  pdfFileInput.addEventListener('change', () => {
+    if (pdfFileInput.files.length) {
+      handleFile(pdfFileInput.files[0]);
+    }
+  });
+
+  // ===== GÉRER LE FICHIER =====
+  function handleFile(file) {
+    if (file.type !== 'application/pdf') {
+      showToast('❌ Veuillez sélectionner un fichier PDF valide', 'error');
+      pdfFileInput.value = '';
+      return;
+    }
+
+    if (file.size > 20 * 1024 * 1024) {
+      showToast('❌ Le fichier est trop volumineux (max 20 Mo)', 'error');
+      pdfFileInput.value = '';
+      return;
+    }
+
+    selectedFile = file;
+    fileName.textContent = file.name;
+    uploadZone.classList.add('has-file');
+    showToast('✅ Fichier PDF sélectionné : ' + file.name, 'success');
+  }
+
+  // ===== PUBLIER =====
+  publierBtn.addEventListener('click', async () => {
+    if (!currentUser) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    // Validation
+    const titre = titreInput.value.trim();
+    const description = descriptionInput.value.trim();
+    const categorie = categorieInput.value;
+    const prix = parseInt(prixInput.value);
+    const image = imageInput.value.trim();
+
+    if (!titre || titre.length < 3) {
+      showToast('❌ Veuillez saisir un titre valide (minimum 3 caractères)', 'error');
+      return;
+    }
+
+    if (!description || description.length < 20) {
+      showToast('❌ Veuillez saisir une description (minimum 20 caractères)', 'error');
+      return;
+    }
+
+    if (!categorie) {
+      showToast('❌ Veuillez sélectionner une catégorie', 'error');
+      return;
+    }
+
+    if (!prix || prix < 1000) {
+      showToast('❌ Veuillez saisir un prix valide (minimum 1 000 FCFA)', 'error');
+      return;
+    }
+
+    if (!selectedFile) {
+      showToast('❌ Veuillez sélectionner un fichier PDF', 'error');
+      return;
+    }
+
+    try {
+      publierBtn.disabled = true;
+      publierBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Upload du PDF...';
+
+      // 1. Upload du PDF vers Firebase Storage
+      const timestamp = Date.now();
+      const filePath = `formations/${currentUser.uid}/${timestamp}_${selectedFile.name}`;
+      const storageRef = ref(storage, filePath);
+      uploadTask = uploadBytesResumable(storageRef, selectedFile);
+
+      // Barre de progression
+      progressContainer.classList.add('show');
+
+      const uploadPromise = new Promise((resolve, reject) => {
+        uploadTask.on('state_changed',
+          (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            progressFill.style.width = progress + '%';
+            progressText.textContent = Math.round(progress) + '%';
+          },
+          (error) => reject(error),
+          async () => {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            resolve({ url: downloadURL, path: filePath });
+          }
+        );
+      });
+
+      const uploadResult = await uploadPromise;
+
+      // 2. Récupérer les infos utilisateur
+      const userRef = doc(db, 'users', currentUser.uid);
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.exists() ? userSnap.data() : {};
+      const vendeurNom = userData.fullName || userData.prenom || 'Utilisateur N.I.F';
+      const vendeurEmail = userData.email || currentUser.email || '';
+
+      // 3. Créer la formation dans Firestore
+      publierBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enregistrement...';
+
+      const formationData = {
+        titre,
+        description,
+        categorie,
+        prix,
+        image: image || 'https://images.pexels.com/photos/3183197/pexels-photo-3183197.jpeg?auto=compress&cs=tinysrgb&w=200&h=240&fit=crop',
+        vendeurId: currentUser.uid,
+        vendeurNom,
+        vendeurEmail,
+        fichierNom: selectedFile.name,
+        fichierTaille: selectedFile.size,
+        fichierUrl: uploadResult.url,
+        fichierPath: uploadResult.path,
+        pages: 0, // Sera rempli par l'admin
+        statut: 'en_attente',
+        motifRefus: '',
+        fraisPublication: 0,
+        fraisPaye: false,
+        dateCreation: new Date().toISOString(),
+        datePublication: null,
+        dateValidation: null,
+        acheteurs: [],
+        ventes: 0,
+        noteMoyenne: 0,
+        nombreAvis: 0
+      };
+
+      await addDoc(collection(db, 'formations'), formationData);
+
+      // 4. Confirmation
+      showToast('✅ Formation soumise avec succès ! En attente de validation admin.', 'success');
+      
+      // Réinitialiser le formulaire
+      form.reset();
+      selectedFile = null;
+      uploadZone.classList.remove('has-file');
+      progressContainer.classList.remove('show');
+      progressFill.style.width = '0%';
+      progressText.textContent = '0%';
+      pdfFileInput.value = '';
+
+      // Recharger la liste
+      loadMesFormations();
+
+    } catch (error) {
+      console.error('Erreur publication:', error);
+      
+      // Annuler l'upload si erreur
+      if (uploadTask) {
+        try { uploadTask.cancel(); } catch (e) {}
+      }
+      
+      showToast('❌ Erreur lors de la publication. Réessayez.', 'error');
+    } finally {
+      publierBtn.disabled = false;
+      publierBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Publier la formation';
+    }
+  });
+
+  // ===== CHARGER MES FORMATIONS =====
+  async function loadMesFormations() {
+    if (!currentUser) return;
+
+    try {
+      const q = query(
+        collection(db, 'formations'),
+        where('vendeurId', '==', currentUser.uid),
+        orderBy('dateCreation', 'desc')
+      );
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        mesFormationsList.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-plus-circle"></i>
+            <p>Vous n'avez pas encore publié de formation.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const statutClass = data.statut === 'public' ? 'publie' : data.statut === 'refuse' ? 'refuse' : 'en-attente';
+        const statutLabel = data.statut === 'public' ? '✅ Publiée' : data.statut === 'refuse' ? '❌ Refusée' : '⏳ En attente';
+        const pagesInfo = data.pages ? `📄 ${data.pages} pages` : '📄 Pages non comptées';
+
+        html += `
+          <div class="formation-publiee">
+            <div class="info">
+              <span class="name">${data.titre}</span>
+              <span class="details">${data.prix.toLocaleString('fr-FR')} FCFA • ${data.categorie} • ${pagesInfo}</span>
+            </div>
+            <span class="statut ${statutClass}">${statutLabel}</span>
+          </div>
+        `;
+      });
+
+      mesFormationsList.innerHTML = html;
+
+    } catch (error) {
+      console.error('Erreur chargement formations:', error);
+    }
+  }
+
+  // ===== TOAST =====
+  function showToast(message, type = 'success') {
+    toast.textContent = message;
+    toast.className = `toast ${type}`;
+    setTimeout(() => toast.classList.add('show'), 50);
+    setTimeout(() => toast.classList.remove('show'), 5000);
+  }
+
+  // ===== AUTH =====
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      currentUser = user;
+      localStorage.setItem('NIF_current_user', user.uid);
+      loadMesFormations();
+    } else {
+      const savedUid = localStorage.getItem('NIF_current_user');
+      if (savedUid) {
+        setTimeout(() => {
+          if (!auth.currentUser) {
+            window.location.href = 'login.html';
+          }
+        }, 1500);
+      } else {
+        window.location.href = 'login.html';
+      }
+    }
+  });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Boutique - N.I.F</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#0A1128">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #D4AF37;
+      --primary-dark: #AA8417;
+      --primary-light: #F3E5AB;
+      --bg-dark: #0A1128;
+      --bg-surface: #111A36;
+      --text-light: #FFFFFF;
+      --text-dim: #94A3B8;
+      --card-bg: rgba(17, 26, 54, 0.65);
+      --card-border: rgba(212, 175, 55, 0.12);
+      --success: #10B981;
+      --glass-bg: rgba(212, 175, 55, 0.03);
+      --glass-border: rgba(212, 175, 55, 0.08);
+      --transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    .gradient-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      background: radial-gradient(ellipse 60% 50% at 15% 15%, rgba(212, 175, 55, 0.06) 0%, transparent 70%),
+                  linear-gradient(180deg, #0A1128 0%, #070C1E 100%);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 5%;
+      background: rgba(10, 17, 40, 0.95);
+      backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text-light);
+      font-size: 20px;
+      font-weight: 700;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .logo span { color: var(--primary); }
+
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover { border-color: var(--primary); }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    /* ===== HEADER PAGE ===== */
+    .page-header {
+      margin-bottom: 24px;
+    }
+
+    .page-header .subtitle {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .page-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .page-header h1 span { color: var(--primary); font-style: italic; }
+
+    .page-header p {
+      color: var(--text-dim);
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    /* ===== LISTE DES FORMATIONS ===== */
+    .formations-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .formation-card {
+      display: flex;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: var(--transition);
+      height: 145px;
+    }
+
+    .formation-card:hover {
+      border-color: rgba(212, 175, 55, 0.3);
+      transform: translateY(-2px);
+      background: rgba(17, 26, 54, 0.85);
+    }
+
+    .formation-card.bought {
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .formation-card .img-wrap {
+      position: relative;
+      width: 110px;
+      min-width: 110px;
+      height: 100%;
+    }
+
+    .formation-card .img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.8);
+      transition: var(--transition);
+    }
+
+    .formation-card:hover .img-wrap img {
+      filter: brightness(0.95);
+      transform: scale(1.03);
+    }
+
+    .formation-card .badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(10, 17, 40, 0.85);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: var(--primary-light);
+      font-size: 9px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .formation-card .badge.bought-badge {
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .formation-card .content {
+      flex: 1;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .formation-card .title {
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Playfair Display', serif;
+      color: var(--text-light);
+      line-height: 1.3;
+      margin-bottom: 2px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .formation-card .description {
+      color: var(--text-dim);
+      font-size: 11px;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .formation-card .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .formation-card .price {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .formation-card .price.bought-price {
+      color: var(--success);
+    }
+
+    .formation-card .action {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: var(--transition);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .formation-card .action:hover {
+      background: rgba(212, 175, 55, 0.08);
+    }
+
+    .formation-card .action.bought-action {
+      color: var(--success);
+    }
+
+    .formation-card .action.bought-action:hover {
+      background: rgba(16, 185, 129, 0.08);
+    }
+
+    .formation-card:hover .action i {
+      transform: translateX(2px);
+    }
+
+    /* ===== PANIER VIDE ===== */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .empty-state i {
+      font-size: 48px;
+      color: var(--text-dim);
+      opacity: 0.3;
+      margin-bottom: 16px;
+    }
+
+    .empty-state h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--text-light);
+    }
+
+    .empty-state p {
+      color: var(--text-dim);
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 16px;
+      right: 16px;
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 500;
+      transform: translateY(120px);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 999;
+      text-align: center;
+    }
+
+    .toast.show { transform: translateY(0); }
+    .toast.success { background: #0D2A1F; border: 1px solid var(--success); color: var(--success); }
+    .toast.error { background: #2A0D0D; border: 1px solid #EF4444; color: #EF4444; }
+    .toast.info { background: #1A1A2E; border: 1px solid var(--primary); color: var(--primary-light); }
+
+    @media (max-width: 500px) {
+      .formation-card { height: 130px; }
+      .formation-card .img-wrap { width: 90px; min-width: 90px; }
+      .page-header h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="gradient-bg"></div>
+
+<!-- HEADER -->
+<header class="header">
+  <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+  <a href="index.html" class="logo">N.I.<span>F</span></a>
+  <div style="width:36px;"></div>
+</header>
+
+<main class="container">
+
+  <!-- HEADER PAGE -->
+  <div class="page-header">
+    <div class="subtitle"><i class="fas fa-store"></i> Notre Catalogue</div>
+    <h1>🛒 Acheter des <span>Formations</span></h1>
+    <p>Découvrez nos formations premium et développez vos compétences.</p>
+  </div>
+
+  <!-- LISTE DES FORMATIONS -->
+  <div class="formations-list" id="formationsList">
+    <!-- Les formations seront générées par JavaScript -->
+  </div>
+
+</main>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script type="importmap">
+  {
+    "imports": {
+      "firebase/app": "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js",
+      "firebase/auth": "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js",
+      "firebase/firestore": "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js"
+    }
+  }
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+  import { getFirestore, doc, getDoc, updateDoc, arrayUnion, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAVlK5ivp2dCWyr22gkeGSLbRdwTIVMrEE",
+    authDomain: "earnzone-9e82e.firebaseapp.com",
+    projectId: "earnzone-9e82e",
+    storageBucket: "earnzone-9e82e.firebasestorage.app",
+    messagingSenderId: "1076831479440",
+    appId: "1:1076831479440:web:8da3b161e9683dd98e1a15"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const formationsList = document.getElementById('formationsList');
+  const toast = document.getElementById('toast');
+
+  let currentUser = null;
+  let userData = null;
+
+  // ===== CATALOGUE DES FORMATIONS (15) =====
+const FORMATIONS_CATALOG = [
+  // === FINANCE ===
+  {
+    id: 'formation-1',
+    titre: 'Lancement d\'Entreprise',
+    description: 'Modèles opérationnels pour structurer une entreprise rentable.',
+    categorie: 'Stratégie',
+    prix: 15000,
+    image: 'https://images.pexels.com/photos/3183197/pexels-photo-3183197.jpeg?auto=compress&cs=tinysrgb&w=200&h=240&fit=crop'
+  },
+  {
+    id: 'formation-2',
+    titre: 'Ingénierie Marketing',
+    description: 'Maîtrise des canaux numériques pour l\'acquisition premium.',
+    categorie: 'Marketing',
+    prix: 12000,
+    image: 'https://images.pexels.com/photos/669615/pexels-photo-669615.jpeg?auto=compress&cs=tinysrgb&w=200&h=240&fit=crop'
+  },
+  {
+    id: 'formation-3',
+    titre: 'Gestion de Portefeuille',
+    description: 'Apprenez à gérer vos investissements et optimiser vos rendements.',
+    categorie: 'Finance',
+    prix: 20000,
+    image: 'https://images.pexels.com/photos/48148/document-agreement-documents-sign-48148.jpeg?auto=compress&cs=tinysrgb&w=200&h=240&fit=crop'
+  },
+  {
+    id: 'formation-4',
+    titre: 'Entrepreneuriat Digital',
+    description: 'Créez et développez votre activité en ligne avec des stratégies éprouvées.',
+    categorie: 'Entrepreneuriat',
+    prix: 18000,
+    image: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=200&h=240&fit=crop'
+  },
+  // === MARKETING & COMMUNICATION ===
+  {
+    id: 'formation-5',
+    titre: 'Social Media Management',
+    description: 'Stratégies avancées pour gérer et monétiser les réseaux sociaux.',
+    categorie: 'Marketing',
+    prix: 10000,
+    image: 'https://images.pexels.com/photos/267350/pexels-photo-267350.jpeg?auto=compress&cs=tinysrgb&w=200&h=240&fit=crop'
+  },
+  {
+    id: 'formation-6',
+    titre: 'Copywriting Pro',
+    description: 'Écrivez des textes qui vendent et convertissent vos prospects.',
+    categorie: 'Marketing',
+    prix: 8000,
+    image: 'https://images.pexels.com/photos/210661/pexels-photo-210661.jpeg?auto=compress&cs=tinysrgb&w=200&h=240&fit=crop'
+  },
+  {
+    id: 'formation-7',
+    titre: 'Branding & Identité Visuelle',
+    description: 'Créez une marque forte avec une identité visuelle professionnelle.',
+    categorie: 'Marketing',
+    prix: 14000,
+    image: 'https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=200&h=240&fit=crop'
+  },
+  // === ENTREPRENEURIAT ===
+  {
+    id: 'formation-8',
+    titre: 'Business Plan & Levée de Fonds',
+    description: 'Construisez un business plan solide et attirez les investisseurs.',
+    categorie: 'Entrepreneuriat',
+    prix: 22000,
+    image: 'https://images.pexels.com/photos/256514/pexels-photo-256514.jpeg?auto=compress&cs=tinysrgb&w=200&h=240&fit=crop'
+  },
+  {
+    id: 'formation-9',
+    titre: 'E-commerce & Dropshipping',
+    description: 'Lancez votre boutique en ligne et vendez sans stock.',
+    categorie: 'Entrepreneuriat',
+    prix: 16000,
+    image: 'https://images.pexels.com/photos/5632400/pexels-photo-5632400.jpeg?auto=compress&cs=tinysrgb&w=200&h=240&fit=crop'
+  },
+  {
+    id: 'formation-10',
+    titre: 'Leadership & Management',
+    description: 'Devenez un leader d\'exception et gérez vos équipes efficacement.',
+    categorie: 'Entrepreneuriat',
+    prix: 19000,
+    image: 'https://images.pexels.com/photos/3182763/pexels-photo-3182763.jpeg?auto=compress&cs=tinysrgb&w=200&h=240&fit=crop'
+  },
+  // === FINANCE & INVESTISSEMENT ===
+  {
+    id: 'formation-11',
+    titre: 'Cryptomonnaies & Blockchain',
+    description: 'Comprenez et investissez dans les actifs numériques en toute sécurité.',
+    categorie: 'Finance',
+    prix: 25000,
+    image: 'https://images.pexels.com/photos/7567368/pexels-photo-7567368.jpeg?auto=compress&cs=tinysrgb&w=200&h=240&fit=crop'
+  },
+  {
+    id: 'formation-12',
+    titre: 'Bourse & Trading',
+    description: 'Maîtrisez les marchés financiers et développez vos stratégies de trading.',
+    categorie: 'Finance',
+    prix: 28000,
+    image: 'https://images.pexels.com/photos/210600/pexels-photo-210600.jpeg?auto=compress&cs=tinysrgb&w=200&h=240&fit=crop'
+  },
+  {
+    id: 'formation-13',
+    titre: 'Épargne & Retraite',
+    description: 'Planifiez votre avenir financier avec des stratégies d\'épargne efficaces.',
+    categorie: 'Finance',
+    prix: 13000,
+    image: 'https://images.pexels.com/photos/4386326/pexels-photo-4386326.jpeg?auto=compress&cs=tinysrgb&w=200&h=240&fit=crop'
+  },
+  // === STRATÉGIE & DÉVELOPPEMENT ===
+  {
+    id: 'formation-14',
+    titre: 'Stratégie d\'Innovation',
+    description: 'Développez une culture d\'innovation et restez compétitif.',
+    categorie: 'Stratégie',
+    prix: 21000,
+    image: 'https://images.pexels.com/photos/3184357/pexels-photo-3184357.jpeg?auto=compress&cs=tinysrgb&w=200&h=240&fit=crop'
+  },
+  {
+    id: 'formation-15',
+    titre: 'Développement Personnel & Productivité',
+    description: 'Optimisez votre temps et atteignez vos objectifs plus rapidement.',
+    categorie: 'Stratégie',
+    prix: 9000,
+    image: 'https://images.pexels.com/photos/4060141/pexels-photo-4060141.jpeg?auto=compress&cs=tinysrgb&w=200&h=240&fit=crop'
+  }
+];
+
+  // ===== AFFICHER LES FORMATIONS =====
+  function renderFormations() {
+    const userPurchases = userData?.formationsAchetees || [];
+    
+    formationsList.innerHTML = '';
+
+    FORMATIONS_CATALOG.forEach(formation => {
+      const isBought = userPurchases.includes(formation.id);
+      const card = document.createElement('div');
+      card.className = `formation-card${isBought ? ' bought' : ''}`;
+      
+      card.innerHTML = `
+        <div class="img-wrap">
+          <img src="${formation.image}" alt="${formation.titre}" loading="lazy">
+          <span class="badge${isBought ? ' bought-badge' : ''}">${isBought ? '✅ Possédé' : formation.categorie}</span>
+        </div>
+        <div class="content">
+          <h3 class="title">${formation.titre}</h3>
+          <p class="description">${formation.description}</p>
+          <div class="footer">
+            <span class="price${isBought ? ' bought-price' : ''}">
+              ${isBought ? '📖 Débloqué' : formation.prix.toLocaleString('fr-FR') + ' FCFA'}
+            </span>
+            <button class="action${isBought ? ' bought-action' : ''}" data-formation-id="${formation.id}">
+              ${isBought ? 'Ouvrir' : 'Acheter'} <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      `;
+
+      const actionBtn = card.querySelector('.action');
+      actionBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        handleFormationAction(formation.id, formation.prix);
+      });
+
+      // Cliquer sur la carte = même action
+      card.addEventListener('click', () => {
+        handleFormationAction(formation.id, formation.prix);
+      });
+
+      formationsList.appendChild(card);
+    });
+  }
+
+  // ===== GÉRER L'ACTION (ACHETER OU OUVRIR) =====
+  async function handleFormationAction(formationId, prix) {
+    if (!currentUser) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    const userPurchases = userData?.formationsAchetees || [];
+
+    // Si déjà acheté → ouvrir la formation
+    if (userPurchases.includes(formationId)) {
+      showToast('📖 Accès à la formation...', 'info');
+      // Rediriger vers la page de la formation
+      // window.location.href = `formation-${formationId}.html`;
+      return;
+    }
+
+    // Vérifier le solde
+    const balance = userData?.balance || 0;
+    if (balance < prix) {
+      showToast(`❌ Solde insuffisant ! Il vous manque ${(prix - balance).toLocaleString('fr-FR')} FCFA`, 'error');
+      return;
+    }
+
+    // Confirmation d'achat
+    if (!confirm(`Confirmer l'achat de cette formation pour ${prix.toLocaleString('fr-FR')} FCFA ?`)) {
+      return;
+    }
+
+    try {
+      // 1. Débiter le compte de l'utilisateur
+      const userRef = doc(db, 'users', currentUser.uid);
+      const newBalance = balance - prix;
+      
+      await updateDoc(userRef, {
+        balance: newBalance,
+        formationsAchetees: arrayUnion(formationId),
+        totalAchats: (userData.totalAchats || 0) + 1
+      });
+
+      // 2. Enregistrer la transaction
+      await addDoc(collection(db, 'transactions'), {
+        userId: currentUser.uid,
+        type: 'achat',
+        formationId: formationId,
+        montant: prix,
+        date: new Date().toISOString(),
+        statut: 'completé'
+      });
+
+      // 3. Mettre à jour les données locales
+      userData.balance = newBalance;
+      userData.formationsAchetees = [...(userData.formationsAchetees || []), formationId];
+      userData.totalAchats = (userData.totalAchats || 0) + 1;
+
+      showToast(`✅ Achat réussi ! ${prix.toLocaleString('fr-FR')} FCFA débités`, 'success');
+      
+      // Re-rendre les cartes
+      renderFormations();
+
+    } catch (error) {
+      console.error('Erreur achat:', error);
+      showToast('❌ Erreur lors de l\'achat. Réessayez.', 'error');
+    }
+  }
+
+  // ===== TOAST =====
+  function showToast(message, type = 'success') {
+    toast.textContent = message;
+    toast.className = `toast ${type}`;
+    setTimeout(() => toast.classList.add('show'), 50);
+    setTimeout(() => toast.classList.remove('show'), 4000);
+  }
+
+  // ===== CHARGER LES DONNÉES UTILISATEUR =====
+  async function loadUserData(user) {
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      const userSnap = await getDoc(userRef);
+      
+      if (userSnap.exists()) {
+        userData = userSnap.data();
+        userData.formationsAchetees = userData.formationsAchetees || [];
+        renderFormations();
+      } else {
+        // Créer un nouvel utilisateur
+        userData = { 
+          balance: 0, 
+          formationsAchetees: [],
+          totalAchats: 0,
+          totalVentes: 0,
+          totalRevenus: 0,
+          totalRetraits: 0
+        };
+        renderFormations();
+      }
+    } catch (error) {
+      console.error('Erreur chargement user:', error);
+      renderFormations();
+    }
+  }
+
+  // ===== AUTH =====
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      currentUser = user;
+      localStorage.setItem('NIF_current_user', user.uid);
+      loadUserData(user);
+    } else {
+      const savedUid = localStorage.getItem('NIF_current_user');
+      if (savedUid) {
+        setTimeout(() => {
+          if (!auth.currentUser) {
+            window.location.href = 'login.html';
+          }
+        }, 1500);
+      } else {
+        window.location.href = 'login.html';
+      }
+    }
+  });
+
+</script>
+
+</body>
+</html>
