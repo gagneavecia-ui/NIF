@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - N.I.F</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#0A1128">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #D4AF37;
+      --primary-dark: #AA8417;
+      --primary-light: #F3E5AB;
+      --bg-dark: #0A1128;
+      --bg-surface: #111A36;
+      --text-light: #FFFFFF;
+      --text-dim: #94A3B8;
+      --card-bg: rgba(17, 26, 54, 0.65);
+      --card-border: rgba(212, 175, 55, 0.12);
+      --success: #10B981;
+      --danger: #EF4444;
+      --warning: #F59E0B;
+      --transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      --glass-bg: rgba(212, 175, 55, 0.03);
+      --glass-border: rgba(212, 175, 55, 0.08);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    .gradient-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      background: radial-gradient(ellipse 60% 50% at 15% 15%, rgba(212, 175, 55, 0.06) 0%, transparent 70%),
+                  linear-gradient(180deg, #0A1128 0%, #070C1E 100%);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 5%;
+      background: rgba(10, 17, 40, 0.95);
+      backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text-light);
+      font-size: 20px;
+      font-weight: 700;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .logo span { color: var(--primary); }
+
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover { border-color: var(--primary); }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    .page-header {
+      margin-bottom: 24px;
+    }
+
+    .page-header .subtitle {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .page-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .page-header h1 span { color: var(--primary); font-style: italic; }
+
+    .page-header p {
+      color: var(--text-dim);
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .admin-form {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .admin-form .form-group {
+      margin-bottom: 16px;
+    }
+
+    .admin-form label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .admin-form input,
+    .admin-form select,
+    .admin-form textarea {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(10, 17, 40, 0.6);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 12px;
+      color: var(--text-light);
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      transition: var(--transition);
+      outline: none;
+    }
+
+    .admin-form input:focus,
+    .admin-form select:focus,
+    .admin-form textarea:focus {
+      border-color: var(--primary);
+      background: rgba(10, 17, 40, 0.9);
+    }
+
+    .admin-form textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .admin-form select option {
+      background: var(--bg-dark);
+      color: var(--text-light);
+    }
+
+    .admin-form .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* ===== IMAGE ===== */
+    .image-upload-section {
+      margin-bottom: 16px;
+    }
+
+    .image-upload-section .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .image-upload-section .label-row label {
+      margin-bottom: 0;
+    }
+
+    .image-preview-container {
+      position: relative;
+      width: 100%;
+      height: 160px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: rgba(10, 17, 40, 0.6);
+      border: 2px dashed rgba(212, 175, 55, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .image-preview-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .image-preview-container .placeholder {
+      text-align: center;
+      color: var(--text-dim);
+    }
+
+    .image-preview-container .placeholder i {
+      font-size: 32px;
+      opacity: 0.3;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .image-preview-container .placeholder p {
+      font-size: 12px;
+    }
+
+    .image-preview-container .remove-image {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      background: rgba(239, 68, 68, 0.9);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      cursor: pointer;
+      font-size: 12px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .image-preview-container .remove-image.show {
+      display: flex;
+    }
+
+    .image-url-input {
+      margin-top: 10px;
+    }
+
+    .image-url-input input {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(10, 17, 40, 0.6);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 10px;
+      color: var(--text-light);
+      font-size: 13px;
+      outline: none;
+    }
+
+    .image-url-input input:focus {
+      border-color: var(--primary);
+    }
+
+    .image-url-input .or-text {
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 11px;
+      margin: 8px 0;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border: none;
+      border-radius: 12px;
+      color: #0A1128;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      margin-top: 8px;
+    }
+
+    .btn-submit:active { transform: scale(0.97); }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .formations-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .formation-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: rgba(17, 26, 54, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 12px;
+      transition: var(--transition);
+    }
+
+    .formation-item:hover {
+      background: rgba(17, 26, 54, 0.8);
+      border-color: rgba(212, 175, 55, 0.15);
+    }
+
+    .formation-item .info {
+      flex: 1;
+    }
+
+    .formation-item .info .title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-light);
+    }
+
+    .formation-item .info .meta {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    .formation-item .info .meta span {
+      margin-right: 12px;
+    }
+
+    .formation-item .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .formation-item .actions button {
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .formation-item .actions button:active { transform: scale(0.92); }
+
+    .btn-delete {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--danger);
+    }
+
+    .btn-delete:hover {
+      background: rgba(239, 68, 68, 0.25);
+    }
+
+    .btn-toggle {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+    }
+
+    .btn-toggle:hover {
+      background: rgba(16, 185, 129, 0.25);
+    }
+
+    .btn-toggle.draft {
+      color: var(--warning);
+      background: rgba(245, 158, 11, 0.15);
+    }
+
+    .btn-toggle.draft:hover {
+      background: rgba(245, 158, 11, 0.25);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 16px;
+      right: 16px;
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 500;
+      transform: translateY(120px);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 999;
+      text-align: center;
+    }
+
+    .toast.show { transform: translateY(0); }
+    .toast.success { background: #0D2A1F; border: 1px solid var(--success); color: var(--success); }
+    .toast.error { background: #2A0D0D; border: 1px solid #EF4444; color: #EF4444; }
+    .toast.info { background: #1A1A2E; border: 1px solid var(--primary); color: var(--primary-light); }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-dim);
+    }
+
+    .empty-state i {
+      font-size: 36px;
+      opacity: 0.3;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 500px) {
+      .admin-form .row-2 {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      .page-header h1 { font-size: 24px; }
+      .image-preview-container { height: 120px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="gradient-bg"></div>
+
+<header class="header">
+  <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+  <a href="index.html" class="logo">N.I.<span>F</span></a>
+  <div style="width:36px;"></div>
+</header>
+
+<main class="container">
+
+  <div class="page-header">
+    <div class="subtitle"><i class="fas fa-lock"></i> Administration</div>
+    <h1>📚 Gérer les <span>Formations</span></h1>
+    <p>Ajoutez, modifiez ou supprimez les formations de la boutique.</p>
+  </div>
+
+  <div class="admin-form">
+    <h3 style="font-family: 'Playfair Display'; margin-bottom: 16px; font-size: 18px;">
+      <i class="fas fa-plus-circle" style="color: var(--primary);"></i> Ajouter une formation
+    </h3>
+    
+    <form id="addForm">
+      <div class="row-2">
+        <div class="form-group">
+          <label>Titre *</label>
+          <input type="text" id="titre" placeholder="Nom de la formation" required>
+        </div>
+        <div class="form-group">
+          <label>Catégorie *</label>
+          <select id="categorie" required>
+            <option value="Finance">💰 Finance</option>
+            <option value="Marketing">📊 Marketing</option>
+            <option value="Entrepreneuriat">🚀 Entrepreneuriat</option>
+            <option value="Stratégie">🎯 Stratégie</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Description *</label>
+        <textarea id="description" placeholder="Description détaillée de la formation" required></textarea>
+      </div>
+
+      <div class="row-2">
+        <div class="form-group">
+          <label>Prix (FCFA) *</label>
+          <input type="number" id="prix" placeholder="0 = Gratuit" value="0" required>
+        </div>
+        <div class="form-group">
+          <label>Nombre de pages</label>
+          <input type="number" id="pages" placeholder="10" value="10">
+        </div>
+      </div>
+
+      <!-- ===== IMAGE ===== -->
+      <div class="image-upload-section">
+        <div class="label-row">
+          <label>Image de la formation</label>
+          <span style="font-size: 10px; color: var(--text-dim);">(Optionnel)</span>
+        </div>
+
+        <div class="image-preview-container" id="imageDropZone">
+          <div class="placeholder" id="imagePlaceholder">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Cliquez pour choisir une image</p>
+            <p style="font-size: 10px; opacity: 0.6;">PNG, JPG, WebP</p>
+          </div>
+          <img id="imagePreview" style="display: none;" alt="Aperçu">
+          <button type="button" class="remove-image" id="removeImageBtn">
+            <i class="fas fa-times"></i>
+          </button>
+          <input type="file" id="imageFileInput" accept="image/*" style="display: none;">
+        </div>
+
+        <div class="image-url-input">
+          <div class="or-text">— OU —</div>
+          <input type="text" id="imageUrlInput" placeholder="https://exemple.com/image.jpg (URL depuis Internet)">
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div class="form-group">
+          <label>Vendeur</label>
+          <input type="text" id="vendeurNom" placeholder="N.I.F Admin">
+        </div>
+        <div class="form-group">
+          <label>Email vendeur</label>
+          <input type="email" id="vendeurEmail" placeholder="admin@nif.com">
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit" id="submitBtn">
+        <i class="fas fa-save"></i> Ajouter la formation
+      </button>
+    </form>
+  </div>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+    <h3 style="font-family: 'Playfair Display'; font-size: 18px;">
+      <i class="fas fa-list" style="color: var(--primary);"></i> Formations existantes
+    </h3>
+    <span id="totalCount" style="color: var(--text-dim); font-size: 13px;">0 formation(s)</span>
+  </div>
+
+  <div class="formations-list" id="formationsList">
+    <div class="empty-state">
+      <i class="fas fa-book-open"></i>
+      <p>Aucune formation. Ajoutez-en une ci-dessus.</p>
+    </div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script type="importmap">
+  {
+    "imports": {
+      "firebase/app": "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js",
+      "firebase/auth": "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js",
+      "firebase/firestore": "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js"
+    }
+  }
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+  import { 
+    getFirestore, doc, getDocs, deleteDoc, updateDoc,
+    collection, query, onSnapshot, addDoc, orderBy
+  } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDEjj2oAg7ZL8HvdkSWliShxydgq_BPxzs",
+    authDomain: "brickshare-d35b3.firebaseapp.com",
+    projectId: "brickshare-d35b3",
+    storageBucket: "brickshare-d35b3.firebasestorage.app",
+    messagingSenderId: "613227362818",
+    appId: "1:613227362818:web:c4de1ad3372c16d8d3051b"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const form = document.getElementById('addForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const formationsList = document.getElementById('formationsList');
+  const totalCount = document.getElementById('totalCount');
+  const toast = document.getElementById('toast');
+
+  // Image
+  const imageFileInput = document.getElementById('imageFileInput');
+  const imageDropZone = document.getElementById('imageDropZone');
+  const imagePreview = document.getElementById('imagePreview');
+  const imagePlaceholder = document.getElementById('imagePlaceholder');
+  const removeImageBtn = document.getElementById('removeImageBtn');
+  const imageUrlInput = document.getElementById('imageUrlInput');
+
+  let currentUser = null;
+  let formations = [];
+  let selectedImageData = null; // Stocke l'image en base64
+
+  function showToast(message, type = 'success') {
+    toast.textContent = message;
+    toast.className = `toast ${type}`;
+    setTimeout(() => toast.classList.add('show'), 50);
+    setTimeout(() => toast.classList.remove('show'), 4000);
+  }
+
+  // ===== IMAGE - UPLOAD =====
+  imageDropZone.addEventListener('click', () => {
+    imageFileInput.click();
+  });
+
+  imageFileInput.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+      const file = e.target.files[0];
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          selectedImageData = event.target.result; // Stocke en base64
+          imagePreview.src = selectedImageData;
+          imagePreview.style.display = 'block';
+          imagePlaceholder.style.display = 'none';
+          removeImageBtn.classList.add('show');
+          console.log("📸 Image sélectionnée en base64");
+        };
+        reader.readAsDataURL(file);
+      } else {
+        showToast('❌ Veuillez sélectionner une image', 'error');
+      }
+    }
+  });
+
+  // Drag & Drop
+  imageDropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    imageDropZone.classList.add('dragover');
+  });
+
+  imageDropZone.addEventListener('dragleave', () => {
+    imageDropZone.classList.remove('dragover');
+  });
+
+  imageDropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    imageDropZone.classList.remove('dragover');
+    const files = e.dataTransfer.files;
+    if (files.length > 0 && files[0].type.startsWith('image/')) {
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        selectedImageData = event.target.result;
+        imagePreview.src = selectedImageData;
+        imagePreview.style.display = 'block';
+        imagePlaceholder.style.display = 'none';
+        removeImageBtn.classList.add('show');
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  removeImageBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    selectedImageData = null;
+    imagePreview.style.display = 'none';
+    imagePlaceholder.style.display = 'block';
+    removeImageBtn.classList.remove('show');
+    imageFileInput.value = '';
+    console.log("🗑️ Image supprimée");
+  });
+
+  // ===== CHARGER LES FORMATIONS =====
+  function loadFormations() {
+    const formationsRef = collection(db, 'formations');
+    const q = query(formationsRef, orderBy('dateCreation', 'desc'));
+
+    onSnapshot(q, (snapshot) => {
+      formations = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      renderFormations();
+    }, (error) => {
+      console.error('Erreur chargement formations:', error);
+    });
+  }
+
+  function renderFormations() {
+    if (formations.length === 0) {
+      formationsList.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-book-open"></i>
+          <p>Aucune formation. Ajoutez-en une ci-dessus.</p>
+        </div>
+      `;
+      totalCount.textContent = '0 formation';
+      return;
+    }
+
+    totalCount.textContent = `${formations.length} formation(s)`;
+
+    formationsList.innerHTML = formations.map(f => `
+      <div class="formation-item">
+        <div class="info">
+          <div class="title">${f.titre || 'Sans titre'}</div>
+          <div class="meta">
+            <span>${f.categorie || 'Non catégorisé'}</span>
+            <span>💰 ${(f.prix || 0).toLocaleString('fr-FR')} FCFA</span>
+            <span>👤 ${f.vendeurNom || 'Inconnu'}</span>
+            <span>📦 ${f.nbAcheteurs || 0} acheteur(s)</span>
+            ${f.image ? `<span>🖼️ Image présente</span>` : `<span style="color: var(--danger);">❌ Pas d'image</span>`}
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn-toggle ${f.statut === 'publie' ? '' : 'draft'}" 
+                  data-id="${f.id}" 
+                  data-statut="${f.statut || 'brouillon'}">
+            <i class="fas ${f.statut === 'publie' ? 'fa-eye' : 'fa-eye-slash'}"></i>
+          </button>
+          <button class="btn-delete" data-id="${f.id}">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    document.querySelectorAll('.btn-delete').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.dataset.id;
+        if (confirm('Supprimer cette formation ?')) {
+          try {
+            await deleteDoc(doc(db, 'formations', id));
+            showToast('✅ Formation supprimée', 'success');
+          } catch (error) {
+            console.error('Erreur suppression:', error);
+            showToast('❌ Erreur lors de la suppression', 'error');
+          }
+        }
+      });
+    });
+
+    document.querySelectorAll('.btn-toggle').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.dataset.id;
+        const currentStatut = btn.dataset.statut;
+        const newStatut = currentStatut === 'publie' ? 'brouillon' : 'publie';
+        
+        try {
+          await updateDoc(doc(db, 'formations', id), {
+            statut: newStatut
+          });
+          showToast(`✅ Formation ${newStatut === 'publie' ? 'publiée' : 'mise en brouillon'}`, 'success');
+        } catch (error) {
+          console.error('Erreur toggle:', error);
+          showToast('❌ Erreur lors du changement de statut', 'error');
+        }
+      });
+    });
+  }
+
+  // ===== AJOUTER UNE FORMATION =====
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const titre = document.getElementById('titre').value.trim();
+    const description = document.getElementById('description').value.trim();
+    const categorie = document.getElementById('categorie').value;
+    const prix = parseInt(document.getElementById('prix').value) || 0;
+    const pages = parseInt(document.getElementById('pages').value) || 10;
+    const vendeurNom = document.getElementById('vendeurNom').value.trim() || 'N.I.F Admin';
+    const vendeurEmail = document.getElementById('vendeurEmail').value.trim() || 'admin@nif.com';
+    const urlImage = imageUrlInput.value.trim();
+
+    if (!titre || !description) {
+      showToast('❌ Titre et description sont obligatoires', 'error');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Ajout en cours...';
+
+    try {
+      // PRIORITÉ : image depuis la galerie (base64) SINON URL
+      let imageFinale = '';
+      if (selectedImageData) {
+        imageFinale = selectedImageData;
+        console.log("📸 Image utilisée (base64)");
+      } else if (urlImage) {
+        imageFinale = urlImage;
+        console.log("🔗 Image utilisée (URL)");
+      } else {
+        console.log("ℹ️ Aucune image");
+      }
+
+      const formationData = {
+        titre,
+        description,
+        categorie,
+        prix,
+        pages,
+        vendeurNom,
+        vendeurEmail,
+        vendeurId: currentUser?.uid || 'admin',
+        acheteurs: [],
+        nbAcheteurs: 0,
+        dateCreation: new Date().toISOString(),
+        statut: 'publie',
+        estGratuit: prix === 0,
+        image: imageFinale,
+        fichierUrl: ''
+      };
+
+      await addDoc(collection(db, 'formations'), formationData);
+
+      showToast('✅ Formation ajoutée avec succès !', 'success');
+
+      form.reset();
+      document.getElementById('prix').value = '0';
+      document.getElementById('pages').value = '10';
+      selectedImageData = null;
+      imagePreview.style.display = 'none';
+      imagePlaceholder.style.display = 'block';
+      removeImageBtn.classList.remove('show');
+      imageFileInput.value = '';
+      imageUrlInput.value = '';
+
+    } catch (error) {
+      console.error('❌ Erreur ajout formation:', error);
+      showToast('❌ Erreur lors de l\'ajout', 'error');
+    }
+
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="fas fa-save"></i> Ajouter la formation';
+  });
+
+  // ===== AUTH =====
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      currentUser = user;
+      if (user.email !== 'gagneavecia@gmail.com') {
+        showToast('🔒 Accès réservé à l\'administrateur', 'error');
+        setTimeout(() => window.location.href = 'index.html', 2000);
+        return;
+      }
+      loadFormations();
+    } else {
+      window.location.href = 'login.html';
+    }
+  });
+
+  console.log("✅ Admin N.I.F chargé (version base64)");
+  console.log("📸 Les images sont stockées directement dans Firestore (base64)");
+</script>
+
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Vendre ma formation - N.I.F</title>
+  <title>Vendre - N.I.F</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <meta name="theme-color" content="#0A1128">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,11 +20,11 @@
       --card-bg: rgba(17, 26, 54, 0.65);
       --card-border: rgba(212, 175, 55, 0.12);
       --success: #10B981;
-      --warning: #F59E0B;
       --danger: #EF4444;
+      --warning: #F59E0B;
+      --transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
       --glass-bg: rgba(212, 175, 55, 0.03);
       --glass-border: rgba(212, 175, 55, 0.08);
-      --transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -125,38 +125,36 @@
     }
 
     /* ===== FORMULAIRE ===== */
-    .form-card {
+    .vendre-form {
       background: var(--card-bg);
       backdrop-filter: blur(10px);
       border: 1px solid var(--card-border);
       border-radius: 16px;
       padding: 20px;
-      margin-bottom: 20px;
     }
 
-    .form-group {
-      margin-bottom: 16px;
+    .vendre-form .form-group {
+      margin-bottom: 18px;
     }
 
-    .form-group:last-child { margin-bottom: 0; }
-
-    .form-label {
+    .vendre-form label {
       display: block;
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 600;
-      color: var(--text-light);
-      margin-bottom: 6px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
     }
 
-    .form-label i { color: var(--primary); margin-right: 6px; }
-    .form-label .required { color: var(--danger); margin-left: 2px; }
-
-    .form-control {
+    .vendre-form input,
+    .vendre-form select,
+    .vendre-form textarea {
       width: 100%;
       padding: 12px 14px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 10px;
+      background: rgba(10, 17, 40, 0.6);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 12px;
       color: var(--text-light);
       font-size: 14px;
       font-family: 'Inter', sans-serif;
@@ -164,349 +162,190 @@
       outline: none;
     }
 
-    .form-control:focus {
+    .vendre-form input:focus,
+    .vendre-form select:focus,
+    .vendre-form textarea:focus {
       border-color: var(--primary);
-      background: rgba(212, 175, 55, 0.04);
+      background: rgba(10, 17, 40, 0.9);
     }
 
-    .form-control::placeholder {
-      color: var(--text-dim);
+    .vendre-form textarea {
+      min-height: 80px;
+      resize: vertical;
     }
 
-    .form-control:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    select.form-control {
-      appearance: none;
-      cursor: pointer;
-    }
-
-    select.form-control option {
+    .vendre-form select option {
       background: var(--bg-dark);
       color: var(--text-light);
     }
 
-    textarea.form-control {
-      resize: vertical;
-      min-height: 80px;
+    .vendre-form .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* ===== IMAGE UPLOAD ===== */
+    .image-upload-section {
+      margin-bottom: 18px;
+    }
+
+    .image-upload-section .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .image-upload-section .label-row label {
+      margin-bottom: 0;
+    }
+
+    .image-upload-section .input-methods {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .image-upload-section .method-btn {
+      padding: 6px 14px;
+      border-radius: 30px;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      background: transparent;
+      color: var(--text-dim);
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
       font-family: 'Inter', sans-serif;
     }
 
-    .form-hint {
-      font-size: 11px;
-      color: var(--text-dim);
-      margin-top: 4px;
+    .image-upload-section .method-btn.active {
+      background: var(--primary);
+      color: #0A1128;
+      border-color: var(--primary);
     }
 
-    .form-hint i { margin-right: 4px; }
+    .image-upload-section .method-btn:active {
+      transform: scale(0.95);
+    }
 
-    /* ===== UPLOAD PDF ===== */
-    .upload-zone {
-      border: 2px dashed rgba(212, 175, 55, 0.2);
-      border-radius: 12px;
-      padding: 30px 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: var(--transition);
+    .image-preview-container {
       position: relative;
-    }
-
-    .upload-zone:hover {
-      border-color: var(--primary);
-      background: rgba(212, 175, 55, 0.04);
-    }
-
-    .upload-zone.dragover {
-      border-color: var(--primary);
-      background: rgba(212, 175, 55, 0.08);
-    }
-
-    .upload-zone.has-file {
-      border-color: var(--success);
-      background: rgba(16, 185, 129, 0.04);
-    }
-
-    .upload-zone i {
-      font-size: 36px;
-      color: var(--text-dim);
-      margin-bottom: 8px;
-      display: block;
-    }
-
-    .upload-zone .upload-text {
-      font-size: 14px;
-      color: var(--text-dim);
-    }
-
-    .upload-zone .upload-text strong {
-      color: var(--primary);
-    }
-
-    .upload-zone .file-info {
-      display: none;
-      margin-top: 8px;
-      font-size: 13px;
-      color: var(--success);
-    }
-
-    .upload-zone.has-file .file-info {
-      display: block;
-    }
-
-    .upload-zone.has-file i {
-      color: var(--success);
-    }
-
-    .upload-zone input[type="file"] {
-      position: absolute;
-      top: 0;
-      left: 0;
       width: 100%;
-      height: 100%;
-      opacity: 0;
-      cursor: pointer;
-    }
-
-    /* ===== BARRE DE PROGRÈS ===== */
-    .progress-container {
-      display: none;
-      margin-top: 12px;
-    }
-
-    .progress-container.show {
-      display: block;
-    }
-
-    .progress-bar-bg {
-      width: 100%;
-      height: 6px;
-      background: rgba(255, 255, 255, 0.06);
-      border-radius: 10px;
+      height: 160px;
+      border-radius: 12px;
       overflow: hidden;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
-      border-radius: 10px;
-      width: 0%;
-      transition: width 0.3s ease;
-    }
-
-    .progress-text {
-      font-size: 11px;
-      color: var(--text-dim);
-      margin-top: 4px;
-      text-align: right;
-    }
-
-    /* ===== RÈGLES DE PUBLICATION ===== */
-    .rules-box {
-      background: rgba(245, 158, 11, 0.04);
-      border: 1px solid rgba(245, 158, 11, 0.1);
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 20px;
-    }
-
-    .rules-box .title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--warning);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
-
-    .rules-box .title i { font-size: 16px; }
-
-    .rules-box ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .rules-box ul li {
-      font-size: 12px;
-      color: var(--text-dim);
-      padding: 3px 0;
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-    }
-
-    .rules-box ul li i {
-      color: var(--primary);
-      font-size: 10px;
-      margin-top: 3px;
-    }
-
-    /* ===== TARIFS PUBLICATION ===== */
-    .tarifs-box {
-      background: rgba(212, 175, 55, 0.04);
-      border: 1px solid rgba(212, 175, 55, 0.1);
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 20px;
-    }
-
-    .tarifs-box .title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
-
-    .tarifs-box .title i { font-size: 16px; }
-
-    .tarif-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .tarif-item {
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 8px;
-      padding: 8px 12px;
-      text-align: center;
-    }
-
-    .tarif-item .pages {
-      font-size: 11px;
-      color: var(--text-dim);
-    }
-
-    .tarif-item .prix {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--primary);
-    }
-
-    /* ===== BOUTON PUBLIER ===== */
-    .btn-publier {
+      background: rgba(10, 17, 40, 0.6);
+      border: 2px dashed rgba(212, 175, 55, 0.2);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      width: 100%;
-      padding: 16px;
-      background: var(--primary);
-      color: var(--bg-dark);
-      border: none;
-      border-radius: 14px;
-      font-size: 16px;
-      font-weight: 700;
+      transition: var(--transition);
       cursor: pointer;
-      transition: var(--transition);
-      font-family: 'Inter', sans-serif;
     }
 
-    .btn-publier:hover {
-      background: var(--primary-dark);
-      transform: scale(1.02);
+    .image-preview-container.dragover {
+      border-color: var(--primary);
+      background: rgba(212, 175, 55, 0.05);
     }
 
-    .btn-publier:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
+    .image-preview-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
-    .btn-publier i { font-size: 18px; }
-
-    /* ===== MES FORMATIONS PUBLIÉES ===== */
-    .mes-formations {
-      margin-top: 32px;
-    }
-
-    .mes-formations .title {
-      font-size: 16px;
-      font-family: 'Playfair Display', serif;
-      margin-bottom: 12px;
-    }
-
-    .mes-formations .title span { color: var(--primary); }
-
-    .formation-publiee {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 12px 16px;
-      margin-bottom: 10px;
-      transition: var(--transition);
-    }
-
-    .formation-publiee:hover {
-      border-color: rgba(212, 175, 55, 0.2);
-    }
-
-    .formation-publiee .info {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      min-width: 0;
-    }
-
-    .formation-publiee .info .name {
-      font-size: 14px;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .formation-publiee .info .details {
-      font-size: 11px;
-      color: var(--text-dim);
-    }
-
-    .formation-publiee .statut {
-      font-size: 10px;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 20px;
-      white-space: nowrap;
-      margin-left: 8px;
-    }
-
-    .formation-publiee .statut.en-attente {
-      background: rgba(245, 158, 11, 0.12);
-      color: var(--warning);
-      border: 1px solid rgba(245, 158, 11, 0.2);
-    }
-
-    .formation-publiee .statut.publie {
-      background: rgba(16, 185, 129, 0.12);
-      color: var(--success);
-      border: 1px solid rgba(16, 185, 129, 0.2);
-    }
-
-    .formation-publiee .statut.refuse {
-      background: rgba(239, 68, 68, 0.12);
-      color: var(--danger);
-      border: 1px solid rgba(239, 68, 68, 0.2);
-    }
-
-    .empty-state {
+    .image-preview-container .placeholder {
       text-align: center;
-      padding: 30px 20px;
       color: var(--text-dim);
     }
 
-    .empty-state i {
+    .image-preview-container .placeholder i {
       font-size: 32px;
       opacity: 0.3;
       margin-bottom: 8px;
+      display: block;
     }
+
+    .image-preview-container .placeholder p {
+      font-size: 12px;
+    }
+
+    .image-preview-container .remove-image {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      background: rgba(239, 68, 68, 0.9);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      cursor: pointer;
+      font-size: 12px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-preview-container .remove-image.show {
+      display: flex;
+    }
+
+    .image-preview-container .upload-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s;
+      border-radius: 0 0 12px 12px;
+    }
+
+    .image-url-input {
+      display: none;
+      margin-top: 10px;
+    }
+
+    .image-url-input.visible {
+      display: block;
+    }
+
+    .image-url-input input {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(10, 17, 40, 0.6);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 10px;
+      color: var(--text-light);
+      font-size: 13px;
+      outline: none;
+    }
+
+    .image-url-input input:focus {
+      border-color: var(--primary);
+    }
+
+    /* ===== BOUTON ===== */
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border: none;
+      border-radius: 12px;
+      color: #0A1128;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      margin-top: 8px;
+    }
+
+    .btn-submit:active { transform: scale(0.97); }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
     /* ===== TOAST ===== */
     .toast {
@@ -528,16 +367,16 @@
 
     .toast.show { transform: translateY(0); }
     .toast.success { background: #0D2A1F; border: 1px solid var(--success); color: var(--success); }
-    .toast.error { background: #2A0D0D; border: 1px solid var(--danger); color: var(--danger); }
+    .toast.error { background: #2A0D0D; border: 1px solid #EF4444; color: #EF4444; }
     .toast.info { background: #1A1A2E; border: 1px solid var(--primary); color: var(--primary-light); }
-    .toast.warning { background: #1A1A0D; border: 1px solid var(--warning); color: var(--warning); }
 
     @media (max-width: 500px) {
+      .vendre-form .row-2 {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
       .page-header h1 { font-size: 24px; }
-      .tarif-grid { grid-template-columns: 1fr 1fr; }
-      .upload-zone { padding: 20px; }
-      .formation-publiee { flex-wrap: wrap; gap: 8px; }
-      .formation-publiee .statut { margin-left: 0; }
+      .image-preview-container { height: 120px; }
     }
   </style>
 </head>
@@ -556,116 +395,118 @@
 
   <!-- HEADER PAGE -->
   <div class="page-header">
-    <div class="subtitle"><i class="fas fa-upload"></i> Publier votre formation</div>
-    <h1>📤 Vendre une <span>Formation</span></h1>
-    <p>Partagez votre expertise et gagnez de l'argent. Publication payante selon le nombre de pages.</p>
-  </div>
-
-  <!-- RÈGLES -->
-  <div class="rules-box">
-    <div class="title"><i class="fas fa-shield-alt"></i> Règles de publication</div>
-    <ul>
-      <li><i class="fas fa-check-circle"></i> Vous devez être l'auteur du PDF</li>
-      <li><i class="fas fa-check-circle"></i> Format PDF uniquement</li>
-      <li><i class="fas fa-check-circle"></i> Taille maximale : 20 Mo</li>
-      <li><i class="fas fa-check-circle"></i> Validation manuelle par l'admin (24h)</li>
-      <li><i class="fas fa-check-circle"></i> Remboursement si la formation est refusée</li>
-    </ul>
-  </div>
-
-  <!-- TARIFS -->
-  <div class="tarifs-box">
-    <div class="title"><i class="fas fa-coins"></i> Frais de publication</div>
-    <div class="tarif-grid">
-      <div class="tarif-item">
-        <span class="pages">📄 1 - 70 pages</span>
-        <span class="prix">500 FCFA</span>
-      </div>
-      <div class="tarif-item">
-        <span class="pages">📚 71 - 300 pages</span>
-        <span class="prix">1 000 FCFA</span>
-      </div>
-    </div>
-    <div style="font-size:10px;color:var(--text-dim);margin-top:8px;text-align:center;">
-      <i class="fas fa-info-circle"></i> Les frais sont à payer après validation admin
-    </div>
+    <div class="subtitle"><i class="fas fa-upload"></i> Publier une formation</div>
+    <h1>📤 Vendre ma <span>Formation</span></h1>
+    <p>Publiez votre formation et gagnez de l'argent. Publication payante selon le nombre de pages.</p>
   </div>
 
   <!-- FORMULAIRE -->
-  <form id="formationForm" class="form-card">
+  <form class="vendre-form" id="vendreForm">
+
+    <!-- Titre -->
     <div class="form-group">
-      <label class="form-label"><i class="fas fa-tag"></i> Titre de la formation <span class="required">*</span></label>
-      <input type="text" class="form-control" id="titre" placeholder="Ex: Formation Marketing Digital" required>
+      <label>Titre de la formation *</label>
+      <input type="text" id="titre" placeholder="Ex: Maîtrise du trading" required>
     </div>
 
+    <!-- Description -->
     <div class="form-group">
-      <label class="form-label"><i class="fas fa-align-left"></i> Description <span class="required">*</span></label>
-      <textarea class="form-control" id="description" placeholder="Décrivez votre formation en quelques lignes..." required></textarea>
-      <div class="form-hint"><i class="fas fa-info-circle"></i> 50-200 caractères recommandés</div>
+      <label>Description *</label>
+      <textarea id="description" placeholder="Décrivez votre formation en détail" required></textarea>
     </div>
 
-    <div class="form-group">
-      <label class="form-label"><i class="fas fa-layer-group"></i> Catégorie <span class="required">*</span></label>
-      <select class="form-control" id="categorie" required>
-        <option value="">Sélectionner une catégorie</option>
-        <option value="Finance">Finance & Investissement</option>
-        <option value="Marketing">Marketing & Communication</option>
-        <option value="Entrepreneuriat">Entrepreneuriat</option>
-        <option value="Strategie">Stratégie & Développement</option>
-        <option value="Technologie">Technologie & Digital</option>
-        <option value="Personnel">Développement Personnel</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label"><i class="fas fa-coins"></i> Prix de vente (FCFA) <span class="required">*</span></label>
-      <input type="number" class="form-control" id="prix" placeholder="Ex: 15000" min="1000" step="500" required>
-      <div class="form-hint"><i class="fas fa-info-circle"></i> Prix minimum : 1 000 FCFA</div>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label"><i class="fas fa-file-pdf"></i> Fichier PDF <span class="required">*</span></label>
-      <div class="upload-zone" id="uploadZone">
-        <i class="fas fa-cloud-upload-alt"></i>
-        <div class="upload-text">
-          <strong>Cliquez ici</strong> ou glissez votre PDF
-        </div>
-        <div class="file-info" id="fileInfo">
-          <i class="fas fa-check-circle"></i> Fichier sélectionné : <span id="fileName">-</span>
-        </div>
-        <input type="file" id="pdfFile" accept=".pdf" required>
+    <!-- Catégorie + Prix -->
+    <div class="row-2">
+      <div class="form-group">
+        <label>Catégorie *</label>
+        <select id="categorie" required>
+          <option value="Finance">💰 Finance</option>
+          <option value="Marketing">📊 Marketing</option>
+          <option value="Entrepreneuriat">🚀 Entrepreneuriat</option>
+          <option value="Stratégie">🎯 Stratégie</option>
+        </select>
       </div>
-      <div class="progress-container" id="progressContainer">
-        <div class="progress-bar-bg">
-          <div class="progress-bar-fill" id="progressFill"></div>
-        </div>
-        <div class="progress-text" id="progressText">0%</div>
+      <div class="form-group">
+        <label>Prix (FCFA) *</label>
+        <input type="number" id="prix" placeholder="0 = Gratuit" value="0" required>
       </div>
-      <div class="form-hint"><i class="fas fa-info-circle"></i> Taille maximale : 20 Mo</div>
     </div>
 
-    <div class="form-group">
-      <label class="form-label"><i class="fas fa-image"></i> Image de couverture (URL)</label>
-      <input type="url" class="form-control" id="image" placeholder="https://exemple.com/couverture.jpg">
-      <div class="form-hint"><i class="fas fa-info-circle"></i> Optionnel - Lien vers une image de couverture</div>
+    <!-- Pages + Catégorie -->
+    <div class="row-2">
+      <div class="form-group">
+        <label>Nombre de pages *</label>
+        <input type="number" id="pages" placeholder="Nombre de pages" value="10" required>
+        <div style="font-size: 10px; color: var(--text-dim); margin-top: 4px;">
+          💰 Coût de publication : <span id="coutPublication">0</span> FCFA
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Fichier PDF</label>
+        <input type="file" id="fichier" accept=".pdf">
+        <div style="font-size: 10px; color: var(--text-dim); margin-top: 4px;">
+          📄 Format PDF uniquement
+        </div>
+      </div>
     </div>
+
+    <!-- ===== IMAGE ===== -->
+    <div class="image-upload-section">
+      <div class="label-row">
+        <label>Image de la formation</label>
+        <span style="font-size: 10px; color: var(--text-dim);">(Optionnel)</span>
+      </div>
+
+      <!-- Méthodes d'import -->
+      <div class="input-methods">
+        <button type="button" class="method-btn active" data-method="upload">
+          <i class="fas fa-images"></i> Galerie
+        </button>
+        <button type="button" class="method-btn" data-method="url">
+          <i class="fas fa-link"></i> URL
+        </button>
+      </div>
+
+      <!-- Upload depuis galerie -->
+      <div id="uploadMethod">
+        <div class="image-preview-container" id="imageDropZone">
+          <div class="placeholder" id="imagePlaceholder">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Cliquez pour choisir une image</p>
+            <p style="font-size: 10px; opacity: 0.6;">PNG, JPG, WebP</p>
+          </div>
+          <img id="imagePreview" style="display: none;" alt="Aperçu">
+          <button type="button" class="remove-image" id="removeImageBtn">
+            <i class="fas fa-times"></i>
+          </button>
+          <div class="upload-progress" id="uploadProgress"></div>
+          <input type="file" id="imageFileInput" accept="image/*" style="display: none;">
+        </div>
+      </div>
+
+      <!-- URL -->
+      <div class="image-url-input" id="urlMethod">
+        <input type="text" id="imageUrlInput" placeholder="https://exemple.com/image.jpg">
+      </div>
+    </div>
+
+    <!-- Vendeur -->
+    <div class="row-2">
+      <div class="form-group">
+        <label>Votre nom</label>
+        <input type="text" id="vendeurNom" placeholder="Votre nom">
+      </div>
+      <div class="form-group">
+        <label>Votre email</label>
+        <input type="email" id="vendeurEmail" placeholder="votre@email.com">
+      </div>
+    </div>
+
+    <!-- Bouton -->
+    <button type="submit" class="btn-submit" id="submitBtn">
+      <i class="fas fa-rocket"></i> Publier la formation
+    </button>
   </form>
-
-  <!-- BOUTON PUBLIER -->
-  <button class="btn-publier" id="publierBtn">
-    <i class="fas fa-cloud-upload-alt"></i> Publier la formation
-  </button>
-
-  <!-- MES FORMATIONS PUBLIÉES -->
-  <div class="mes-formations">
-    <div class="title">📚 Mes <span>formations</span> publiées</div>
-    <div id="mesFormationsList">
-      <div class="empty-state">
-        <i class="fas fa-plus-circle"></i>
-        <p>Vous n'avez pas encore publié de formation.</p>
-      </div>
-    </div>
-  </div>
 
 </main>
 
@@ -686,283 +527,348 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-  import { getFirestore, doc, getDoc, addDoc, collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
-  import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
+  import { 
+    getFirestore, doc, getDoc, addDoc, collection, 
+    updateDoc, arrayUnion, increment 
+  } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+  import { 
+    getStorage, ref, uploadBytesResumable, getDownloadURL 
+  } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
 
+  // ===== FIREBASE CONFIG =====
   const firebaseConfig = {
-  apiKey: "AIzaSyDEjj2oAg7ZL8HvdkSWliShxydgq_BPxzs",
-  authDomain: "brickshare-d35b3.firebaseapp.com",
-  projectId: "brickshare-d35b3",
-  storageBucket: "brickshare-d35b3.firebasestorage.app",
-  messagingSenderId: "613227362818",
-  appId: "1:613227362818:web:c4de1ad3372c16d8d3051b"
-};
+    apiKey: "AIzaSyDEjj2oAg7ZL8HvdkSWliShxydgq_BPxzs",
+    authDomain: "brickshare-d35b3.firebaseapp.com",
+    projectId: "brickshare-d35b3",
+    storageBucket: "brickshare-d35b3.firebasestorage.app",
+    messagingSenderId: "613227362818",
+    appId: "1:613227362818:web:c4de1ad3372c16d8d3051b"
+  };
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
   const storage = getStorage(app);
 
-  // ===== ÉLÉMENTS =====
-  const form = document.getElementById('formationForm');
-  const publierBtn = document.getElementById('publierBtn');
-  const mesFormationsList = document.getElementById('mesFormationsList');
+  // ===== DOM =====
+  const form = document.getElementById('vendreForm');
+  const submitBtn = document.getElementById('submitBtn');
   const toast = document.getElementById('toast');
 
   const titreInput = document.getElementById('titre');
   const descriptionInput = document.getElementById('description');
-  const categorieInput = document.getElementById('categorie');
+  const categorieSelect = document.getElementById('categorie');
   const prixInput = document.getElementById('prix');
-  const imageInput = document.getElementById('image');
-  const pdfFileInput = document.getElementById('pdfFile');
-  const uploadZone = document.getElementById('uploadZone');
-  const fileInfo = document.getElementById('fileInfo');
-  const fileName = document.getElementById('fileName');
-  const progressContainer = document.getElementById('progressContainer');
-  const progressFill = document.getElementById('progressFill');
-  const progressText = document.getElementById('progressText');
+  const pagesInput = document.getElementById('pages');
+  const fichierInput = document.getElementById('fichier');
+  const vendeurNomInput = document.getElementById('vendeurNom');
+  const vendeurEmailInput = document.getElementById('vendeurEmail');
+  const coutPublication = document.getElementById('coutPublication');
+
+  // Image
+  const imageFileInput = document.getElementById('imageFileInput');
+  const imageDropZone = document.getElementById('imageDropZone');
+  const imagePreview = document.getElementById('imagePreview');
+  const imagePlaceholder = document.getElementById('imagePlaceholder');
+  const removeImageBtn = document.getElementById('removeImageBtn');
+  const uploadProgress = document.getElementById('uploadProgress');
+  const imageUrlInput = document.getElementById('imageUrlInput');
 
   let currentUser = null;
-  let selectedFile = null;
-  let uploadTask = null;
-
-  // ===== UPLOAD ZONE =====
-  uploadZone.addEventListener('click', () => pdfFileInput.click());
-
-  uploadZone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    uploadZone.classList.add('dragover');
-  });
-
-  uploadZone.addEventListener('dragleave', () => {
-    uploadZone.classList.remove('dragover');
-  });
-
-  uploadZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    uploadZone.classList.remove('dragover');
-    if (e.dataTransfer.files.length) {
-      handleFile(e.dataTransfer.files[0]);
-    }
-  });
-
-  pdfFileInput.addEventListener('change', () => {
-    if (pdfFileInput.files.length) {
-      handleFile(pdfFileInput.files[0]);
-    }
-  });
-
-  // ===== GÉRER LE FICHIER =====
-  function handleFile(file) {
-    if (file.type !== 'application/pdf') {
-      showToast('❌ Veuillez sélectionner un fichier PDF valide', 'error');
-      pdfFileInput.value = '';
-      return;
-    }
-
-    if (file.size > 20 * 1024 * 1024) {
-      showToast('❌ Le fichier est trop volumineux (max 20 Mo)', 'error');
-      pdfFileInput.value = '';
-      return;
-    }
-
-    selectedFile = file;
-    fileName.textContent = file.name;
-    uploadZone.classList.add('has-file');
-    showToast('✅ Fichier PDF sélectionné : ' + file.name, 'success');
-  }
-
-  // ===== PUBLIER =====
-  publierBtn.addEventListener('click', async () => {
-    if (!currentUser) {
-      window.location.href = 'login.html';
-      return;
-    }
-
-    // Validation
-    const titre = titreInput.value.trim();
-    const description = descriptionInput.value.trim();
-    const categorie = categorieInput.value;
-    const prix = parseInt(prixInput.value);
-    const image = imageInput.value.trim();
-
-    if (!titre || titre.length < 3) {
-      showToast('❌ Veuillez saisir un titre valide (minimum 3 caractères)', 'error');
-      return;
-    }
-
-    if (!description || description.length < 20) {
-      showToast('❌ Veuillez saisir une description (minimum 20 caractères)', 'error');
-      return;
-    }
-
-    if (!categorie) {
-      showToast('❌ Veuillez sélectionner une catégorie', 'error');
-      return;
-    }
-
-    if (!prix || prix < 1000) {
-      showToast('❌ Veuillez saisir un prix valide (minimum 1 000 FCFA)', 'error');
-      return;
-    }
-
-    if (!selectedFile) {
-      showToast('❌ Veuillez sélectionner un fichier PDF', 'error');
-      return;
-    }
-
-    try {
-      publierBtn.disabled = true;
-      publierBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Upload du PDF...';
-
-      // 1. Upload du PDF vers Firebase Storage
-      const timestamp = Date.now();
-      const filePath = `formations/${currentUser.uid}/${timestamp}_${selectedFile.name}`;
-      const storageRef = ref(storage, filePath);
-      uploadTask = uploadBytesResumable(storageRef, selectedFile);
-
-      // Barre de progression
-      progressContainer.classList.add('show');
-
-      const uploadPromise = new Promise((resolve, reject) => {
-        uploadTask.on('state_changed',
-          (snapshot) => {
-            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            progressFill.style.width = progress + '%';
-            progressText.textContent = Math.round(progress) + '%';
-          },
-          (error) => reject(error),
-          async () => {
-            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            resolve({ url: downloadURL, path: filePath });
-          }
-        );
-      });
-
-      const uploadResult = await uploadPromise;
-
-      // 2. Récupérer les infos utilisateur
-      const userRef = doc(db, 'users', currentUser.uid);
-      const userSnap = await getDoc(userRef);
-      const userData = userSnap.exists() ? userSnap.data() : {};
-      const vendeurNom = userData.fullName || userData.prenom || 'Utilisateur N.I.F';
-      const vendeurEmail = userData.email || currentUser.email || '';
-
-      // 3. Créer la formation dans Firestore
-      publierBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enregistrement...';
-
-      const formationData = {
-        titre,
-        description,
-        categorie,
-        prix,
-        image: image || 'https://images.pexels.com/photos/3183197/pexels-photo-3183197.jpeg?auto=compress&cs=tinysrgb&w=200&h=240&fit=crop',
-        vendeurId: currentUser.uid,
-        vendeurNom,
-        vendeurEmail,
-        fichierNom: selectedFile.name,
-        fichierTaille: selectedFile.size,
-        fichierUrl: uploadResult.url,
-        fichierPath: uploadResult.path,
-        pages: 0, // Sera rempli par l'admin
-        statut: 'en_attente',
-        motifRefus: '',
-        fraisPublication: 0,
-        fraisPaye: false,
-        dateCreation: new Date().toISOString(),
-        datePublication: null,
-        dateValidation: null,
-        acheteurs: [],
-        ventes: 0,
-        noteMoyenne: 0,
-        nombreAvis: 0
-      };
-
-      await addDoc(collection(db, 'formations'), formationData);
-
-      // 4. Confirmation
-      showToast('✅ Formation soumise avec succès ! En attente de validation admin.', 'success');
-      
-      // Réinitialiser le formulaire
-      form.reset();
-      selectedFile = null;
-      uploadZone.classList.remove('has-file');
-      progressContainer.classList.remove('show');
-      progressFill.style.width = '0%';
-      progressText.textContent = '0%';
-      pdfFileInput.value = '';
-
-      // Recharger la liste
-      loadMesFormations();
-
-    } catch (error) {
-      console.error('Erreur publication:', error);
-      
-      // Annuler l'upload si erreur
-      if (uploadTask) {
-        try { uploadTask.cancel(); } catch (e) {}
-      }
-      
-      showToast('❌ Erreur lors de la publication. Réessayez.', 'error');
-    } finally {
-      publierBtn.disabled = false;
-      publierBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Publier la formation';
-    }
-  });
-
-  // ===== CHARGER MES FORMATIONS =====
-  async function loadMesFormations() {
-    if (!currentUser) return;
-
-    try {
-      const q = query(
-        collection(db, 'formations'),
-        where('vendeurId', '==', currentUser.uid),
-        orderBy('dateCreation', 'desc')
-      );
-      const querySnapshot = await getDocs(q);
-
-      if (querySnapshot.empty) {
-        mesFormationsList.innerHTML = `
-          <div class="empty-state">
-            <i class="fas fa-plus-circle"></i>
-            <p>Vous n'avez pas encore publié de formation.</p>
-          </div>
-        `;
-        return;
-      }
-
-      let html = '';
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        const statutClass = data.statut === 'public' ? 'publie' : data.statut === 'refuse' ? 'refuse' : 'en-attente';
-        const statutLabel = data.statut === 'public' ? '✅ Publiée' : data.statut === 'refuse' ? '❌ Refusée' : '⏳ En attente';
-        const pagesInfo = data.pages ? `📄 ${data.pages} pages` : '📄 Pages non comptées';
-
-        html += `
-          <div class="formation-publiee">
-            <div class="info">
-              <span class="name">${data.titre}</span>
-              <span class="details">${data.prix.toLocaleString('fr-FR')} FCFA • ${data.categorie} • ${pagesInfo}</span>
-            </div>
-            <span class="statut ${statutClass}">${statutLabel}</span>
-          </div>
-        `;
-      });
-
-      mesFormationsList.innerHTML = html;
-
-    } catch (error) {
-      console.error('Erreur chargement formations:', error);
-    }
-  }
+  let userData = null;
+  let selectedImageFile = null;
+  let imageUrl = null;
+  let imagePath = null;
+  let isUploading = false;
+  let currentMethod = 'upload';
 
   // ===== TOAST =====
   function showToast(message, type = 'success') {
     toast.textContent = message;
     toast.className = `toast ${type}`;
     setTimeout(() => toast.classList.add('show'), 50);
-    setTimeout(() => toast.classList.remove('show'), 5000);
+    setTimeout(() => toast.classList.remove('show'), 4000);
+  }
+
+  // ===== COÛT DE PUBLICATION =====
+  function updateCoutPublication() {
+    const pages = parseInt(pagesInput.value) || 0;
+    const cout = pages * 250;
+    coutPublication.textContent = cout.toLocaleString('fr-FR');
+  }
+
+  pagesInput.addEventListener('input', updateCoutPublication);
+  updateCoutPublication();
+
+  // ===== IMAGE - MÉTHODES =====
+  document.querySelectorAll('.method-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentMethod = btn.dataset.method;
+
+      if (currentMethod === 'upload') {
+        document.getElementById('uploadMethod').style.display = 'block';
+        document.getElementById('urlMethod').classList.remove('visible');
+      } else {
+        document.getElementById('uploadMethod').style.display = 'none';
+        document.getElementById('urlMethod').classList.add('visible');
+      }
+    });
+  });
+
+  // ===== IMAGE - UPLOAD =====
+  imageDropZone.addEventListener('click', () => {
+    if (!isUploading) imageFileInput.click();
+  });
+
+  imageFileInput.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+      const file = e.target.files[0];
+      if (file.type.startsWith('image/')) {
+        selectedImageFile = file;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          imagePreview.src = event.target.result;
+          imagePreview.style.display = 'block';
+          imagePlaceholder.style.display = 'none';
+          removeImageBtn.classList.add('show');
+        };
+        reader.readAsDataURL(file);
+      } else {
+        showToast('❌ Veuillez sélectionner une image', 'error');
+      }
+    }
+  });
+
+  // Drag & Drop
+  imageDropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    imageDropZone.classList.add('dragover');
+  });
+
+  imageDropZone.addEventListener('dragleave', () => {
+    imageDropZone.classList.remove('dragover');
+  });
+
+  imageDropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    imageDropZone.classList.remove('dragover');
+    const files = e.dataTransfer.files;
+    if (files.length > 0 && files[0].type.startsWith('image/')) {
+      selectedImageFile = files[0];
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        imagePreview.src = event.target.result;
+        imagePreview.style.display = 'block';
+        imagePlaceholder.style.display = 'none';
+        removeImageBtn.classList.add('show');
+      };
+      reader.readAsDataURL(selectedImageFile);
+    }
+  });
+
+  // Supprimer l'image
+  removeImageBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    selectedImageFile = null;
+    imagePreview.style.display = 'none';
+    imagePlaceholder.style.display = 'block';
+    removeImageBtn.classList.remove('show');
+    uploadProgress.style.width = '0%';
+    imageFileInput.value = '';
+  });
+
+   // ===== UPLOAD VERS FIREBASE STORAGE =====
+  async function uploadImage(uid, formationId) {
+    if (!selectedImageFile) return null;
+
+    return new Promise((resolve, reject) => {
+      const fileName = `${uid}_${formationId}_${Date.now()}.jpg`;
+      const storageRef = ref(storage, `formations/${fileName}`);
+      const uploadTask = uploadBytesResumable(storageRef, selectedImageFile);
+
+      uploadTask.on('state_changed',
+        (snapshot) => {
+          isUploading = true;
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          uploadProgress.style.width = `${progress}%`;
+        },
+        (error) => {
+          console.error('Erreur upload:', error);
+          isUploading = false;
+          reject(error);
+        },
+        async () => {
+          try {
+            const url = await getDownloadURL(uploadTask.snapshot.ref);
+            isUploading = false;
+            uploadProgress.style.width = '100%';
+            resolve({ url, path: `formations/${fileName}` });
+          } catch (error) {
+            isUploading = false;
+            reject(error);
+          }
+        }
+      );
+    });
+  }
+
+  // ===== SOUMISSION =====
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (!currentUser) {
+      showToast('❌ Veuillez vous connecter', 'error');
+      window.location.href = 'login.html';
+      return;
+    }
+
+    const titre = titreInput.value.trim();
+    const description = descriptionInput.value.trim();
+    const categorie = categorieSelect.value;
+    const prix = parseInt(prixInput.value) || 0;
+    const pages = parseInt(pagesInput.value) || 0;
+    const fichier = fichierInput.files[0];
+    const vendeurNom = vendeurNomInput.value.trim() || userData?.fullName || 'Utilisateur';
+    const vendeurEmail = vendeurEmailInput.value.trim() || userData?.email || '';
+
+    if (!titre || !description) {
+      showToast('❌ Titre et description sont obligatoires', 'error');
+      return;
+    }
+
+    if (pages < 1) {
+      showToast('❌ Minimum 1 page', 'error');
+      return;
+    }
+
+    // Coût de publication
+    const cout = pages * 250;
+    if ((userData?.balance || 0) < cout) {
+      showToast(`❌ Solde insuffisant ! Il vous manque ${(cout - (userData?.balance || 0)).toLocaleString('fr-FR')} FCFA`, 'error');
+      return;
+    }
+
+    // Récupérer l'URL de l'image (upload ou URL)
+    let finalImageUrl = '';
+    let finalImagePath = '';
+
+    if (currentMethod === 'upload' && selectedImageFile) {
+      // Upload en cours...
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Upload de l\'image...';
+      
+      try {
+        const tempId = 'temp_' + Date.now();
+        const uploadResult = await uploadImage(currentUser.uid, tempId);
+        if (uploadResult) {
+          finalImageUrl = uploadResult.url;
+          finalImagePath = uploadResult.path;
+        }
+      } catch (error) {
+        console.error('Erreur upload image:', error);
+        showToast('❌ Erreur lors de l\'upload de l\'image', 'error');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-rocket"></i> Publier la formation';
+        return;
+      }
+    } else if (currentMethod === 'url') {
+      finalImageUrl = imageUrlInput.value.trim();
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publication en cours...';
+
+    try {
+      // 1. Créer la formation
+      const formationData = {
+        titre,
+        description,
+        categorie,
+        prix,
+        pages,
+        vendeurId: currentUser.uid,
+        vendeurNom,
+        vendeurEmail,
+        image: finalImageUrl,
+        imagePath: finalImagePath,
+        acheteurs: [],
+        nbAcheteurs: 0,
+        statut: 'publie',
+        dateCreation: new Date().toISOString(),
+        estGratuit: prix === 0
+      };
+
+      const docRef = await addDoc(collection(db, 'formations'), formationData);
+      const formationId = docRef.id;
+
+      // 2. Upload du PDF si présent
+      if (fichier && fichier.type === 'application/pdf') {
+        const pdfRef = ref(storage, `formations/${formationId}/fichier.pdf`);
+        await uploadBytesResumable(pdfRef, fichier);
+        const pdfUrl = await getDownloadURL(pdfRef);
+        await updateDoc(doc(db, 'formations', formationId), {
+          fichierUrl: pdfUrl,
+          fichierNom: fichier.name,
+          fichierTaille: fichier.size
+        });
+      }
+
+      // 3. Mettre à jour le solde de l'utilisateur
+      const userRef = doc(db, 'users', currentUser.uid);
+      await updateDoc(userRef, {
+        balance: (userData?.balance || 0) - cout,
+        totalVentes: (userData?.totalVentes || 0) + 1
+      });
+
+      // 4. Enregistrer la transaction
+      await addDoc(collection(db, 'transactions'), {
+        userId: currentUser.uid,
+        type: 'publication',
+        formationId: formationId,
+        montant: cout,
+        description: `Publication de "${titre}" (${pages} pages)`,
+        date: new Date().toISOString(),
+        statut: 'completé'
+      });
+
+      // 5. Mettre à jour les données locales
+      userData.balance = (userData?.balance || 0) - cout;
+      userData.totalVentes = (userData?.totalVentes || 0) + 1;
+
+      showToast('✅ Formation publiée avec succès !', 'success');
+
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 1500);
+
+    } catch (error) {
+      console.error('Erreur publication:', error);
+      showToast('❌ Erreur lors de la publication', 'error');
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="fas fa-rocket"></i> Publier la formation';
+    }
+  });
+
+  // ===== CHARGER DONNÉES UTILISATEUR =====
+  async function loadUserData(user) {
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        userData = userSnap.data();
+        if (!vendeurNomInput.value) {
+          vendeurNomInput.value = userData.fullName || userData.prenom || '';
+        }
+        if (!vendeurEmailInput.value) {
+          vendeurEmailInput.value = userData.email || '';
+        }
+      }
+    } catch (error) {
+      console.error('Erreur chargement user:', error);
+    }
   }
 
   // ===== AUTH =====
@@ -970,7 +876,7 @@
     if (user) {
       currentUser = user;
       localStorage.setItem('NIF_current_user', user.uid);
-      loadMesFormations();
+      loadUserData(user);
     } else {
       const savedUid = localStorage.getItem('NIF_current_user');
       if (savedUid) {
@@ -985,6 +891,7 @@
     }
   });
 
+  console.log("✅ Page Vendre N.I.F chargée !");
 </script>
 
 </body>
