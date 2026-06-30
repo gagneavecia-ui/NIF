@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="/icon-192.png">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
   
@@ -21,8 +21,8 @@
       --bg-surface: #111A36;
       --text-light: #FFFFFF;
       --text-dim: #94A3B8;
-      --card-bg: rgba(17, 26, 54, 0.65);
-      --card-border: rgba(212, 175, 55, 0.12);
+      --card-bg: rgba(17, 26, 54, 0.8);
+      --card-border: rgba(212, 175, 55, 0.2);
       --success: #10B981;
       --danger: #EF4444;
       --warning: #F59E0B;
@@ -61,6 +61,7 @@
                   linear-gradient(180deg, #0A1128 0%, #070C1E 100%);
     }
 
+    /* ===== HEADER ===== */
     .header {
       display: flex;
       justify-content: space-between;
@@ -97,24 +98,29 @@
       border: 1px solid rgba(212, 175, 55, 0.2);
       border-radius: 30px;
       transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .login-link:active {
       transform: scale(0.97);
     }
 
+    /* ===== CONTAINER ===== */
     .container {
-      max-width: 500px;
+      max-width: 480px;
       margin: 0 auto;
       padding: 20px 16px 40px;
       width: 100%;
       flex: 1;
     }
 
+    /* ===== CARD ===== */
     .register-card {
-      background: rgba(17, 26, 54, 0.8);
+      background: var(--card-bg);
       backdrop-filter: blur(20px);
-      border: 1px solid rgba(212, 175, 55, 0.2);
+      border: 1px solid var(--card-border);
       border-radius: 28px;
       padding: 32px 24px;
       animation: fadeInUp 0.5s ease-out;
@@ -125,13 +131,14 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* ===== HEADER PAGE ===== */
     .register-header {
       text-align: center;
       margin-bottom: 28px;
     }
 
     .register-title {
-      font-size: 24px;
+      font-size: 26px;
       font-weight: 700;
       font-family: 'Playfair Display', serif;
     }
@@ -147,6 +154,7 @@
       margin-top: 6px;
     }
 
+    /* ===== MESSAGE ===== */
     .message-banner {
       border-radius: 16px;
       padding: 12px 16px;
@@ -155,6 +163,11 @@
       align-items: center;
       gap: 12px;
       font-size: 13px;
+      animation: fadeInUp 0.3s ease;
+    }
+
+    .message-banner.hidden {
+      display: none;
     }
 
     .message-banner.error {
@@ -175,18 +188,15 @@
       color: #FDE68A;
     }
 
-    .message-banner.hidden {
-      display: none;
-    }
-
+    /* ===== FORM ===== */
     .form-group {
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .form-group label {
       display: block;
       font-size: 11px;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--text-dim);
       margin-bottom: 6px;
       text-transform: uppercase;
@@ -199,7 +209,7 @@
       align-items: center;
     }
 
-    .input-icon {
+    .input-wrapper .input-icon {
       position: absolute;
       left: 14px;
       color: var(--text-dim);
@@ -216,10 +226,10 @@
       color: var(--text-light);
       font-size: 14px;
       transition: var(--transition);
+      outline: none;
     }
 
     .input-wrapper input:focus {
-      outline: none;
       border-color: var(--primary);
       background: rgba(10, 17, 40, 0.95);
     }
@@ -229,15 +239,17 @@
       opacity: 0.6;
     }
 
+    .input-wrapper .input-error {
+      border-color: var(--danger);
+    }
+
     .row-2cols {
-      display: flex;
-      gap: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
     }
 
-    .row-2cols .form-group {
-      flex: 1;
-    }
-
+    /* ===== TOGGLE PASSWORD ===== */
     .toggle-password {
       position: absolute;
       right: 14px;
@@ -245,13 +257,14 @@
       cursor: pointer;
       font-size: 14px;
       z-index: 2;
+      transition: var(--transition);
     }
 
     .toggle-password:hover {
       color: var(--primary);
     }
 
-    /* ===== COUNTRY SELECTOR (EARNZONE) ===== */
+    /* ===== PAYS SELECTOR (MODAL) ===== */
     .country-selector {
       display: flex;
       align-items: center;
@@ -308,6 +321,164 @@
 
     .country-selector:focus-within .arrow {
       color: var(--primary);
+    }
+
+    /* ===== PHONE ===== */
+    .phone-wrapper {
+      display: flex;
+      align-items: center;
+      background: rgba(10, 17, 40, 0.8);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 12px;
+      transition: var(--transition);
+      overflow: hidden;
+    }
+
+    .phone-wrapper:focus-within {
+      border-color: var(--primary);
+      background: rgba(10, 17, 40, 0.95);
+    }
+
+    .phone-indicatif {
+      padding: 12px 0 12px 14px;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 14px;
+      min-width: 55px;
+      border-right: 1px solid rgba(212, 175, 55, 0.15);
+      background: transparent;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .phone-wrapper input {
+      flex: 1;
+      padding: 12px 14px;
+      background: transparent;
+      border: none;
+      color: var(--text-light);
+      font-size: 14px;
+      outline: none;
+      min-width: 0;
+    }
+
+    .phone-wrapper input::placeholder {
+      color: var(--text-dim);
+      opacity: 0.6;
+    }
+
+    /* ===== CHECKBOX ===== */
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 4px 0 6px;
+      padding: 4px 0;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      margin-top: 1px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .checkbox-group label {
+      font-size: 12px;
+      color: var(--text-dim);
+      cursor: pointer;
+      line-height: 1.4;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .checkbox-group label a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .checkbox-group label a:hover {
+      text-decoration: underline;
+    }
+
+    .checkbox-group .checkbox-error {
+      color: var(--danger);
+    }
+
+    /* ===== SUBMIT ===== */
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border: none;
+      border-radius: 14px;
+      color: #0A1128;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      margin-top: 8px;
+    }
+
+    .submit-btn:active {
+      transform: scale(0.97);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid transparent;
+      border-top-color: #0A1128;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: none;
+    }
+
+    .submit-btn.loading .btn-spinner {
+      display: inline-block;
+    }
+
+    .submit-btn.loading .btn-text {
+      display: none;
+    }
+
+    .submit-btn.loading .btn-icon {
+      display: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ===== FOOTER ===== */
+    .login-footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .login-footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .login-footer a:hover {
+      text-decoration: underline;
     }
 
     /* ===== COUNTRY MODAL ===== */
@@ -402,10 +573,10 @@
       border-radius: 14px;
       color: var(--text-light);
       font-size: 13px;
+      outline: none;
     }
 
     .country-modal-search input:focus {
-      outline: none;
       border-color: var(--primary);
     }
 
@@ -472,133 +643,289 @@
       font-family: monospace;
     }
 
-    /* ===== PHONE ===== */
-    .phone-wrapper {
-      display: flex;
-      align-items: center;
-      background: rgba(10, 17, 40, 0.8);
-      border: 1px solid rgba(212, 175, 55, 0.2);
-      border-radius: 12px;
-      transition: var(--transition);
-      overflow: hidden;
-    }
-
-    .phone-wrapper:focus-within {
-      border-color: var(--primary);
-      background: rgba(10, 17, 40, 0.95);
-    }
-
-    .phone-indicatif {
-      padding: 12px 0 12px 14px;
-      color: var(--primary);
-      font-weight: 600;
-      font-size: 14px;
-      min-width: 55px;
-      border-right: 1px solid rgba(212, 175, 55, 0.15);
-      background: transparent;
-      white-space: nowrap;
-    }
-
-    .phone-wrapper input {
-      flex: 1;
-      padding: 12px 14px;
-      background: transparent;
-      border: none;
-      color: var(--text-light);
-      font-size: 14px;
-      outline: none;
-      min-width: 0;
-    }
-
-    .phone-wrapper input::placeholder {
-      color: var(--text-dim);
-      opacity: 0.6;
-    }
-
-    /* ===== SUBMIT ===== */
-    .submit-btn {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      border: none;
-      border-radius: 14px;
-      color: #0A1128;
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      transition: var(--transition);
-      font-family: 'Inter', sans-serif;
-      margin-top: 6px;
-    }
-
-    .submit-btn:active {
-      transform: scale(0.97);
-    }
-
-    .submit-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .btn-spinner {
-      width: 18px;
-      height: 18px;
-      border: 2px solid transparent;
-      border-top-color: #0A1128;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .login-footer {
-      text-align: center;
-      margin-top: 28px;
-      font-size: 13px;
-      color: var(--text-dim);
-    }
-
-    .login-footer a {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 600;
-    }
-
     /* ===== RESPONSIVE ===== */
     @media (max-width: 480px) {
-      .register-card { padding: 24px 18px; }
-      .row-2cols { flex-direction: column; gap: 0; }
-      .register-title { font-size: 20px; }
-      .country-modal { max-width: 100%; margin: 10px; border-radius: 20px; }
+      .register-card {
+        padding: 24px 18px;
+      }
+
+      .row-2cols {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .register-title {
+        font-size: 22px;
+      }
+
+      .country-modal {
+        max-width: 100%;
+        margin: 10px;
+        border-radius: 20px;
+      }
     }
 
-    .pwa-install-btn {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      right: 20px;
-      background: var(--primary);
-      color: #0A1128;
-      border: none;
-      border-radius: 50px;
-      padding: 14px;
-      font-weight: 700;
-      z-index: 1000;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      cursor: pointer;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      max-width: 460px;
-      margin: 0 auto;
+    /* ===== FOOTER SITE ===== */
+    .site-footer {
+      text-align: center;
+      padding: 20px 16px 10px;
+      border-top: 1px solid rgba(212, 175, 55, 0.06);
+      margin-top: 10px;
     }
+
+    .site-footer p {
+      color: var(--text-dim);
+      font-size: 11px;
+    }
+    
+    /* ============================================================
+   RESPONSIVE - À AJOUTER À LA FIN DU FICHIER
+   ============================================================ */
+
+/* ===== TABLETTE (>= 768px) ===== */
+@media (min-width: 768px) {
+  .container {
+    max-width: 700px;
+    padding: 30px 24px 60px;
+  }
+
+  .register-card {
+    padding: 40px 36px;
+    border-radius: 32px;
+  }
+
+  .register-title {
+    font-size: 30px;
+  }
+
+  .row-2cols {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .row-2cols .form-group {
+    margin-bottom: 0;
+  }
+
+  .country-modal {
+    max-width: 420px;
+  }
+
+  .header {
+    padding: 16px 5%;
+  }
+
+  .logo-text {
+    font-size: 26px;
+  }
+
+  .login-link {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+
+  .submit-btn {
+    padding: 16px;
+    font-size: 16px;
+  }
+}
+
+/* ===== ORDINATEUR (>= 1024px) ===== */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 900px;
+    padding: 40px 32px 80px;
+  }
+
+  .register-card {
+    padding: 48px 44px;
+    border-radius: 36px;
+  }
+
+  .register-title {
+    font-size: 34px;
+  }
+
+  .register-subtitle {
+    font-size: 15px;
+  }
+
+  .row-2cols {
+    gap: 20px;
+  }
+
+  .form-group label {
+    font-size: 12px;
+  }
+
+  .input-wrapper input,
+  .country-selector,
+  .phone-wrapper {
+    padding: 14px 16px 14px 46px;
+    font-size: 15px;
+    border-radius: 14px;
+  }
+
+  .input-wrapper .input-icon {
+    left: 16px;
+    font-size: 15px;
+  }
+
+  .phone-indicatif {
+    padding: 14px 0 14px 16px;
+    font-size: 15px;
+    min-width: 60px;
+  }
+
+  .phone-wrapper input {
+    padding: 14px 16px;
+    font-size: 15px;
+  }
+
+  .country-selector-display .flag {
+    font-size: 26px;
+  }
+
+  .country-selector-display .name {
+    font-size: 15px;
+  }
+
+  .checkbox-group label {
+    font-size: 13px;
+  }
+
+  .submit-btn {
+    padding: 18px;
+    font-size: 17px;
+    border-radius: 16px;
+    margin-top: 12px;
+  }
+
+  .login-footer {
+    font-size: 14px;
+    margin-top: 28px;
+  }
+
+  .country-modal {
+    max-width: 460px;
+    border-radius: 32px;
+  }
+
+  .country-modal-header h3 {
+    font-size: 20px;
+  }
+
+  .country-option {
+    padding: 14px 18px;
+  }
+
+  .country-option-name {
+    font-size: 15px;
+  }
+
+  .site-footer p {
+    font-size: 12px;
+  }
+}
+
+/* ===== GRAND ÉCRAN (>= 1280px) ===== */
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1100px;
+    padding: 50px 40px 100px;
+  }
+
+  .register-card {
+    padding: 56px 52px;
+    border-radius: 40px;
+  }
+
+  .register-title {
+    font-size: 38px;
+  }
+
+  .row-2cols {
+    gap: 24px;
+  }
+
+  .input-wrapper input,
+  .country-selector,
+  .phone-wrapper {
+    padding: 16px 18px 16px 50px;
+    font-size: 16px;
+  }
+
+  .input-wrapper .input-icon {
+    left: 18px;
+    font-size: 16px;
+  }
+}
+
+/* ===== PETIT TÉLÉPHONE (< 400px) ===== */
+@media (max-width: 399px) {
+  .register-card {
+    padding: 20px 14px;
+    border-radius: 20px;
+  }
+
+  .register-title {
+    font-size: 20px;
+  }
+
+  .register-subtitle {
+    font-size: 12px;
+  }
+
+  .input-wrapper input,
+  .country-selector,
+  .phone-wrapper {
+    padding: 10px 12px 10px 36px;
+    font-size: 13px;
+  }
+
+  .input-wrapper .input-icon {
+    left: 10px;
+    font-size: 12px;
+  }
+
+  .phone-indicatif {
+    padding: 10px 0 10px 10px;
+    font-size: 13px;
+    min-width: 48px;
+  }
+
+  .phone-wrapper input {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .country-selector-display .flag {
+    font-size: 18px;
+  }
+
+  .country-selector-display .name {
+    font-size: 13px;
+  }
+
+  .submit-btn {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .login-footer {
+    font-size: 12px;
+  }
+
+  .checkbox-group label {
+    font-size: 11px;
+  }
+
+  .checkbox-group input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+  }
+}login.html
   </style>
 </head>
 <body>
@@ -614,33 +941,36 @@
 <!-- MAIN -->
 <main class="container">
   <div class="register-card">
+
+    <!-- HEADER -->
     <div class="register-header">
       <h1 class="register-title">Créer un <span>Compte</span></h1>
       <p class="register-subtitle">Rejoignez la plateforme N.I.F</p>
     </div>
 
-    <!-- MESSAGE BANNER -->
+    <!-- MESSAGE -->
     <div id="messageBanner" class="message-banner hidden">
       <i id="messageIcon" class="fas fa-info-circle"></i>
       <span id="messageText"></span>
     </div>
 
     <!-- FORM -->
-    <form id="registerForm">
-      <!-- Nom & Prénom -->
+    <form id="registerForm" novalidate>
+
+      <!-- Nom + Prénom -->
       <div class="row-2cols">
         <div class="form-group">
           <label>Nom</label>
           <div class="input-wrapper">
             <i class="fas fa-user input-icon"></i>
-            <input type="text" id="nom" placeholder="Votre nom" autocomplete="off" required>
+            <input type="text" id="nom" placeholder="Votre nom" autocomplete="family-name" required>
           </div>
         </div>
         <div class="form-group">
           <label>Prénom</label>
           <div class="input-wrapper">
             <i class="fas fa-user input-icon"></i>
-            <input type="text" id="prenom" placeholder="Votre prénom" autocomplete="off" required>
+            <input type="text" id="prenom" placeholder="Votre prénom" autocomplete="given-name" required>
           </div>
         </div>
       </div>
@@ -650,11 +980,11 @@
         <label>Email</label>
         <div class="input-wrapper">
           <i class="fas fa-envelope input-icon"></i>
-          <input type="email" id="email" placeholder="exemple@email.com" autocomplete="off" required>
+          <input type="email" id="email" placeholder="exemple@email.com" autocomplete="email" required>
         </div>
       </div>
 
-      <!-- Pays (avec modal) -->
+      <!-- Pays -->
       <div class="form-group">
         <label>Pays</label>
         <div class="country-selector" id="countrySelector">
@@ -674,7 +1004,10 @@
         <label>Téléphone</label>
         <div class="phone-wrapper">
           <span class="phone-indicatif" id="indicatifDisplay">+227</span>
-          <input type="tel" id="phone" placeholder="90 12 34 56" autocomplete="off" required>
+          <input type="tel" id="phone" placeholder="90 12 34 56" autocomplete="tel" required maxlength="10">
+        </div>
+        <div style="font-size: 10px; color: var(--text-dim); margin-top: 4px;">
+          <i class="fas fa-info-circle"></i> 8 chiffres (ex: 90 12 34 56)
         </div>
       </div>
 
@@ -683,46 +1016,64 @@
         <label>Mot de passe</label>
         <div class="input-wrapper">
           <i class="fas fa-lock input-icon"></i>
-          <input type="password" id="password" placeholder="6 caractères minimum" required>
+          <input type="password" id="password" placeholder="8 caractères minimum" autocomplete="new-password" required>
           <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+        </div>
+        <div style="font-size: 10px; color: var(--text-dim); margin-top: 4px;">
+          <i class="fas fa-info-circle"></i> Minimum 8 caractères
         </div>
       </div>
 
-      <!-- Confirmer mot de passe -->
+      <!-- Confirmer -->
       <div class="form-group">
         <label>Confirmer le mot de passe</label>
         <div class="input-wrapper">
           <i class="fas fa-lock input-icon"></i>
-          <input type="password" id="confirmPassword" placeholder="Répétez le mot de passe" required>
+          <input type="password" id="confirmPassword" placeholder="Répétez le mot de passe" autocomplete="new-password" required>
+          <i class="fas fa-eye toggle-password" id="toggleConfirmPassword"></i>
         </div>
       </div>
 
-      <!-- Bouton -->
-      <button type="submit" class="submit-btn" id="registerBtn">
-        <i class="fas fa-user-plus"></i> Créer mon compte
+      <!-- Conditions -->
+      <div class="form-group">
+        <div class="checkbox-group" id="checkboxGroup">
+          <input type="checkbox" id="acceptConditions">
+          <label for="acceptConditions" id="conditionsLabel">
+            J'accepte les <a href="conditions.html" target="_blank">conditions d'utilisation</a>
+          </label>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="submit-btn" id="submitBtn">
+        <span class="btn-icon"><i class="fas fa-user-plus"></i></span>
+        <span class="btn-text">Créer mon compte</span>
+        <span class="btn-spinner"></span>
       </button>
+
     </form>
 
     <!-- Footer -->
     <div class="login-footer">
       Déjà membre ? <a href="login.html">Connectez-vous</a>
     </div>
+
   </div>
 </main>
 
-<!-- PWA Install Button -->
-<button class="pwa-install-btn" id="pwaInstallBtn">
-  <i class="fas fa-download"></i> Installer l'application
-</button>
+<!-- FOOTER SITE -->
+<footer class="site-footer">
+  <p>&copy; 2026 N.I.F - Niger Investment & Finance</p>
+</footer>
 
 <!-- ===== COUNTRY MODAL ===== -->
 <div class="country-modal-overlay" id="countryModal">
   <div class="country-modal">
     <div class="country-modal-header">
       <h3>Sélectionnez votre <span>pays</span></h3>
-      <div class="country-modal-close" id="closeCountryModalBtn">
+      <button class="country-modal-close" id="closeCountryModalBtn">
         <i class="fas fa-times"></i>
-      </div>
+      </button>
     </div>
     <div class="country-modal-search">
       <input type="text" id="countrySearch" placeholder="🔍 Rechercher un pays..." autocomplete="off">
@@ -745,7 +1096,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-  import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
   // ===== FIREBASE CONFIG =====
   const firebaseConfig = {
@@ -765,18 +1116,12 @@
   // ===== PAYS =====
   const countries = [
     { name: "Niger", flag: "🇳🇪", code: "+227" },
-    { name: "Bénin", flag: "🇧🇯", code: "+229" },
     { name: "Mali", flag: "🇲🇱", code: "+223" },
+    { name: "Bénin", flag: "🇧🇯", code: "+229" },
     { name: "Burkina Faso", flag: "🇧🇫", code: "+226" },
     { name: "Sénégal", flag: "🇸🇳", code: "+221" },
-    { name: "Côte d'Ivoire", flag: "🇨🇮", code: "+225" },
     { name: "Togo", flag: "🇹🇬", code: "+228" },
-    { name: "Guinée", flag: "🇬🇳", code: "+224" },
-    { name: "Ghana", flag: "🇬🇭", code: "+233" },
-    { name: "Cameroun", flag: "🇨🇲", code: "+237" },
-    { name: "Nigéria", flag: "🇳🇬", code: "+234" },
-    { name: "Tchad", flag: "🇹🇩", code: "+235" },
-    { name: "Maroc", flag: "🇲🇦", code: "+212" }
+    { name: "Nigeria", flag: "🇳🇬", code: "+234" }
   ];
 
   let selectedCountry = "Niger";
@@ -784,19 +1129,30 @@
   let selectedCode = "+227";
 
   // ===== DOM =====
-  const registerForm = document.getElementById('registerForm');
-  const registerBtn = document.getElementById('registerBtn');
+  const form = document.getElementById('registerForm');
+  const submitBtn = document.getElementById('submitBtn');
   const messageBanner = document.getElementById('messageBanner');
   const messageIcon = document.getElementById('messageIcon');
   const messageText = document.getElementById('messageText');
-  const togglePassword = document.getElementById('togglePassword');
+
+  const nomInput = document.getElementById('nom');
+  const prenomInput = document.getElementById('prenom');
+  const emailInput = document.getElementById('email');
+  const phoneInput = document.getElementById('phone');
   const passwordInput = document.getElementById('password');
-  const indicatifDisplay = document.getElementById('indicatifDisplay');
+  const confirmPasswordInput = document.getElementById('confirmPassword');
+  const acceptConditions = document.getElementById('acceptConditions');
+
   const countrySelector = document.getElementById('countrySelector');
   const selectedCountryFlag = document.getElementById('selectedCountryFlag');
   const selectedCountryName = document.getElementById('selectedCountryName');
   const paysInput = document.getElementById('pays');
   const indicatifInput = document.getElementById('indicatif');
+  const indicatifDisplay = document.getElementById('indicatifDisplay');
+
+  const togglePassword = document.getElementById('togglePassword');
+  const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+
   const countryModal = document.getElementById('countryModal');
   const closeCountryModalBtn = document.getElementById('closeCountryModalBtn');
   const countrySearch = document.getElementById('countrySearch');
@@ -808,6 +1164,13 @@
     passwordInput.type = type;
     togglePassword.classList.toggle('fa-eye');
     togglePassword.classList.toggle('fa-eye-slash');
+  });
+
+  toggleConfirmPassword.addEventListener('click', () => {
+    const type = confirmPasswordInput.type === 'password' ? 'text' : 'password';
+    confirmPasswordInput.type = type;
+    toggleConfirmPassword.classList.toggle('fa-eye');
+    toggleConfirmPassword.classList.toggle('fa-eye-slash');
   });
 
   // ===== COUNTRY MODAL =====
@@ -837,13 +1200,13 @@
   }
 
   function renderCountryList(filter = "") {
-    const filtered = countries.filter(c => 
+    const filtered = countries.filter(c =>
       c.name.toLowerCase().includes(filter.toLowerCase()) ||
       c.code.includes(filter)
     );
 
     countryList.innerHTML = filtered.map(c => `
-      <div class="country-option ${c.name === selectedCountry ? 'selected' : ''}" 
+      <div class="country-option ${c.name === selectedCountry ? 'selected' : ''}"
            data-name="${c.name}" data-flag="${c.flag}" data-code="${c.code}">
         <span class="country-option-flag">${c.flag}</span>
         <span class="country-option-name">${c.name}</span>
@@ -861,7 +1224,6 @@
     });
   }
 
-  // ===== COUNTRY EVENTS =====
   countrySelector.addEventListener('click', openCountryModal);
   closeCountryModalBtn.addEventListener('click', closeCountryModal);
   countryModal.addEventListener('click', (e) => {
@@ -875,11 +1237,11 @@
   // ===== MESSAGE =====
   function showMessage(text, type = 'error') {
     messageBanner.className = `message-banner ${type}`;
-    messageIcon.className = type === 'error' ? 'fas fa-exclamation-circle' : 
+    messageIcon.className = type === 'error' ? 'fas fa-exclamation-circle' :
                            (type === 'success' ? 'fas fa-check-circle' : 'fas fa-info-circle');
     messageText.textContent = text;
     messageBanner.classList.remove('hidden');
-    
+
     if (type === 'success') {
       setTimeout(() => messageBanner.classList.add('hidden'), 5000);
     }
@@ -889,46 +1251,62 @@
     messageBanner.classList.add('hidden');
   }
 
-  // ========================================
-  // ===== INSCRIPTION =====
-  // ========================================
-  registerForm.addEventListener('submit', async (e) => {
+  // ===== VALIDATION =====
+  function validateForm() {
+    const nom = nomInput.value.trim();
+    const prenom = prenomInput.value.trim();
+    const email = emailInput.value.trim();
+    const phone = phoneInput.value.trim().replace(/\s/g, '');
+    const password = passwordInput.value;
+    const confirm = confirmPasswordInput.value;
+
+    if (!nom) { showMessage('Veuillez saisir votre nom.', 'error'); return false; }
+    if (!prenom) { showMessage('Veuillez saisir votre prénom.', 'error'); return false; }
+    if (!email) { showMessage('Veuillez saisir votre email.', 'error'); return false; }
+    if (!email.includes('@') || !email.includes('.')) {
+      showMessage('Veuillez saisir un email valide.', 'error');
+      return false;
+    }
+    if (!phone || phone.length < 8) {
+      showMessage(`Le numéro doit contenir 8 chiffres.`, 'error');
+      return false;
+    }
+    if (phone.length > 8) {
+      showMessage(`Le numéro ne doit pas dépasser 8 chiffres.`, 'error');
+      return false;
+    }
+    if (!password || password.length < 8) {
+      showMessage('Le mot de passe doit contenir au moins 8 caractères.', 'error');
+      return false;
+    }
+    if (password !== confirm) {
+      showMessage('Les mots de passe ne correspondent pas.', 'error');
+      return false;
+    }
+    if (!acceptConditions.checked) {
+      showMessage('Vous devez accepter les conditions d\'utilisation.', 'warning');
+      return false;
+    }
+
+    return true;
+  }
+
+  // ===== SUBMIT =====
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     hideMessage();
 
-    const nom = document.getElementById('nom').value.trim();
-    const prenom = document.getElementById('prenom').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
+    if (!validateForm()) return;
 
-    // Validations
-    if (!nom || !prenom || !email || !phone || !password) {
-      showMessage('Veuillez remplir tous les champs.', 'error');
-      return;
-    }
+    const nom = nomInput.value.trim();
+    const prenom = prenomInput.value.trim();
+    const email = emailInput.value.trim();
+    const phone = phoneInput.value.trim().replace(/\s/g, '');
+    const password = passwordInput.value;
+    const fullPhone = selectedCode + phone;
 
-    if (password.length < 6) {
-      showMessage('Le mot de passe doit contenir au moins 6 caractères.', 'error');
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      showMessage('Les mots de passe ne correspondent pas.', 'error');
-      return;
-    }
-
-    if (phone.replace(/\s/g, '').length < 7) {
-      showMessage('Numéro de téléphone invalide.', 'error');
-      return;
-    }
-
-    const phoneFull = selectedCode + ' ' + phone;
-    const paysNom = selectedCountry;
-
-    registerBtn.disabled = true;
-    registerBtn.innerHTML = '<div class="btn-spinner"></div> Création du compte...';
+    submitBtn.classList.add('loading');
+    submitBtn.disabled = true;
 
     try {
       // 1. Création Auth
@@ -936,41 +1314,28 @@
       const user = userCredential.user;
       const now = new Date().toISOString();
 
-      // ========================================
-      // 2. DOCUMENT UTILISATEUR
-      // ========================================
+      // 2. Création du document utilisateur
       const userData = {
         uid: user.uid,
-        email: email,
         nom: nom,
         prenom: prenom,
         fullName: `${prenom} ${nom}`,
-        phone: phoneFull,
-        pays: selectedCode,
-        paysNom: paysNom,
-        indicatif: selectedCode,
-
-        // Portefeuille
+        email: email,
+        phone: fullPhone,
+        pays: selectedCountry,
+        paysCode: selectedCode,
         balance: 0,
         totalDepots: 0,
         totalRetraits: 0,
-
-        // Statistiques
         totalAchats: 0,
         totalVentes: 0,
         totalRevenus: 0,
         formationsAchetees: [],
-
-        // Statut
         status: "active",
         role: "user",
-
-        // Dates
-        registrationDate: now,
         createdAt: now,
+        registrationDate: now,
         lastLogin: now,
-
-        // Notifications
         notificationPreferences: {
           ventes: true,
           achats: true,
@@ -979,92 +1344,12 @@
       };
 
       await setDoc(doc(db, "users", user.uid), userData);
-      console.log("✅ Utilisateur créé");
 
-      // ========================================
-      // 3. COLLECTIONS
-      // ========================================
-
-      // Collection "formations"
-      await setDoc(doc(db, "formations", "init_" + user.uid), {
-        titre: "Initialisation",
-        description: "Collection prête",
-        categorie: "Init",
-        prix: 0,
-        vendeurId: user.uid,
-        vendeurNom: `${prenom} ${nom}`,
-        vendeurEmail: email,
-        fichierNom: "",
-        fichierTaille: 0,
-        fichierUrl: "",
-        fichierPath: "",
-        pages: 0,
-        statut: "init",
-        acheteurs: [],
-        ventes: 0,
-        noteMoyenne: 0,
-        nombreAvis: 0,
-        dateCreation: now,
-        isInit: true
-      });
-      console.log("✅ Collection 'formations' créée");
-
-      // Collection "transactions"
-      await setDoc(doc(db, "transactions", "init_" + user.uid), {
-        userId: user.uid,
-        type: "initialisation",
-        montant: 0,
-        description: "Collection initialisée",
-        date: now,
-        statut: "completé",
-        isInit: true
-      });
-      console.log("✅ Collection 'transactions' créée");
-
-      // Collection "avis"
-      await setDoc(doc(db, "avis", "init_" + user.uid), {
-        userId: user.uid,
-        formationId: "init",
-        note: 0,
-        commentaire: "Collection initialisée",
-        date: now,
-        isInit: true
-      });
-      console.log("✅ Collection 'avis' créée");
-
-      // Collection "depots"
-      await setDoc(doc(db, "depots", "init_" + user.uid), {
-        userId: user.uid,
-        montant: 0,
-        reference: "init",
-        statut: "init",
-        date: now,
-        dateValidation: null,
-        methode: "initialisation",
-        isInit: true
-      });
-      console.log("✅ Collection 'depots' créée");
-
-      // ========================================
-      // 4. SUPPRIMER LES DOCS "init"
-      // ========================================
-      try {
-        await deleteDoc(doc(db, "formations", "init_" + user.uid));
-        await deleteDoc(doc(db, "transactions", "init_" + user.uid));
-        await deleteDoc(doc(db, "avis", "init_" + user.uid));
-        await deleteDoc(doc(db, "depots", "init_" + user.uid));
-        console.log("✅ Documents 'init' supprimés - Collections prêtes");
-      } catch (e) {
-        console.log("⚠️ Erreur suppression init:", e);
-      }
-
-      // ========================================
-      // 5. SAUVEGARDE LOCALE
-      // ========================================
+      // 3. Stockage local
       localStorage.setItem('NIF_current_user', user.uid);
       localStorage.setItem('NIF_user_name', userData.fullName);
 
-      showMessage('✅ Compte créé avec succès ! Redirection...', 'success');
+      showMessage('✅ Compte créé avec succès !', 'success');
 
       setTimeout(() => {
         window.location.href = 'index.html';
@@ -1079,53 +1364,26 @@
       } else if (error.code === 'auth/invalid-email') {
         errorMsg = 'Email invalide.';
       } else if (error.code === 'auth/weak-password') {
-        errorMsg = 'Mot de passe trop faible.';
-      } else if (error.code === 'auth/operation-not-allowed') {
-        errorMsg = "L'inscription est temporairement désactivée.";
+        errorMsg = 'Mot de passe trop faible (8 caractères minimum).';
       } else if (error.code === 'auth/network-request-failed') {
         errorMsg = 'Erreur réseau. Vérifiez votre connexion.';
       }
 
       showMessage(errorMsg, 'error');
 
-      registerBtn.disabled = false;
-      registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> Créer mon compte';
+      submitBtn.classList.remove('loading');
+      submitBtn.disabled = false;
     }
   });
 
-  // ===== VÉRIFIER SI DÉJÀ CONNECTÉ =====
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      localStorage.setItem('NIF_current_user', user.uid);
-      window.location.href = 'index.html';
-    }
-  });
-
-  // ===== PWA =====
-  let deferredPrompt;
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    const installBtn = document.getElementById('pwaInstallBtn');
-    installBtn.style.display = 'flex';
-
-    installBtn.onclick = async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        deferredPrompt = null;
-        installBtn.style.display = 'none';
-      }
-    };
-  });
-
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then(reg => console.log('Service Worker enregistré'))
-        .catch(err => console.log('Erreur Service Worker:', err));
-    });
+  // ===== CHARGEMENT RAPIDE DU NOM DEPUIS LOCALSTORAGE =====
+  const savedName = localStorage.getItem('NIF_user_name');
+  if (savedName) {
+    // Déjà connecté, rediriger
+    window.location.href = 'index.html';
   }
+
+  console.log("✅ Page d'inscription N.I.F chargée !");
 </script>
 
 </body>

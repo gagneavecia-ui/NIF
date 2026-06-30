@@ -2,10 +2,9 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>N.I.F - Niger Investment & Finance</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
   <meta name="theme-color" content="#0A1128">
-  <meta name="description" content="N.I.F - Plateforme de formation">
+  <meta name="description" content="N.I.F - Niger Investment & Finance">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="N.I.F">
@@ -61,7 +60,7 @@
                   linear-gradient(180deg, #0A1128 0%, #070C1E 100%);
     }
 
-    /* HEADER */
+    /* ===== HEADER ===== */
     .header {
       display: flex;
       justify-content: space-between;
@@ -141,19 +140,6 @@
       white-space: nowrap;
     }
 
-    .user-name.skeleton {
-      width: 60px;
-      height: 12px;
-      background: rgba(255,255,255,0.06);
-      border-radius: 4px;
-      animation: pulse 1.5s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 0.4; }
-      50% { opacity: 0.8; }
-    }
-
     .menu-btn {
       width: 36px;
       height: 36px;
@@ -178,16 +164,22 @@
       color: var(--text-light);
     }
 
-    /* CONTAINER */
+    /* ===== CONTAINER ===== */
     .container {
       max-width: 500px;
       margin: 0 auto;
       padding: 20px 16px 80px;
     }
 
-    /* HERO */
+    /* ===== HERO ===== */
     .hero-section {
       margin-bottom: 24px;
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .hero-badge {
@@ -231,7 +223,7 @@
       color: var(--text-dim);
     }
 
-    /* DASHBOARD */
+    /* ===== DASHBOARD ===== */
     .dashboard-stats-container {
       margin-bottom: 28px;
     }
@@ -241,6 +233,13 @@
       border: 1px solid rgba(212, 175, 55, 0.2);
       border-radius: 20px;
       padding: 18px 20px;
+      transition: var(--transition);
+      animation: fadeInUp 0.7s ease-out;
+    }
+
+    .main-stat-card:hover {
+      border-color: rgba(212, 175, 55, 0.4);
+      transform: translateY(-3px);
     }
 
     .main-stat-header {
@@ -289,14 +288,6 @@
       margin-bottom: 8px;
     }
 
-    .main-stat-value.skeleton {
-      width: 120px;
-      height: 28px;
-      background: rgba(255,255,255,0.04);
-      border-radius: 6px;
-      animation: pulse 1.5s ease-in-out infinite;
-    }
-
     .main-stat-footer {
       font-size: 10px;
       color: var(--text-dim);
@@ -305,7 +296,7 @@
       gap: 6px;
     }
 
-    /* SECTION HEADER */
+    /* ===== SECTION HEADER ===== */
     .section-header {
       margin-bottom: 16px;
       display: flex;
@@ -337,7 +328,7 @@
       font-style: italic;
     }
 
-    /* FORMATIONS */
+    /* ===== FORMATIONS GRATUITES ===== */
     .formations-list-horizontal {
       display: flex;
       flex-direction: column;
@@ -357,6 +348,7 @@
       transition: var(--transition);
       height: 145px;
       cursor: pointer;
+      animation: fadeInUp 0.8s ease-out;
     }
 
     .formation-card-horizontal:active {
@@ -365,7 +357,7 @@
 
     .formation-card-horizontal:hover {
       border-color: rgba(212, 175, 55, 0.3);
-      transform: translateY(-2px);
+      transform: translateY(-3px);
       background: rgba(17, 26, 54, 0.85);
     }
 
@@ -447,7 +439,7 @@
     .formation-horiz-price {
       font-size: 11px;
       font-weight: 700;
-      color: var(--primary);
+      color: var(--success);
     }
 
     .formation-horiz-action {
@@ -464,7 +456,7 @@
       transform: translateX(2px);
     }
 
-    /* FEATURES GRID */
+    /* ===== FEATURES GRID ===== */
     .features-grid {
       display: flex;
       flex-direction: column;
@@ -489,6 +481,7 @@
       display: block;
       transition: var(--transition);
       cursor: pointer;
+      animation: fadeInUp 0.9s ease-out;
     }
 
     .feature-card-premium:active {
@@ -547,6 +540,7 @@
       display: block;
       transition: var(--transition);
       cursor: pointer;
+      animation: fadeInUp 1.0s ease-out;
     }
 
     .feature-card-express:active {
@@ -595,6 +589,7 @@
       gap: 16px;
       transition: var(--transition);
       cursor: pointer;
+      animation: fadeInUp 1.1s ease-out;
     }
 
     .feature-card-horizontal:active {
@@ -644,7 +639,7 @@
       transform: translateX(3px);
     }
 
-    /* TESTIMONIALS */
+    /* ===== TESTIMONIALS ===== */
     .testimonials-section {
       margin: 32px 0 24px;
     }
@@ -680,6 +675,7 @@
       border-radius: 20px;
       padding: 16px;
       scroll-snap-align: start;
+      animation: fadeInUp 1.2s ease-out;
     }
 
     .testimonial-compact-stars {
@@ -726,7 +722,7 @@
       color: var(--primary-light);
     }
 
-    /* TESTIMONIALS - BOUTON VOIR TOUT */
+    /* ===== BOUTON VOIR TOUT ===== */
     .testimonials-see-all {
       display: flex;
       align-items: center;
@@ -743,6 +739,7 @@
       font-weight: 600;
       transition: var(--transition);
       cursor: pointer;
+      animation: fadeInUp 1.3s ease-out;
     }
 
     .testimonials-see-all:active {
@@ -763,7 +760,7 @@
       transform: translateX(4px);
     }
 
-    /* FOOTER */
+    /* ===== FOOTER ===== */
     .footer {
       border-top: 1px solid rgba(212, 175, 55, 0.08);
       padding: 32px 0 20px;
@@ -801,6 +798,7 @@
       justify-content: center;
       gap: 12px;
       margin-bottom: 20px;
+      flex-wrap: wrap;
     }
 
     .social-link {
@@ -815,10 +813,8 @@
       color: var(--text-dim);
       text-decoration: none;
       transition: var(--transition);
-    }
-
-    .social-link:active {
-      transform: scale(0.92);
+      cursor: default;
+      pointer-events: none;
     }
 
     .social-link:hover {
@@ -826,88 +822,28 @@
       border-color: var(--primary);
     }
 
+    .social-link.admin-link {
+      border-color: rgba(212, 175, 55, 0.4);
+      color: var(--primary);
+      cursor: pointer;
+      pointer-events: auto;
+      opacity: 0.8;
+    }
+
+    .social-link.admin-link:hover {
+      opacity: 1;
+      border-color: var(--primary);
+      transform: scale(1.05);
+    }
+
     .footer-bottom {
       font-size: 10px;
       color: var(--text-dim);
     }
 
-    /* GAIN NOTIFICATION */
-    .gain-notification {
-      position: fixed;
-      bottom: 20px;
-      left: 16px;
-      right: 16px;
-      background: #0D1633;
-      border: 1px solid var(--primary);
-      border-radius: 14px;
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      z-index: 1000;
-      transform: translateY(200px);
-      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      max-width: 400px;
-      margin: 0 auto;
-    }
-
-    .gain-notification.show {
-      transform: translateY(0);
-    }
-
-    .notif-icon {
-      width: 36px;
-      height: 36px;
-      background: rgba(16, 185, 129, 0.1);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--success);
-    }
-
-    .notif-content h4 {
-      font-size: 13px;
-      margin-bottom: 2px;
-    }
-
-    .notif-content p {
-      font-size: 11px;
-      color: var(--text-dim);
-    }
-
-      /* TOAST */
-    .toast {
-      position: fixed;
-      bottom: 80px;
-      left: 16px;
-      right: 16px;
-      max-width: 400px;
-      margin: 0 auto;
-      padding: 14px 20px;
-      border-radius: 14px;
-      font-size: 13px;
-      font-weight: 500;
-      transform: translateY(120px);
-      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      z-index: 999;
-      text-align: center;
-    }
-
-    .toast.show { transform: translateY(0); }
-    .toast.success { background: #0D2A1F; border: 1px solid var(--success); color: var(--success); }
-    .toast.error { background: #2A0D0D; border: 1px solid #EF4444; color: #EF4444; }
-    .toast.info { background: #1A1A2E; border: 1px solid var(--primary); color: var(--primary-light); }
-
-    @media (max-width: 550px) {
-      .hero-title { font-size: 24px; }
-      .main-stat-value { font-size: 26px; }
-      .formation-card-horizontal { height: 130px; }
-      .formation-horiz-img-wrap { width: 90px; min-width: 90px; }
-      .container { padding: 16px 14px 80px; }
-    }
-
-    /* ===== MENU PLEIN ÉCRAN ===== */
+      /* ============================================================
+       MENU PLEIN ÉCRAN
+       ============================================================ */
     .menu-overlay {
       position: fixed;
       top: 0;
@@ -956,7 +892,17 @@
       transform: translateX(0);
     }
 
-    /* En-tête du menu */
+    .menu-sidebar::-webkit-scrollbar {
+      width: 2px;
+    }
+    .menu-sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .menu-sidebar::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 4px;
+    }
+
     .menu-header {
       display: flex;
       justify-content: space-between;
@@ -1022,7 +968,6 @@
       transform: scale(0.92);
     }
 
-    /* Navigation */
     .menu-nav {
       flex: 1;
       padding: 16px 12px 20px;
@@ -1073,7 +1018,6 @@
       color: var(--primary-light);
     }
 
-    /* Pied du menu */
     .menu-footer {
       padding: 16px 20px 10px;
       border-top: 1px solid rgba(212, 175, 55, 0.06);
@@ -1091,6 +1035,7 @@
       font-weight: 500;
       transition: var(--transition);
       opacity: 0.7;
+      cursor: pointer;
     }
 
     .menu-logout:active {
@@ -1114,17 +1059,156 @@
       margin-top: 10px;
     }
 
-    .menu-sidebar::-webkit-scrollbar {
-      width: 2px;
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+
+    @media (max-width: 550px) {
+      .hero-title { font-size: 24px; }
+      .main-stat-value { font-size: 26px; }
+      .formation-card-horizontal { height: 130px; }
+      .formation-horiz-img-wrap { width: 90px; min-width: 90px; }
+      .container { padding: 16px 14px 80px; }
     }
 
-    .menu-sidebar::-webkit-scrollbar-track {
-      background: transparent;
+    /* ===== TABLETTE (>= 768px) ===== */
+    @media (min-width: 768px) {
+      .container {
+        max-width: 700px;
+        padding: 30px 24px 60px;
+      }
+
+      .header {
+        padding: 16px 5%;
+      }
+
+      .logo-text {
+        font-size: 26px;
+      }
+
+      .hero-title {
+        font-size: 34px;
+      }
+
+      .main-stat-value {
+        font-size: 34px;
+      }
+
+      .formation-card-horizontal {
+        height: 160px;
+      }
+
+      .formation-horiz-img-wrap {
+        width: 130px;
+        min-width: 130px;
+      }
     }
 
-    .menu-sidebar::-webkit-scrollbar-thumb {
-      background: var(--primary);
-      border-radius: 4px;
+    /* ===== ORDINATEUR (>= 1024px) ===== */
+    @media (min-width: 1024px) {
+      .container {
+        max-width: 960px;
+        padding: 40px 32px 80px;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .feature-card-horizontal {
+        grid-column: span 2;
+      }
+
+      .formations-list-horizontal {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+
+      .formation-card-horizontal {
+        height: 170px;
+        flex-direction: column;
+      }
+
+      .formation-horiz-img-wrap {
+        width: 100%;
+        min-width: 100%;
+        height: 120px;
+      }
+
+      .formation-horiz-img {
+        height: 120px;
+      }
+
+      .formation-horiz-content {
+        padding: 12px 14px;
+        height: auto;
+      }
+
+      .formation-horiz-description {
+        -webkit-line-clamp: 1;
+      }
+
+      .testimonials-scroll {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        overflow-x: visible;
+      }
+
+      .testimonial-compact {
+        min-width: auto;
+      }
+    }
+
+    /* ===== GRAND ÉCRAN (>= 1280px) ===== */
+    @media (min-width: 1280px) {
+      .container {
+        max-width: 1200px;
+        padding: 50px 40px 100px;
+      }
+
+      .features-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+
+      .feature-card-horizontal {
+        grid-column: span 3;
+      }
+
+      .formations-list-horizontal {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+
+      .formation-card-horizontal {
+        height: 190px;
+      }
+
+      .formation-horiz-img-wrap {
+        height: 130px;
+      }
+
+      .formation-horiz-img {
+        height: 130px;
+      }
+
+      .hero-title {
+        font-size: 40px;
+      }
+
+      .main-stat-value {
+        font-size: 40px;
+      }
+
+      .social-link {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+      }
     }
   </style>
 </head>
@@ -1132,23 +1216,10 @@
 
 <div class="gradient-bg"></div>
 
-<!-- GAIN NOTIFICATION -->
-<div class="gain-notification" id="gainNotification">
-  <div class="notif-icon"><i class="fas fa-chart-line"></i></div>
-  <div class="notif-content">
-    <h4 id="gainNotifTitle">Rendement Crédité</h4>
-    <p id="gainNotifMessage">Message</p>
-  </div>
-</div>
-
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
-
 <!-- ===== MENU PLEIN ÉCRAN ===== -->
 <div class="menu-overlay" id="menuOverlay">
   <div class="menu-backdrop" id="menuBackdrop"></div>
   <div class="menu-sidebar">
-    <!-- En-tête du menu -->
     <div class="menu-header">
       <div class="menu-user">
         <div class="menu-avatar" id="menuAvatar">N</div>
@@ -1162,7 +1233,6 @@
       </button>
     </div>
 
-    <!-- Liens du menu -->
     <nav class="menu-nav">
       <a href="index.html" class="menu-link active">
         <i class="fas fa-home"></i> Accueil
@@ -1190,7 +1260,6 @@
       </a>
     </nav>
 
-    <!-- Bas du menu -->
     <div class="menu-footer">
       <a href="#" class="menu-logout" id="menuLogoutBtn">
         <i class="fas fa-sign-out-alt"></i> Se déconnecter
@@ -1258,8 +1327,8 @@
         <h3 class="formation-horiz-title">Lancement d'Entreprise</h3>
         <p class="formation-horiz-description">Modèles opérationnels pour structurer une entreprise rentable.</p>
         <div class="formation-horiz-footer">
-          <span class="formation-horiz-price">Inclus</span>
-          <span class="formation-horiz-action">Ouvrir <i class="fas fa-chevron-right"></i></span>
+          <span class="formation-horiz-price">🎁 GRATUIT</span>
+          <span class="formation-horiz-action">Découvrir <i class="fas fa-chevron-right"></i></span>
         </div>
       </div>
     </a>
@@ -1273,8 +1342,8 @@
         <h3 class="formation-horiz-title">Ingénierie Marketing</h3>
         <p class="formation-horiz-description">Maîtrise des canaux numériques pour l'acquisition premium.</p>
         <div class="formation-horiz-footer">
-          <span class="formation-horiz-price">Inclus</span>
-          <span class="formation-horiz-action">Ouvrir <i class="fas fa-chevron-right"></i></span>
+          <span class="formation-horiz-price">🎁 GRATUIT</span>
+          <span class="formation-horiz-action">Découvrir <i class="fas fa-chevron-right"></i></span>
         </div>
       </div>
     </a>
@@ -1369,7 +1438,6 @@
       </div>
     </div>
 
-    <!-- BOUTON LIRE TOUS LES TÉMOIGNAGES -->
     <a href="avis.html" class="testimonials-see-all">
       <span>Lire tous les témoignages</span>
       <i class="fas fa-arrow-right"></i>
@@ -1385,7 +1453,9 @@
       <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
       <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
       <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
-      <a href="#" class="social-link" id="adminLockBtn" style="display: none;"><i class="fas fa-lock"></i></a>
+      <a href="#" class="social-link admin-link" id="adminLockBtn" style="display: none;">
+        <i class="fas fa-lock"></i>
+      </a>
     </div>
     <div class="footer-bottom">© 2026 N.I.F - Niger Investment & Finance</div>
   </footer>
@@ -1403,13 +1473,10 @@
   }
 </script>
 
-  <script type="module">
+<script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-  import { 
-    getFirestore, doc, onSnapshot, getDoc, setDoc, updateDoc, 
-    collection, query, where, getDocs, orderBy, limit 
-  } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+  import { getFirestore, doc, getDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
   // ===== FIREBASE CONFIG =====
   const firebaseConfig = {
@@ -1426,19 +1493,13 @@
   const db = getFirestore(app);
 
   // ===== DOM ELEMENTS =====
-  const userNameEl = document.getElementById("userName");
-  const userAvatarEl = document.getElementById("userAvatar");
-  const statBalanceEl = document.getElementById("statBalance");
-  const gainNotification = document.getElementById("gainNotification");
-  const gainNotifTitle = document.getElementById("gainNotifTitle");
-  const gainNotifMessage = document.getElementById("gainNotifMessage");
-  const toast = document.getElementById("toast");
-  const userProfileBtn = document.getElementById("userProfileBtn");
-  const menuBtn = document.getElementById("menuBtn");
-  const logoLink = document.getElementById("logoLink");
+  const userNameEl = document.getElementById('userName');
+  const userAvatarEl = document.getElementById('userAvatar');
+  const statBalanceEl = document.getElementById('statBalance');
 
   // Menu
   const menuOverlay = document.getElementById('menuOverlay');
+  const menuBtn = document.getElementById('menuBtn');
   const menuCloseBtn = document.getElementById('menuCloseBtn');
   const menuBackdrop = document.getElementById('menuBackdrop');
   const menuAvatar = document.getElementById('menuAvatar');
@@ -1446,9 +1507,11 @@
   const menuUseremail = document.getElementById('menuUseremail');
   const menuLogoutBtn = document.getElementById('menuLogoutBtn');
 
-  let lastBalance = null;
-  let currentUserData = null;
+  const adminLockBtn = document.getElementById('adminLockBtn');
+
   let currentUser = null;
+  let userData = null;
+  let unsubscribeUser = null;
 
   // ===== MENU =====
   function openMenu() {
@@ -1461,185 +1524,94 @@
     document.body.style.overflow = '';
   }
 
-  // Ouvrir le menu
   menuBtn.addEventListener('click', (e) => {
     e.preventDefault();
     openMenu();
   });
 
-  // Fermer le menu (bouton X)
   menuCloseBtn.addEventListener('click', closeMenu);
-
-  // Fermer le menu (clic sur le fond)
   menuBackdrop.addEventListener('click', closeMenu);
 
-  // Fermer le menu avec la touche Échap
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeMenu();
-    }
+    if (e.key === 'Escape') closeMenu();
   });
 
-  // ===== MENU - Mettre à jour les infos utilisateur =====
-  function updateMenuUser(userData) {
-    const displayName = userData?.fullName || userData?.prenom || 'Investisseur';
-    const email = userData?.email || 'email@email.com';
-    
-    menuAvatar.textContent = displayName.charAt(0).toUpperCase();
-    menuUsername.textContent = displayName;
-    menuUseremail.textContent = email;
-  }
-
   // ===== DÉCONNEXION =====
-  menuLogoutBtn.addEventListener('click', (e) => {
+  menuLogoutBtn.addEventListener('click', async (e) => {
     e.preventDefault();
     if (confirm('Voulez-vous vous déconnecter ?')) {
-      auth.signOut().then(() => {
+      try {
+        await signOut(auth);
         localStorage.removeItem('NIF_current_user');
         localStorage.removeItem('NIF_user_name');
         window.location.href = 'login.html';
-      }).catch(() => {
-        window.location.href = 'login.html';
-      });
+      } catch (error) {
+        console.error('Erreur déconnexion:', error);
+      }
     }
   });
 
-  // ===== TOAST =====
-  function showToast(message, type = 'success') {
-    toast.textContent = message;
-    toast.className = `toast ${type}`;
-    setTimeout(() => toast.classList.add('show'), 50);
-    setTimeout(() => toast.classList.remove('show'), 4000);
-  }
+  // ===== UPDATE UI =====
+  function updateUI(data) {
+    if (!data) return;
 
-  // ===== NOTIFICATION GAIN =====
-  function showGainNotification(title, message) {
-    if (!gainNotification) return;
-    gainNotifTitle.textContent = title;
-    gainNotifMessage.textContent = message;
-    gainNotification.classList.add("show");
-    setTimeout(() => gainNotification.classList.remove("show"), 4000);
-  }
+    const prenom = data.prenom || '';
+    const displayName = prenom || 'Investisseur';
 
-  // ===== MISE À JOUR UI =====
-  function updateUI(userData) {
-    const displayName = userData.fullName || userData.prenom || "Investisseur";
-    
-    if (userNameEl) userNameEl.textContent = displayName;
-    if (userAvatarEl) userAvatarEl.textContent = displayName.charAt(0).toUpperCase();
+    // Afficher uniquement le prénom
+    userNameEl.textContent = displayName;
+    userAvatarEl.textContent = displayName.charAt(0).toUpperCase();
 
     // Mettre à jour le menu
-    updateMenuUser(userData);
+    menuAvatar.textContent = displayName.charAt(0).toUpperCase();
+    menuUsername.textContent = displayName;
+    menuUseremail.textContent = data.email || 'email@email.com';
 
-    const currentBalance = userData.balance || 0;
-    if (statBalanceEl) {
-      statBalanceEl.textContent = `${currentBalance.toLocaleString('fr-FR')} FCFA`;
-    }
-
-    if (lastBalance !== null && currentBalance > lastBalance) {
-      const diff = currentBalance - lastBalance;
-      showGainNotification("💰 Nouveau crédit", `+${diff.toLocaleString('fr-FR')} FCFA`);
-    }
-    lastBalance = currentBalance;
-    currentUserData = userData;
+    // Solde
+    const balance = data.balance || 0;
+    statBalanceEl.textContent = `${balance.toLocaleString('fr-FR')} FCFA`;
   }
 
-  // ===== AFFICHAGE RAPIDE AVEC LOCALSTORAGE =====
-  function loadFromLocalStorage() {
-    const savedUid = localStorage.getItem('NIF_current_user');
-    const savedName = localStorage.getItem('NIF_user_name');
-    
-    if (savedName && userNameEl) {
-      userNameEl.textContent = savedName;
-      userAvatarEl.textContent = savedName.charAt(0).toUpperCase();
-      menuUsername.textContent = savedName;
-    }
-    
-    return savedUid;
-  }
-
-  // ===== BOUTON ADMIN =====
+  // ===== ADMIN BUTTON =====
   function checkAdminButton(user) {
-    const adminBtn = document.getElementById('adminLockBtn');
-    if (!adminBtn) return;
-    
+    if (!adminLockBtn) return;
+
     if (user && user.email === 'gagneavecia@gmail.com') {
-      adminBtn.style.display = 'flex';
-      adminBtn.onclick = (e) => { 
-        e.preventDefault(); 
-        window.location.href = 'admin.html'; 
+      adminLockBtn.style.display = 'flex';
+      adminLockBtn.onclick = (e) => {
+        e.preventDefault();
+        window.location.href = 'admin/index.html';
       };
     } else {
-      adminBtn.style.display = 'none';
+      adminLockBtn.style.display = 'none';
     }
-  }
-
-  // ===== NAVIGATION =====
-  function setupNavigation() {
-    // Profil
-    if (userProfileBtn) {
-      userProfileBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.location.href = 'profil.html';
-      });
-    }
-
-    // Logo
-    if (logoLink) {
-      logoLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.location.href = 'index.html';
-      });
-    }
-
-    // Formations
-    document.querySelectorAll('.formation-link').forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.location.href = 'boutique.html';
-      });
-    });
   }
 
   // ===== AUTH =====
-  // 1. Chargement immédiat depuis localStorage
-  loadFromLocalStorage();
-
-  // 2. Setup navigation
-  setupNavigation();
-
-  // 3. Firebase Auth
   onAuthStateChanged(auth, (user) => {
     if (user) {
       currentUser = user;
-      // Sauvegarder UID
       localStorage.setItem('NIF_current_user', user.uid);
-      
-      // Vérifier admin
+
       checkAdminButton(user);
 
-      // Récupérer les données en temps réel
-      const userRef = doc(db, "users", user.uid);
-      
-      // D'abord une lecture rapide
+      const userRef = doc(db, 'users', user.uid);
+
+      // Lecture initiale
       getDoc(userRef).then((docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
-          // Sauvegarder le nom pour les futures visites
-          if (data.fullName) {
-            localStorage.setItem('NIF_user_name', data.fullName);
-          }
+          userData = data;
           updateUI(data);
         }
       }).catch(() => {});
 
-      // Puis écoute en temps réel
-      onSnapshot(userRef, (docSnap) => {
+      // Écoute en temps réel
+      if (unsubscribeUser) unsubscribeUser();
+      unsubscribeUser = onSnapshot(userRef, (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
-          if (data.fullName) {
-            localStorage.setItem('NIF_user_name', data.fullName);
-          }
+          userData = data;
           updateUI(data);
         }
       }, (error) => {
@@ -1647,10 +1619,8 @@
       });
 
     } else {
-      // Vérifier si un utilisateur est stocké localement
       const savedUid = localStorage.getItem('NIF_current_user');
       if (savedUid) {
-        // Tentative de reconnexion silencieuse
         setTimeout(() => {
           if (!auth.currentUser) {
             window.location.href = 'login.html';
@@ -1662,6 +1632,24 @@
     }
   });
 
+  // ===== NAVIGATION =====
+  document.getElementById('userProfileBtn').addEventListener('click', (e) => {
+    e.preventDefault();
+    window.location.href = 'profil.html';
+  });
+
+  document.getElementById('logoLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    window.location.href = 'index.html';
+  });
+
+  document.querySelectorAll('.formation-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.href = 'boutique.html';
+    });
+  });
+
   // ===== SERVICE WORKER =====
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -1670,13 +1658,6 @@
         .catch(err => console.log('Erreur Service Worker:', err));
     });
   }
-
-  // ===== PWA INSTALL =====
-  let deferredPrompt;
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-  });
 
   console.log("✅ Index N.I.F chargé !");
 </script>
