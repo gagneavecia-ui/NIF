@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <meta name="theme-color" content="#0A1128">
+  <title>Admin N.I.F - Gestion des retraits</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #D4AF37;
+      --primary-dark: #AA8417;
+      --primary-light: #F3E5AB;
+      --bg-dark: #0A1128;
+      --bg-surface: #111A36;
+      --text-light: #FFFFFF;
+      --text-dim: #94A3B8;
+      --card-bg: rgba(17, 26, 54, 0.65);
+      --card-border: rgba(212, 175, 55, 0.12);
+      --success: #10B981;
+      --danger: #EF4444;
+      --warning: #F59E0B;
+      --transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      --glass-bg: rgba(212, 175, 55, 0.03);
+      --glass-border: rgba(212, 175, 55, 0.08);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .gradient-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -2;
+      background: radial-gradient(ellipse 60% 50% at 15% 20%, rgba(212, 175, 55, 0.08) 0%, transparent 60%),
+                  radial-gradient(ellipse 50% 40% at 85% 75%, rgba(16, 185, 129, 0.04) 0%, transparent 55%),
+                  linear-gradient(180deg, #0A1128 0%, #070C1E 100%);
+    }
+
+    .orb { position: fixed; border-radius: 50%; filter: blur(80px); z-index: -1; pointer-events: none; animation: orbFloat 8s ease-in-out infinite; }
+    .orb-1 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(212, 175, 55, 0.12), transparent 70%); top: -100px; left: -100px; }
+    .orb-2 { width: 250px; height: 250px; background: radial-gradient(circle, rgba(16, 185, 129, 0.06), transparent 70%); bottom: 20%; right: -80px; animation-delay: -4s; }
+    @keyframes orbFloat { 0%, 100% { transform: translate(0, 0) scale(1); } 33% { transform: translate(20px, -20px) scale(1.05); } 66% { transform: translate(-15px, 15px) scale(0.95); } }
+
+    /* ===== HEADER ===== */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 5%;
+      background: rgba(10, 17, 40, 0.95);
+      backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    .logo { display: flex; align-items: center; text-decoration: none; }
+    .logo-text { font-size: 22px; font-weight: 700; font-family: 'Playfair Display', serif; letter-spacing: 2px; color: var(--text-light); }
+    .logo-text span { color: var(--primary); }
+
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+
+    .admin-badge {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #0A1128;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .logout-btn {
+      background: rgba(239,68,68,0.15);
+      border: 1px solid rgba(239,68,68,0.3);
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--danger);
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+    }
+    .logout-btn:active { transform: scale(0.95); }
+    .logout-btn:hover { background: rgba(239,68,68,0.25); }
+
+    .menu-btn {
+      width: 36px;
+      height: 36px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      font-size: 18px;
+    }
+    .menu-btn:active { transform: scale(0.94); }
+    .menu-btn:hover { border-color: rgba(212, 175, 55, 0.3); color: var(--text-light); }
+
+    /* ===== CONTAINER ===== */
+    .container { max-width: 500px; margin: 0 auto; padding: 20px 16px 80px; }
+
+    /* ===== REVENUE CARD ===== */
+    .revenue-card {
+      background: linear-gradient(135deg, rgba(17, 26, 54, 0.9), rgba(10, 17, 40, 0.95));
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 24px;
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: var(--transition);
+      animation: fadeInUp 0.6s ease-out;
+    }
+    .revenue-card:hover { border-color: rgba(212, 175, 55, 0.4); }
+
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    .revenue-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 8px; }
+
+    .revenue-row { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
+    .revenue-amount { font-size: 32px; font-weight: 800; color: var(--primary-light); }
+    .revenue-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; background: rgba(16,185,129,0.1); border-radius: 20px; font-size: 11px; font-weight: 600; color: var(--success); }
+
+    .revenue-stats { font-size: 11px; color: var(--text-dim); margin-bottom: 6px; }
+    .revenue-stats span { margin-right: 12px; }
+
+    .revenue-sparkline { margin-top: 10px; }
+    .revenue-sparkline svg { width: 100%; height: 48px; }
+
+    /* ===== BOUTONS ===== */
+    .action-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .action-btn {
+      padding: 16px 12px;
+      border-radius: 16px;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      color: var(--text-light);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      text-align: center;
+    }
+    .action-btn:active { transform: scale(0.96); }
+    .action-btn:hover { border-color: rgba(212, 175, 55, 0.3); }
+    .action-btn i { font-size: 22px; color: var(--primary); }
+    .action-btn .btn-label { font-size: 11px; color: var(--text-dim); }
+
+    /* ===== TABLEAU ===== */
+    .table-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 16px;
+      display: none;
+      animation: slideIn 0.3s ease-out;
+    }
+    .table-card.show { display: block; }
+
+    @keyframes slideIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+    .table-card .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+    .table-card .table-header h3 { font-size: 15px; font-weight: 700; font-family: 'Playfair Display', serif; }
+    .table-card .table-header h3 span { color: var(--primary); font-style: italic; }
+    .table-card .table-header .close-btn { background: rgba(239,68,68,0.1); border: none; color: var(--danger); padding: 6px 12px; border-radius: 30px; font-size: 11px; font-weight: 600; cursor: pointer; transition: var(--transition); font-family: 'Inter', sans-serif; }
+    .table-card .table-header .close-btn:hover { background: rgba(239,68,68,0.2); }
+
+    .table-container { overflow-x: auto; }
+    .admin-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .admin-table th { text-align: left; padding: 10px 6px; color: var(--text-dim); font-weight: 600; border-bottom: 1px solid var(--card-border); }
+    .admin-table td { padding: 10px 6px; border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: middle; }
+
+    .status-badge { display: inline-block; padding: 3px 8px; border-radius: 20px; font-size: 10px; font-weight: 600; }
+    .status-active { background: rgba(16,185,129,0.15); color: var(--success); }
+    .status-blocked { background: rgba(239,68,68,0.15); color: var(--danger); }
+    .status-pending { background: rgba(245,158,11,0.15); color: var(--warning); }
+
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--text-dim); }
+    .empty-state i { font-size: 36px; opacity: 0.3; margin-bottom: 10px; display: block; }
+
+    .action-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+    .action-btns .btn-validate { padding: 5px 14px; border-radius: 20px; font-size: 10px; font-weight: 600; border: none; cursor: pointer; transition: var(--transition); font-family: 'Inter', sans-serif; background: rgba(16,185,129,0.15); color: var(--success); }
+    .action-btns .btn-validate:hover { background: rgba(16,185,129,0.25); }
+    .action-btns .btn-reject { padding: 5px 14px; border-radius: 20px; font-size: 10px; font-weight: 600; border: none; cursor: pointer; transition: var(--transition); font-family: 'Inter', sans-serif; background: rgba(239,68,68,0.15); color: var(--danger); }
+    .action-btns .btn-reject:hover { background: rgba(239,68,68,0.25); }
+
+    /* ===== TOTAL CARD ===== */
+    .total-card {
+      background: linear-gradient(135deg, rgba(17, 26, 54, 0.6), rgba(10, 17, 40, 0.7));
+      border: 1px solid rgba(212, 175, 55, 0.15);
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .total-card .total-label { font-size: 13px; color: var(--text-dim); font-weight: 600; }
+    .total-card .total-amount { font-size: 18px; font-weight: 800; color: var(--primary-light); }
+
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 16px;
+      right: 16px;
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 500;
+      transform: translateY(120px);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 999;
+      text-align: center;
+    }
+    .toast.show { transform: translateY(0); }
+    .toast.success { background: #0D2A1F; border: 1px solid var(--success); color: var(--success); }
+    .toast.error { background: #2A0D0D; border: 1px solid #EF4444; color: #EF4444; }
+    .toast.info { background: #1A1A2E; border: 1px solid var(--primary); color: var(--primary-light); }
+
+    /* ===== FOOTER ===== */
+    .footer { text-align: center; padding: 16px 0; margin-top: 8px; border-top: 1px solid rgba(212, 175, 55, 0.06); }
+    .footer p { color: var(--text-dim); font-size: 11px; }
+
+    /* ============================================================
+       MENU
+       ============================================================ */
+    .menu-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 2000;
+      visibility: hidden;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+    }
+    .menu-overlay.active { visibility: visible; opacity: 1; }
+
+    .menu-backdrop {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(3, 3, 5, 0.5);
+      backdrop-filter: blur(3px);
+      cursor: pointer;
+    }
+
+    .menu-sidebar {
+      position: relative;
+      width: 75%;
+      max-width: 340px;
+      height: 100%;
+      background: linear-gradient(180deg, #0A1128 0%, #0D1633 50%, #0A1128 100%);
+      border-right: 1px solid rgba(212, 175, 55, 0.15);
+      padding: 20px 0;
+      transform: translateX(-100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    .menu-overlay.active .menu-sidebar { transform: translateX(0); }
+
+    .menu-sidebar::-webkit-scrollbar { width: 2px; }
+    .menu-sidebar::-webkit-scrollbar-track { background: transparent; }
+    .menu-sidebar::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+
+    .menu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 0 20px 20px;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+    }
+
+    .menu-user { display: flex; align-items: center; gap: 14px; }
+    .menu-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: #0A1128;
+      flex-shrink: 0;
+    }
+    .menu-username { font-size: 16px; font-weight: 600; font-family: 'Playfair Display', serif; color: var(--text-light); }
+    .menu-useremail { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+
+    .menu-close-btn {
+      width: 36px;
+      height: 36px;
+      background: rgba(212, 175, 55, 0.08);
+      border: 1px solid rgba(212, 175, 55, 0.15);
+      border-radius: 10px;
+      color: var(--text-dim);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+    .menu-close-btn:hover { background: rgba(212, 175, 55, 0.15); color: var(--text-light); }
+    .menu-close-btn:active { transform: scale(0.92); }
+
+    .menu-nav { flex: 1; padding: 16px 12px 20px; display: flex; flex-direction: column; gap: 4px; }
+    .menu-link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+    .menu-link:active { transform: scale(0.96); }
+    .menu-link i { width: 20px; font-size: 16px; color: var(--text-dim); transition: var(--transition); }
+    .menu-link.active { background: rgba(212, 175, 55, 0.08); color: var(--primary); }
+    .menu-link.active i { color: var(--primary); }
+    .menu-link:hover:not(.active) { background: rgba(255,255,255,0.04); color: var(--text-light); }
+    .menu-link:hover:not(.active) i { color: var(--primary-light); }
+
+    .menu-footer { padding: 16px 20px 10px; border-top: 1px solid rgba(212, 175, 55, 0.06); }
+    .menu-logout {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      color: var(--danger);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: var(--transition);
+      opacity: 0.7;
+      cursor: pointer;
+    }
+    .menu-logout:active { transform: scale(0.96); }
+    .menu-logout i { font-size: 16px; }
+    .menu-logout:hover { background: rgba(239,68,68,0.08); opacity: 1; }
+
+    .menu-version { text-align: center; font-size: 10px; color: var(--text-dim); opacity: 0.4; margin-top: 10px; }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 550px) {
+      .container { padding: 16px 14px 70px; }
+      .revenue-amount { font-size: 26px; }
+      .action-buttons { grid-template-columns: 1fr; }
+    }
+
+    @media (min-width: 768px) {
+      .container { max-width: 700px; padding: 30px 24px; }
+      .revenue-amount { font-size: 36px; }
+    }
+
+    @media (min-width: 1024px) {
+      .container { max-width: 960px; padding: 40px 32px; }
+      .revenue-amount { font-size: 44px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="gradient-bg"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- ===== MENU ===== -->
+<div class="menu-overlay" id="menuOverlay">
+  <div class="menu-backdrop" id="menuBackdrop"></div>
+  <div class="menu-sidebar">
+    <div class="menu-header">
+      <div class="menu-user">
+        <div class="menu-avatar" id="menuAvatar">A</div>
+        <div>
+          <div class="menu-username" id="menuUsername">Admin</div>
+          <div class="menu-useremail" id="menuUseremail">admin@nif.com</div>
+        </div>
+      </div>
+      <button class="menu-close-btn" id="menuCloseBtn"><i class="fas fa-times"></i></button>
+    </div>
+    <nav class="menu-nav">
+      <a href="index.html" class="menu-link"><i class="fas fa-chart-pie"></i> Tableau de bord</a>
+      <a href="formations.html" class="menu-link"><i class="fas fa-book"></i> Formations</a>
+      <a href="users.html" class="menu-link"><i class="fas fa-users"></i> Utilisateurs</a>
+      <a href="depots.html" class="menu-link"><i class="fas fa-arrow-down"></i> Dépôts</a>
+      <a href="retraits.html" class="menu-link active"><i class="fas fa-arrow-up"></i> Retraits</a>
+    </nav>
+    <div class="menu-footer">
+      <a href="#" class="menu-logout" id="menuLogoutBtn"><i class="fas fa-sign-out-alt"></i> Se déconnecter</a>
+      <div class="menu-version">N.I.F Admin v1.0</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+  <a href="index.html" class="logo"><div class="logo-text">N.I.<span>F</span></div></a>
+  <div class="header-actions">
+    <div class="admin-badge"><i class="fas fa-shield-alt"></i> Admin</div>
+    <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i></button>
+    <a href="#" class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></a>
+  </div>
+</header>
+
+<!-- ===== MAIN ===== -->
+<main class="container">
+
+  <!-- 1️⃣ CHIFFRE D'AFFAIRES RETRAITS -->
+  <div class="revenue-card">
+    <div class="revenue-label">💰 Total des retraits</div>
+    <div class="revenue-row">
+      <div class="revenue-amount" id="totalRevenue">0 FCFA</div>
+      <div class="revenue-badge" id="revenueBadge">—</div>
+    </div>
+    <div class="revenue-stats" id="revenueStats">Aucun retrait</div>
+    <div class="revenue-sparkline">
+      <svg id="revenueSparkline" viewBox="0 0 400 48" preserveAspectRatio="none">
+        <defs><linearGradient id="gradRevenue" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#D4AF37" stop-opacity="0.15"/>
+          <stop offset="100%" stop-color="#D4AF37" stop-opacity="0"/>
+        </linearGradient></defs>
+        <path id="sparklineFill" d="M0,48 L400,48 Z" fill="url(#gradRevenue)"/>
+        <path id="sparklineLine" d="M0,44 L400,44" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- 2️⃣ BOUTONS -->
+  <div class="action-buttons">
+    <button class="action-btn" id="showListBtn">
+      <i class="fas fa-list"></i>
+      <span>📋 Voir tous les retraits</span>
+      <span class="btn-label">Consulter l'historique complet</span>
+    </button>
+    <button class="action-btn" id="showPendingBtn">
+      <i class="fas fa-clock"></i>
+      <span>⏳ Retraits en attente</span>
+      <span class="btn-label">Valider ou rejeter</span>
+    </button>
+  </div>
+
+   <!-- 3️⃣ TABLEAU DES RETRAITS -->
+  <div class="table-card" id="retraitList">
+    <div class="table-header">
+      <h3>📋 Liste des <span>retraits</span></h3>
+      <button class="close-btn" id="closeListBtn"><i class="fas fa-times"></i> Fermer</button>
+    </div>
+
+    <div class="table-container">
+      <table class="admin-table">
+        <thead>
+          <th>Utilisateur</th>
+          <th>Montant</th>
+          <th>Coordonnées</th>
+          <th>Date</th>
+          <th>Statut</th>
+        </thead>
+        <tbody id="retraitsTableBody">
+          <tr><td colspan="5" class="empty-state">Chargement...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TOTAL -->
+    <div class="total-card">
+      <span class="total-label">💰 Total des retraits validés</span>
+      <span class="total-amount" id="totalRetraitsAmount">0 FCFA</span>
+    </div>
+  </div>
+
+  <!-- 4️⃣ RETRAITS EN ATTENTE -->
+  <div class="table-card" id="pendingList">
+    <div class="table-header">
+      <h3>⏳ Retraits en <span>attente</span></h3>
+      <button class="close-btn" id="closePendingBtn"><i class="fas fa-times"></i> Fermer</button>
+    </div>
+
+    <div class="table-container">
+      <table class="admin-table">
+        <thead>
+          <th>Utilisateur</th>
+          <th>Montant</th>
+          <th>Coordonnées</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </thead>
+        <tbody id="pendingTableBody">
+          <tr><td colspan="5" class="empty-state">Aucun retrait en attente</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>&copy; 2026 N.I.F - Administration</p>
+  </footer>
+
+</main>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- IMPORTS -->
+<script type="importmap">
+  {
+    "imports": {
+      "firebase/app": "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js",
+      "firebase/auth": "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js",
+      "firebase/firestore": "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js"
+    }
+  }
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+  import { getFirestore, collection, query, orderBy, onSnapshot, doc, getDoc, setDoc, updateDoc, addDoc, where, deleteDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+  // ===== CONFIG =====
+  const firebaseConfig = {
+    apiKey: "AIzaSyDEjj2oAg7ZL8HvdkSWliShxydgq_BPxzs",
+    authDomain: "brickshare-d35b3.firebaseapp.com",
+    projectId: "brickshare-d35b3",
+    storageBucket: "brickshare-d35b3.firebasestorage.app",
+    messagingSenderId: "613227362818",
+    appId: "1:613227362818:web:c4de1ad3372c16d8d3051b"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  setPersistence(auth, browserLocalPersistence);
+
+  const ADMIN_EMAIL = "gagneavecia@gmail.com";
+
+  let allRetraits = [];
+  let currentView = 'all';
+
+  // ===== FORMAT =====
+  function formatCurrency(amount) {
+    return amount.toLocaleString('fr-FR') + ' FCFA';
+  }
+
+  // ===== MENU =====
+  const menuOverlay = document.getElementById('menuOverlay');
+  const menuBtn = document.getElementById('menuBtn');
+  const menuCloseBtn = document.getElementById('menuCloseBtn');
+  const menuBackdrop = document.getElementById('menuBackdrop');
+  const menuLogoutBtn = document.getElementById('menuLogoutBtn');
+
+  function openMenu() { menuOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+  function closeMenu() { menuOverlay.classList.remove('active'); document.body.style.overflow = ''; }
+
+  menuBtn.addEventListener('click', (e) => { e.preventDefault(); openMenu(); });
+  menuCloseBtn.addEventListener('click', closeMenu);
+  menuBackdrop.addEventListener('click', closeMenu);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+
+  // ===== LOGOUT =====
+  async function handleLogout() {
+    if (confirm('Voulez-vous vous déconnecter ?')) {
+      await signOut(auth);
+      localStorage.removeItem('NIF_current_user');
+      window.location.href = '../login.html';
+    }
+  }
+  document.getElementById('logoutBtn').onclick = handleLogout;
+  menuLogoutBtn.addEventListener('click', handleLogout);
+
+  // ===== TOAST =====
+  function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = `toast ${type}`;
+    setTimeout(() => toast.classList.add('show'), 50);
+    setTimeout(() => toast.classList.remove('show'), 4000);
+  }
+
+  // ===== SPARKLINE =====
+  function renderSparkline() {
+    const last30Days = [];
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().split('T')[0];
+      const total = allRetraits.filter(r => r.date === dateStr && r.statut === 'validé').reduce((sum, r) => sum + (r.montant || 0), 0);
+      last30Days.push(total);
+    }
+    const max = Math.max(...last30Days, 1);
+    const width = 400, height = 48;
+    const points = last30Days.map((v, i) => ({ x: (i / 29) * width, y: height - (v / max) * (height - 10) }));
+    let linePath = `M${points[0].x},${points[0].y}`;
+    for (let i = 1; i < points.length; i++) {
+      const cp1x = (points[i-1].x + points[i].x) / 2;
+      const cp1y = points[i-1].y;
+      const cp2x = cp1x;
+      const cp2y = points[i].y;
+      linePath += ` C${cp1x},${cp1y} ${cp2x},${cp2y} ${points[i].x},${points[i].y}`;
+    }
+    const lineEl = document.getElementById('sparklineLine');
+    const fillEl = document.getElementById('sparklineFill');
+    if (lineEl) lineEl.setAttribute('d', linePath);
+    if (fillEl) fillEl.setAttribute('d', linePath + ' L400,48 L0,48 Z');
+  }
+
+  // ===== UPDATE UI =====
+  function updateUI() {
+    const validRetraits = allRetraits.filter(r => r.statut === 'validé');
+    const totalRevenue = validRetraits.reduce((sum, r) => sum + (r.montant || 0), 0);
+    const count = validRetraits.length;
+
+    document.getElementById('totalRevenue').textContent = formatCurrency(totalRevenue);
+    document.getElementById('revenueBadge').textContent = `${count} retrait${count > 1 ? 's' : ''}`;
+    document.getElementById('revenueStats').textContent =
+      `${count} retrait${count > 1 ? 's' : ''} • Moyenne: ${count > 0 ? formatCurrency(Math.round(totalRevenue / count)) : '0 FCFA'}`;
+
+    document.getElementById('totalRetraitsAmount').textContent = formatCurrency(totalRevenue);
+
+    renderSparkline();
+  }
+
+  // ===== RENDER RETRAITS =====
+  function renderRetraits() {
+    const tbody = document.getElementById('retraitsTableBody');
+
+    if (allRetraits.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Aucun retrait</td></tr>';
+      return;
+    }
+
+    let html = '';
+    allRetraits.forEach(r => {
+      const statusClass = r.statut === 'validé' ? 'status-active' : (r.statut === 'rejeté' ? 'status-blocked' : 'status-pending');
+      const statusText = r.statut === 'validé' ? '✅ Validé' : (r.statut === 'rejeté' ? '❌ Rejeté' : '⏳ En attente');
+      html += `<tr>
+        <td>${r.userName}</td>
+        <td style="font-weight:600; color:var(--danger);">${formatCurrency(r.montant || 0)}</td>
+        <td>${r.coordonnees || '-'}</td>
+        <td>${r.date ? new Date(r.date).toLocaleDateString('fr-FR') : '-'}</td>
+        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+      </tr>`;
+    });
+    tbody.innerHTML = html;
+  }
+
+  // ===== RENDER PENDING =====
+  function renderPending() {
+    const tbody = document.getElementById('pendingTableBody');
+    const pending = allRetraits.filter(r => r.statut === 'en_attente');
+
+    if (pending.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Aucun retrait en attente</td></tr>';
+      return;
+    }
+
+    let html = '';
+    pending.forEach(r => {
+      html += `<tr>
+        <td>${r.userName}</td>
+        <td style="font-weight:600; color:var(--warning);">${formatCurrency(r.montant || 0)}</td>
+        <td>${r.coordonnees || '-'}</td>
+        <td>${r.date ? new Date(r.date).toLocaleDateString('fr-FR') : '-'}</td>
+        <td>
+          <div class="action-btns">
+            <button class="btn-validate" data-id="${r.id}" data-userid="${r.userId}" data-montant="${r.montant}">
+              ✅ Valider
+            </button>
+            <button class="btn-reject" data-id="${r.id}" data-userid="${r.userId}" data-montant="${r.montant}">
+              ❌ Rejeter
+            </button>
+          </div>
+        </td>
+      </tr>`;
+    });
+    tbody.innerHTML = html;
+
+    // Événements validation
+    document.querySelectorAll('.btn-validate').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const userId = btn.dataset.userid;
+        const montant = parseInt(btn.dataset.montant);
+        validerRetrait(id, userId, montant);
+      });
+    });
+
+    document.querySelectorAll('.btn-reject').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const userId = btn.dataset.userid;
+        const montant = parseInt(btn.dataset.montant);
+        rejeterRetrait(id, userId, montant);
+      });
+    });
+  }
+
+  // ===== VALIDER RETRAIT =====
+  async function validerRetrait(id, userId, montant) {
+    if (!confirm(`Valider le retrait de ${formatCurrency(montant)} ?`)) return;
+
+    try {
+      await updateDoc(doc(db, 'retraits', id), {
+        statut: 'validé',
+        dateValidation: new Date().toISOString()
+      });
+
+      await addDoc(collection(db, 'transactions'), {
+        userId: userId,
+        type: 'retrait',
+        montant: montant,
+        description: 'Retrait validé par l\'administrateur',
+        date: new Date().toISOString(),
+        statut: 'completé'
+      });
+
+      await addDoc(collection(db, 'notifications'), {
+        userId: userId,
+        title: '✅ Retrait validé',
+        message: `Votre retrait de ${formatCurrency(montant)} a été validé et envoyé.`,
+        type: 'success',
+        read: false,
+        createdAt: new Date().toISOString()
+      });
+
+      showToast(`✅ Retrait de ${formatCurrency(montant)} validé`, 'success');
+      renderPending();
+
+    } catch (error) {
+      console.error('Erreur validation:', error);
+      showToast('❌ Erreur lors de la validation', 'error');
+    }
+  }
+
+  // ===== REJETER RETRAIT =====
+  async function rejeterRetrait(id, userId, montant) {
+    if (!confirm(`Rejeter le retrait de ${formatCurrency(montant)} ? Le solde sera remboursé.`)) return;
+
+    try {
+      // Rembourser le solde
+      const userRef = doc(db, 'users', userId);
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        await updateDoc(userRef, {
+          balance: (userData.balance || 0) + montant
+        });
+      }
+
+      await updateDoc(doc(db, 'retraits', id), {
+        statut: 'rejeté',
+        dateRejet: new Date().toISOString()
+      });
+
+      await addDoc(collection(db, 'transactions'), {
+        userId: userId,
+        type: 'retrait_rejet',
+        montant: montant,
+        description: 'Retrait rejeté - Solde remboursé',
+        date: new Date().toISOString(),
+        statut: 'annulé'
+      });
+
+      await addDoc(collection(db, 'notifications'), {
+        userId: userId,
+        title: '❌ Retrait rejeté',
+        message: `Votre retrait de ${formatCurrency(montant)} a été rejeté. Le montant a été remboursé sur votre solde.`,
+        type: 'error',
+        read: false,
+        createdAt: new Date().toISOString()
+      });
+
+      showToast(`✅ Retrait rejeté, solde remboursé`, 'success');
+      renderPending();
+
+    } catch (error) {
+      console.error('Erreur rejet:', error);
+      showToast('❌ Erreur lors du rejet', 'error');
+    }
+  }
+
+  // ===== AFFICHER LISTE =====
+  document.getElementById('showListBtn').addEventListener('click', () => {
+    document.getElementById('retraitList').classList.toggle('show');
+    document.getElementById('pendingList').classList.remove('show');
+    renderRetraits();
+    document.getElementById('retraitList').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  document.getElementById('showPendingBtn').addEventListener('click', () => {
+    document.getElementById('pendingList').classList.toggle('show');
+    document.getElementById('retraitList').classList.remove('show');
+    renderPending();
+    document.getElementById('pendingList').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  document.getElementById('closeListBtn').addEventListener('click', () => {
+    document.getElementById('retraitList').classList.remove('show');
+  });
+
+  document.getElementById('closePendingBtn').addEventListener('click', () => {
+    document.getElementById('pendingList').classList.remove('show');
+  });
+
+  // ===== LISTEN RETRAITS =====
+  function listenRetraits() {
+    onSnapshot(query(collection(db, "retraits"), orderBy("timestamp", "desc")), async (snapshot) => {
+      allRetraits = [];
+      for (const snapDoc of snapshot.docs) {
+        const data = snapDoc.data();
+        let userName = data.userName || 'Inconnu';
+        if (!userName || userName === 'Inconnu') {
+          if (data.userId) {
+            const userRef = doc(db, "users", data.userId);
+            const u = await getDoc(userRef);
+            if (u.exists()) {
+              const ud = u.data();
+              userName = ud.fullName || ud.prenom || ud.nom || 'Utilisateur';
+            }
+          }
+        }
+        allRetraits.push({
+          id: snapDoc.id,
+          userId: data.userId,
+          userName: userName,
+          montant: data.montant || 0,
+          coordonnees: data.coordonnees || '',
+          date: data.date,
+          statut: data.statut || 'en_attente'
+        });
+      }
+      updateUI();
+      renderRetraits();
+      renderPending();
+    });
+  }
+
+  // ===== AUTH =====
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      window.location.href = '../login.html';
+      return;
+    }
+
+    if (user.email !== ADMIN_EMAIL) {
+      alert('⛔ Accès non autorisé. Cette page est réservée à l\'administrateur.');
+      await signOut(auth);
+      window.location.href = '../index.html';
+      return;
+    }
+
+    const emailDisplay = user.email.split('@')[0] || 'Admin';
+    document.getElementById('menuUsername').textContent = emailDisplay;
+    document.getElementById('menuUseremail').textContent = user.email;
+    document.getElementById('menuAvatar').textContent = user.email.charAt(0).toUpperCase();
+
+    try {
+      const adminRef = doc(db, "users", user.uid);
+      const adminDoc = await getDoc(adminRef);
+      if (!adminDoc.exists()) {
+        await setDoc(adminRef, {
+          uid: user.uid,
+          email: user.email,
+          role: 'admin',
+          status: 'active',
+          registrationDate: new Date().toISOString()
+        });
+      } else if (adminDoc.data().role !== 'admin') {
+        await updateDoc(adminRef, { role: 'admin' });
+      }
+    } catch (e) {
+      console.error('Erreur vérification admin:', e);
+    }
+
+    listenRetraits();
+  });
+
+  console.log("✅ Admin Retraits N.I.F chargé !");
+</script>
+
+</body>
+</html>
