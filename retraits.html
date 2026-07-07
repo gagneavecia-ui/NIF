@@ -4,11 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
   <meta name="theme-color" content="#0A1128">
-  <title>Admin N.I.F - Tableau de bord</title>
+  <title>Admin N.I.F - Gestion des retraits</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-  <!-- Chart.js pour le graphique -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   
   <style>
     :root {
@@ -70,25 +68,11 @@
       border-bottom: 1px solid rgba(212, 175, 55, 0.1);
     }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-    }
-    .logo-text {
-      font-size: 22px;
-      font-weight: 700;
-      font-family: 'Playfair Display', serif;
-      letter-spacing: 2px;
-      color: var(--text-light);
-    }
+    .logo { display: flex; align-items: center; text-decoration: none; }
+    .logo-text { font-size: 22px; font-weight: 700; font-family: 'Playfair Display', serif; letter-spacing: 2px; color: var(--text-light); }
     .logo-text span { color: var(--primary); }
 
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
 
     .admin-badge {
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
@@ -164,79 +148,92 @@
     .revenue-sparkline { margin-top: 10px; }
     .revenue-sparkline svg { width: 100%; height: 48px; }
 
-    /* ===== STATS CARDS (Dépôts / Retraits) ===== */
-    .stats-grid {
+    /* ===== BOUTONS ===== */
+    .action-buttons {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
       margin-bottom: 16px;
     }
 
-    .stat-card {
-      background: var(--card-bg);
-      backdrop-filter: blur(14px);
+    .action-btn {
+      padding: 16px 12px;
+      border-radius: 16px;
       border: 1px solid var(--card-border);
-      border-radius: 18px;
-      padding: 16px 14px;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      color: var(--text-light);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
       transition: var(--transition);
-      animation: fadeInUp 0.7s ease-out;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      text-align: center;
     }
-    .stat-card:hover { border-color: rgba(212, 175, 55, 0.3); }
+    .action-btn:active { transform: scale(0.96); }
+    .action-btn:hover { border-color: rgba(212, 175, 55, 0.3); }
+    .action-btn i { font-size: 22px; color: var(--primary); }
+    .action-btn .btn-label { font-size: 11px; color: var(--text-dim); }
 
-    .stat-card .stat-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; }
-    .stat-card .stat-label i { font-size: 14px; }
-    .stat-card .stat-label i.income-icon { color: var(--success); }
-    .stat-card .stat-label i.outcome-icon { color: var(--danger); }
-
-    .stat-card .stat-value { font-size: 22px; font-weight: 800; margin-top: 4px; color: var(--text-light); }
-    .stat-card .stat-value.income-value { color: var(--success); }
-    .stat-card .stat-value.outcome-value { color: var(--danger); }
-
-    .stat-card .stat-count { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
-
-    /* ===== CHART CARD ===== */
-    .chart-card {
+    /* ===== TABLEAU ===== */
+    .table-card {
       background: var(--card-bg);
       backdrop-filter: blur(14px);
       border: 1px solid var(--card-border);
       border-radius: 20px;
       padding: 16px;
       margin-bottom: 16px;
-      animation: fadeInUp 0.8s ease-out;
+      display: none;
+      animation: slideIn 0.3s ease-out;
     }
+    .table-card.show { display: block; }
 
-    .chart-card .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .chart-card .chart-header h3 { font-size: 14px; font-weight: 700; font-family: 'Playfair Display', serif; }
-    .chart-card .chart-header h3 span { color: var(--primary); font-style: italic; }
-    .chart-card .chart-header .chart-period { font-size: 10px; color: var(--text-dim); }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-    .chart-wrapper { position: relative; width: 100%; height: 220px; }
+    .table-card .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+    .table-card .table-header h3 { font-size: 15px; font-weight: 700; font-family: 'Playfair Display', serif; }
+    .table-card .table-header h3 span { color: var(--primary); font-style: italic; }
+    .table-card .table-header .close-btn { background: rgba(239,68,68,0.1); border: none; color: var(--danger); padding: 6px 12px; border-radius: 30px; font-size: 11px; font-weight: 600; cursor: pointer; transition: var(--transition); font-family: 'Inter', sans-serif; }
+    .table-card .table-header .close-btn:hover { background: rgba(239,68,68,0.2); }
 
-    /* ===== RECAP CARD (IA) ===== */
-    .recap-card {
-      background: linear-gradient(135deg, rgba(17, 26, 54, 0.8), rgba(10, 17, 40, 0.9));
-      border: 1px solid rgba(212, 175, 55, 0.2);
-      border-radius: 20px;
-      padding: 18px 20px;
-      margin-bottom: 16px;
-      animation: fadeInUp 0.9s ease-out;
+    .table-container { overflow-x: auto; }
+    .admin-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .admin-table th { text-align: left; padding: 10px 6px; color: var(--text-dim); font-weight: 600; border-bottom: 1px solid var(--card-border); }
+    .admin-table td { padding: 10px 6px; border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: middle; }
+
+    .status-badge { display: inline-block; padding: 3px 8px; border-radius: 20px; font-size: 10px; font-weight: 600; }
+    .status-active { background: rgba(16,185,129,0.15); color: var(--success); }
+    .status-blocked { background: rgba(239,68,68,0.15); color: var(--danger); }
+    .status-pending { background: rgba(245,158,11,0.15); color: var(--warning); }
+
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--text-dim); }
+    .empty-state i { font-size: 36px; opacity: 0.3; margin-bottom: 10px; display: block; }
+
+    .action-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+    .action-btns .btn-validate { padding: 5px 14px; border-radius: 20px; font-size: 10px; font-weight: 600; border: none; cursor: pointer; transition: var(--transition); font-family: 'Inter', sans-serif; background: rgba(16,185,129,0.15); color: var(--success); }
+    .action-btns .btn-validate:hover { background: rgba(16,185,129,0.25); }
+    .action-btns .btn-reject { padding: 5px 14px; border-radius: 20px; font-size: 10px; font-weight: 600; border: none; cursor: pointer; transition: var(--transition); font-family: 'Inter', sans-serif; background: rgba(239,68,68,0.15); color: var(--danger); }
+    .action-btns .btn-reject:hover { background: rgba(239,68,68,0.25); }
+
+    /* ===== TOTAL CARD ===== */
+    .total-card {
+      background: linear-gradient(135deg, rgba(17, 26, 54, 0.6), rgba(10, 17, 40, 0.7));
+      border: 1px solid rgba(212, 175, 55, 0.15);
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
     }
-
-    .recap-card .recap-title { font-size: 15px; font-weight: 700; font-family: 'Playfair Display', serif; margin-bottom: 12px; }
-    .recap-card .recap-title span { color: var(--primary); font-style: italic; }
-    .recap-card .recap-title i { color: var(--primary); margin-right: 6px; }
-
-    .recap-item { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 13px; }
-    .recap-item:last-child { border-bottom: none; }
-    .recap-item .recap-label { color: var(--text-dim); }
-    .recap-item .recap-value { font-weight: 600; }
-    .recap-item .recap-value.income { color: var(--success); }
-    .recap-item .recap-value.outcome { color: var(--danger); }
-    .recap-item .recap-value.profit { color: var(--primary); }
-
-    .recap-admin { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(212, 175, 55, 0.1); font-size: 11px; color: var(--text-dim); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
-    .recap-admin .admin-email { color: var(--primary-light); font-weight: 600; }
-    .recap-admin .admin-time { color: var(--text-dim); }
+    .total-card .total-label { font-size: 13px; color: var(--text-dim); font-weight: 600; }
+    .total-card .total-amount { font-size: 18px; font-weight: 800; color: var(--primary-light); }
 
     /* ===== TOAST ===== */
     .toast {
@@ -265,14 +262,11 @@
     .footer p { color: var(--text-dim); font-size: 11px; }
 
     /* ============================================================
-       MENU PLEIN ÉCRAN
+       MENU
        ============================================================ */
     .menu-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       z-index: 2000;
       visibility: hidden;
       opacity: 0;
@@ -283,10 +277,7 @@
 
     .menu-backdrop {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(3, 3, 5, 0.5);
       backdrop-filter: blur(3px);
       cursor: pointer;
@@ -401,30 +392,17 @@
     @media (max-width: 550px) {
       .container { padding: 16px 14px 70px; }
       .revenue-amount { font-size: 26px; }
-      .stat-card .stat-value { font-size: 18px; }
-      .stats-grid { gap: 8px; }
-      .chart-wrapper { height: 170px; }
-      .recap-item { font-size: 12px; flex-wrap: wrap; gap: 4px; }
+      .action-buttons { grid-template-columns: 1fr; }
     }
 
     @media (min-width: 768px) {
       .container { max-width: 700px; padding: 30px 24px; }
-      .stats-grid { gap: 16px; }
-      .chart-wrapper { height: 250px; }
       .revenue-amount { font-size: 36px; }
     }
 
     @media (min-width: 1024px) {
       .container { max-width: 960px; padding: 40px 32px; }
       .revenue-amount { font-size: 44px; }
-      .chart-wrapper { height: 300px; }
-      .stat-card .stat-value { font-size: 28px; }
-    }
-
-    @media (min-width: 1280px) {
-      .container { max-width: 1200px; padding: 50px 40px; }
-      .revenue-amount { font-size: 48px; }
-      .chart-wrapper { height: 340px; }
     }
   </style>
 </head>
@@ -450,11 +428,11 @@
     </div>
     <nav class="menu-nav">
       <a href="../index.html" class="menu-link"><i class="fas fa-home"></i> Principal</a>
-      <a href="index.html" class="menu-link active"><i class="fas fa-chart-pie"></i> Tableau de bord</a>
+      <a href="index.html" class="menu-link"><i class="fas fa-chart-pie"></i> Tableau de bord</a>
       <a href="formations.html" class="menu-link"><i class="fas fa-book"></i> Formations</a>
       <a href="users.html" class="menu-link"><i class="fas fa-users"></i> Utilisateurs</a>
       <a href="depots.html" class="menu-link"><i class="fas fa-arrow-down"></i> Dépôts</a>
-      <a href="retraits.html" class="menu-link"><i class="fas fa-arrow-up"></i> Retraits</a>
+      <a href="retraits.html" class="menu-link active"><i class="fas fa-arrow-up"></i> Retraits</a>
     </nav>
     <div class="menu-footer">
       <a href="#" class="menu-logout" id="menuLogoutBtn"><i class="fas fa-sign-out-alt"></i> Se déconnecter</a>
@@ -476,14 +454,14 @@
 <!-- ===== MAIN ===== -->
 <main class="container">
 
-  <!-- 1️⃣ CHIFFRE D'AFFAIRES -->
+  <!-- 1️⃣ CHIFFRE D'AFFAIRES RETRAITS -->
   <div class="revenue-card">
-    <div class="revenue-label">💰 Chiffre d'affaires total</div>
+    <div class="revenue-label">💰 Total des retraits</div>
     <div class="revenue-row">
       <div class="revenue-amount" id="totalRevenue">0 FCFA</div>
       <div class="revenue-badge" id="revenueBadge">—</div>
     </div>
-    <div class="revenue-stats" id="revenueStats">Aucun dépôt</div>
+    <div class="revenue-stats" id="revenueStats">Aucun retrait</div>
     <div class="revenue-sparkline">
       <svg id="revenueSparkline" viewBox="0 0 400 48" preserveAspectRatio="none">
         <defs><linearGradient id="gradRevenue" x1="0" y1="0" x2="0" y2="1">
@@ -496,55 +474,69 @@
     </div>
   </div>
 
-  <!-- 2️⃣ DÉPÔTS / RETRAITS -->
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-label"><i class="fas fa-arrow-down income-icon"></i> Dépôts</div>
-      <div class="stat-value income-value" id="totalDepots">0 FCFA</div>
-      <div class="stat-count" id="depotsCount">0 dépôts</div>
+  <!-- 2️⃣ BOUTONS -->
+  <div class="action-buttons">
+    <button class="action-btn" id="showListBtn">
+      <i class="fas fa-list"></i>
+      <span>📋 Voir tous les retraits</span>
+      <span class="btn-label">Consulter l'historique complet</span>
+    </button>
+    <button class="action-btn" id="showPendingBtn">
+      <i class="fas fa-clock"></i>
+      <span>⏳ Retraits en attente</span>
+      <span class="btn-label">Valider ou rejeter</span>
+    </button>
+  </div>
+
+   <!-- 3️⃣ TABLEAU DES RETRAITS -->
+  <div class="table-card" id="retraitList">
+    <div class="table-header">
+      <h3>📋 Liste des <span>retraits</span></h3>
+      <button class="close-btn" id="closeListBtn"><i class="fas fa-times"></i> Fermer</button>
     </div>
-    <div class="stat-card">
-      <div class="stat-label"><i class="fas fa-arrow-up outcome-icon"></i> Retraits</div>
-      <div class="stat-value outcome-value" id="totalRetraits">0 FCFA</div>
-      <div class="stat-count" id="retraitsCount">0 retraits</div>
+
+    <div class="table-container">
+      <table class="admin-table">
+        <thead>
+          <th>Utilisateur</th>
+          <th>Montant</th>
+          <th>Coordonnées</th>
+          <th>Date</th>
+          <th>Statut</th>
+        </thead>
+        <tbody id="retraitsTableBody">
+          <tr><td colspan="5" class="empty-state">Chargement...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TOTAL -->
+    <div class="total-card">
+      <span class="total-label">💰 Total des retraits validés</span>
+      <span class="total-amount" id="totalRetraitsAmount">0 FCFA</span>
     </div>
   </div>
 
-  <!-- 3️⃣ GRAND GRAPHIQUE -->
-  <div class="chart-card">
-    <div class="chart-header">
-      <h3>📊 Évolution du <span>chiffre d'affaires</span></h3>
-      <span class="chart-period">30 derniers jours</span>
-    </div>
-    <div class="chart-wrapper">
-      <canvas id="revenueChart"></canvas>
-    </div>
-  </div>
-
-  <!-- 4️⃣ IA RÉCAPITULATIF -->
-  <div class="recap-card">
-    <div class="recap-title"><i class="fas fa-robot"></i> <span>Récapitulatif</span> du jour</div>
-
-    <div class="recap-item">
-      <span class="recap-label">💰 Chiffre d'affaires total</span>
-      <span class="recap-value income" id="recapRevenue">0 FCFA</span>
-    </div>
-    <div class="recap-item">
-      <span class="recap-label">📤 Retraits effectués</span>
-      <span class="recap-value outcome" id="recapRetraits">0 FCFA</span>
-    </div>
-    <div class="recap-item">
-      <span class="recap-label">📈 Bénéfice net</span>
-      <span class="recap-value profit" id="recapProfit">0 FCFA</span>
-    </div>
-    <div class="recap-item">
-      <span class="recap-label">📊 Nombre de dépôts</span>
-      <span class="recap-value" id="recapDepotsCount">0</span>
+  <!-- 4️⃣ RETRAITS EN ATTENTE -->
+  <div class="table-card" id="pendingList">
+    <div class="table-header">
+      <h3>⏳ Retraits en <span>attente</span></h3>
+      <button class="close-btn" id="closePendingBtn"><i class="fas fa-times"></i> Fermer</button>
     </div>
 
-    <div class="recap-admin">
-      <span>👤 Admin connecté : <span class="admin-email" id="recapAdminEmail">gagneavia@gmail.com</span></span>
-      <span class="admin-time" id="recapTime">⏰ Mise à jour : maintenant</span>
+    <div class="table-container">
+      <table class="admin-table">
+        <thead>
+          <th>Utilisateur</th>
+          <th>Montant</th>
+          <th>Coordonnées</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </thead>
+        <tbody id="pendingTableBody">
+          <tr><td colspan="5" class="empty-state">Aucun retrait en attente</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
@@ -572,7 +564,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-  import { getFirestore, collection, query, orderBy, onSnapshot, doc, getDoc, where, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+  import { getFirestore, collection, query, orderBy, onSnapshot, doc, getDoc, setDoc, updateDoc, addDoc, where, deleteDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
   // ===== CONFIG =====
   const firebaseConfig = {
@@ -591,18 +583,11 @@
 
   const ADMIN_EMAIL = "gagneavecia@gmail.com";
 
-  let allDeposits = [];
   let allRetraits = [];
-  let chartInstance = null;
+  let currentView = 'all';
 
   // ===== FORMAT =====
   function formatCurrency(amount) {
-    if (amount >= 1000000) return (amount / 1000000).toFixed(1) + 'M';
-    if (amount >= 1000) return (amount / 1000).toFixed(0) + 'K';
-    return amount.toLocaleString('fr-FR') + ' FCFA';
-  }
-
-  function formatCurrencyFull(amount) {
     return amount.toLocaleString('fr-FR') + ' FCFA';
   }
 
@@ -648,7 +633,7 @@
       const d = new Date();
       d.setDate(d.getDate() - i);
       const dateStr = d.toISOString().split('T')[0];
-      const total = allDeposits.filter(dep => dep.date === dateStr).reduce((sum, dep) => sum + (dep.amount || 0), 0);
+      const total = allRetraits.filter(r => r.date === dateStr && r.statut === 'validé').reduce((sum, r) => sum + (r.montant || 0), 0);
       last30Days.push(total);
     }
     const max = Math.max(...last30Days, 1);
@@ -668,164 +653,253 @@
     if (fillEl) fillEl.setAttribute('d', linePath + ' L400,48 L0,48 Z');
   }
 
-  // ===== CHART.JS =====
-  function renderChart() {
-    const ctx = document.getElementById('revenueChart').getContext('2d');
-
-    const last30Days = [];
-    const labels = [];
-    const data = [];
-    for (let i = 29; i >= 0; i--) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      const dateStr = d.toISOString().split('T')[0];
-      const total = allDeposits.filter(dep => dep.date === dateStr).reduce((sum, dep) => sum + (dep.amount || 0), 0);
-      labels.push(d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' }));
-      data.push(total);
-    }
-
-    if (chartInstance) chartInstance.destroy();
-
-    chartInstance = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Chiffre d\'affaires (FCFA)',
-          data: data,
-          backgroundColor: 'rgba(212, 175, 55, 0.5)',
-          borderColor: '#D4AF37',
-          borderWidth: 2,
-          borderRadius: 4,
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              color: '#94A3B8',
-              font: { size: 10 },
-              callback: function(value) {
-                if (value >= 1000000) return (value / 1000000).toFixed(1) + 'M';
-                if (value >= 1000) return (value / 1000).toFixed(0) + 'K';
-                return value;
-              }
-            },
-            grid: { color: 'rgba(255,255,255,0.04)' }
-          },
-          x: {
-            ticks: {
-              color: '#94A3B8',
-              font: { size: 9 },
-              maxTicksLimit: 15
-            },
-            grid: { display: false }
-          }
-        }
-      }
-    });
-  }
-
   // ===== UPDATE UI =====
   function updateUI() {
-    const validDepots = allDeposits.filter(d => d.statut === 'validé');
-    const validRetraits = allRetraits.filter(d => d.statut === 'validé');
+    const validRetraits = allRetraits.filter(r => r.statut === 'validé');
+    const totalRevenue = validRetraits.reduce((sum, r) => sum + (r.montant || 0), 0);
+    const count = validRetraits.length;
 
-    const totalRevenue = validDepots.reduce((sum, d) => sum + d.amount, 0);
-    const totalDepots = validDepots.reduce((sum, d) => sum + d.amount, 0);
-    const totalRetraits = validRetraits.reduce((sum, d) => sum + d.amount, 0);
-    const profit = totalDepots - totalRetraits;
-
-    const depotsCount = validDepots.length;
-    const retraitsCount = validRetraits.length;
-
-    // Chiffre d'affaires
-    document.getElementById('totalRevenue').textContent = formatCurrencyFull(totalRevenue);
-    document.getElementById('revenueBadge').textContent = `${depotsCount} dépôts`;
+    document.getElementById('totalRevenue').textContent = formatCurrency(totalRevenue);
+    document.getElementById('revenueBadge').textContent = `${count} retrait${count > 1 ? 's' : ''}`;
     document.getElementById('revenueStats').textContent =
-      `${depotsCount} dépôt${depotsCount > 1 ? 's' : ''} • Moyenne: ${formatCurrencyFull(depotsCount > 0 ? Math.round(totalRevenue / depotsCount) : 0)}`;
+      `${count} retrait${count > 1 ? 's' : ''} • Moyenne: ${count > 0 ? formatCurrency(Math.round(totalRevenue / count)) : '0 FCFA'}`;
 
-    // Dépôts / Retraits
-    document.getElementById('totalDepots').textContent = formatCurrency(totalDepots);
-    document.getElementById('depotsCount').textContent = `${depotsCount} dépôt${depotsCount > 1 ? 's' : ''}`;
-    document.getElementById('totalRetraits').textContent = formatCurrency(totalRetraits);
-    document.getElementById('retraitsCount').textContent = `${retraitsCount} retrait${retraitsCount > 1 ? 's' : ''}`;
+    document.getElementById('totalRetraitsAmount').textContent = formatCurrency(totalRevenue);
 
-    // Récapitulatif
-    document.getElementById('recapRevenue').textContent = formatCurrencyFull(totalRevenue);
-    document.getElementById('recapRetraits').textContent = formatCurrencyFull(totalRetraits);
-    document.getElementById('recapProfit').textContent = formatCurrencyFull(profit);
-    document.getElementById('recapDepotsCount').textContent = depotsCount;
-
-    // Admin email
-    document.getElementById('recapAdminEmail').textContent = ADMIN_EMAIL;
-
-    // Heure
-    const now = new Date();
-    document.getElementById('recapTime').textContent =
-      `⏰ Mise à jour : ${now.toLocaleDateString('fr-FR')} à ${now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`;
-
-    // Sparkline & Chart
     renderSparkline();
-    renderChart();
   }
 
-  // ===== LISTEN DATA =====
-  function listenData() {
-    // Dépôts
-    onSnapshot(query(collection(db, "depots"), orderBy("date", "desc")), async (snapshot) => {
-      allDeposits = [];
-      for (const snapDoc of snapshot.docs) {
-        const data = snapDoc.data();
-        let userName = 'Inconnu';
-        if (data.userId) {
-          const userRef = doc(db, "users", data.userId);
-          const u = await getDoc(userRef);
-          if (u.exists()) {
-            const ud = u.data();
-            userName = ud.fullName || ud.prenom || ud.nom || 'Utilisateur';
-          }
-        }
-        allDeposits.push({
-          id: snapDoc.id,
-          userName,
-          amount: data.montant || 0,
-          date: data.date,
-          statut: data.statut || 'en_attente'
-        });
-      }
-      updateUI();
+  // ===== RENDER RETRAITS =====
+  function renderRetraits() {
+    const tbody = document.getElementById('retraitsTableBody');
+
+    if (allRetraits.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Aucun retrait</td></tr>';
+      return;
+    }
+
+    let html = '';
+    allRetraits.forEach(r => {
+      const statusClass = r.statut === 'validé' ? 'status-active' : (r.statut === 'rejeté' ? 'status-blocked' : 'status-pending');
+      const statusText = r.statut === 'validé' ? '✅ Validé' : (r.statut === 'rejeté' ? '❌ Rejeté' : '⏳ En attente');
+      html += `<tr>
+        <td>${r.userName}</td>
+        <td style="font-weight:600; color:var(--danger);">${formatCurrency(r.montant || 0)}</td>
+        <td>${r.coordonnees || '-'}</td>
+        <td>${r.date ? new Date(r.date).toLocaleDateString('fr-FR') : '-'}</td>
+        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+      </tr>`;
+    });
+    tbody.innerHTML = html;
+  }
+
+  // ===== RENDER PENDING =====
+  function renderPending() {
+    const tbody = document.getElementById('pendingTableBody');
+    const pending = allRetraits.filter(r => r.statut === 'en_attente');
+
+    if (pending.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Aucun retrait en attente</td></tr>';
+      return;
+    }
+
+    let html = '';
+    pending.forEach(r => {
+      html += `<tr>
+        <td>${r.userName}</td>
+        <td style="font-weight:600; color:var(--warning);">${formatCurrency(r.montant || 0)}</td>
+        <td>${r.coordonnees || '-'}</td>
+        <td>${r.date ? new Date(r.date).toLocaleDateString('fr-FR') : '-'}</td>
+        <td>
+          <div class="action-btns">
+            <button class="btn-validate" data-id="${r.id}" data-userid="${r.userId}" data-montant="${r.montant}">
+              ✅ Valider
+            </button>
+            <button class="btn-reject" data-id="${r.id}" data-userid="${r.userId}" data-montant="${r.montant}">
+              ❌ Rejeter
+            </button>
+          </div>
+        </td>
+      </tr>`;
+    });
+    tbody.innerHTML = html;
+
+    // Événements validation
+    document.querySelectorAll('.btn-validate').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const userId = btn.dataset.userid;
+        const montant = parseInt(btn.dataset.montant);
+        validerRetrait(id, userId, montant);
+      });
     });
 
-    // Retraits
-    onSnapshot(collection(db, "retraits"), async (snapshot) => {
+    document.querySelectorAll('.btn-reject').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const userId = btn.dataset.userid;
+        const montant = parseInt(btn.dataset.montant);
+        rejeterRetrait(id, userId, montant);
+      });
+    });
+  }
+
+  // ===== VALIDER RETRAIT =====
+  async function validerRetrait(id, userId, montant) {
+    if (!confirm(`Valider le retrait de ${formatCurrency(montant)} ?`)) return;
+
+    try {
+      const userRef = doc(db, 'users', userId);
+      const userSnap = await getDoc(userRef);
+      if (!userSnap.exists()) {
+        showToast('❌ Utilisateur introuvable', 'error');
+        return;
+      }
+
+      const userData = userSnap.data();
+      const currentBalance = userData.balance || 0;
+      if (currentBalance < montant) {
+        showToast('❌ Solde insuffisant pour valider ce retrait', 'error');
+        return;
+      }
+
+      await updateDoc(userRef, {
+        balance: currentBalance - montant
+      });
+
+      await updateDoc(doc(db, 'retraits', id), {
+        statut: 'validé',
+        dateValidation: new Date().toISOString()
+      });
+
+      await addDoc(collection(db, 'transactions'), {
+        userId: userId,
+        type: 'retrait',
+        montant: montant,
+        frais: 0,
+        description: 'Retrait validé par l\'administrateur',
+        date: new Date().toISOString(),
+        statut: 'completé'
+      });
+
+      await addDoc(collection(db, 'notifications'), {
+        userId: userId,
+        title: '✅ Retrait validé',
+        message: `Votre retrait de ${formatCurrency(montant)} a été validé et envoyé.`,
+        type: 'success',
+        read: false,
+        createdAt: new Date().toISOString()
+      });
+
+      showToast(`✅ Retrait de ${formatCurrency(montant)} validé`, 'success');
+      renderPending();
+
+    } catch (error) {
+      console.error('Erreur validation:', error);
+      showToast('❌ Erreur lors de la validation', 'error');
+    }
+  }
+
+  // ===== REJETER RETRAIT =====
+  async function rejeterRetrait(id, userId, montant) {
+    if (!confirm(`Rejeter le retrait de ${formatCurrency(montant)} ? Le solde sera remboursé.`)) return;
+
+    try {
+      // Rembourser le solde
+      const userRef = doc(db, 'users', userId);
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        await updateDoc(userRef, {
+          balance: (userData.balance || 0) + montant
+        });
+      }
+
+      await updateDoc(doc(db, 'retraits', id), {
+        statut: 'rejeté',
+        dateRejet: new Date().toISOString()
+      });
+
+      await addDoc(collection(db, 'transactions'), {
+        userId: userId,
+        type: 'retrait_rejet',
+        montant: montant,
+        description: 'Retrait rejeté - Solde remboursé',
+        date: new Date().toISOString(),
+        statut: 'annulé'
+      });
+
+      await addDoc(collection(db, 'notifications'), {
+        userId: userId,
+        title: '❌ Retrait rejeté',
+        message: `Votre retrait de ${formatCurrency(montant)} a été rejeté. Le montant a été remboursé sur votre solde.`,
+        type: 'error',
+        read: false,
+        createdAt: new Date().toISOString()
+      });
+
+      showToast(`✅ Retrait rejeté, solde remboursé`, 'success');
+      renderPending();
+
+    } catch (error) {
+      console.error('Erreur rejet:', error);
+      showToast('❌ Erreur lors du rejet', 'error');
+    }
+  }
+
+  // ===== AFFICHER LISTE =====
+  document.getElementById('showListBtn').addEventListener('click', () => {
+    document.getElementById('retraitList').classList.toggle('show');
+    document.getElementById('pendingList').classList.remove('show');
+    renderRetraits();
+    document.getElementById('retraitList').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  document.getElementById('showPendingBtn').addEventListener('click', () => {
+    document.getElementById('pendingList').classList.toggle('show');
+    document.getElementById('retraitList').classList.remove('show');
+    renderPending();
+    document.getElementById('pendingList').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  document.getElementById('closeListBtn').addEventListener('click', () => {
+    document.getElementById('retraitList').classList.remove('show');
+  });
+
+  document.getElementById('closePendingBtn').addEventListener('click', () => {
+    document.getElementById('pendingList').classList.remove('show');
+  });
+
+  // ===== LISTEN RETRAITS =====
+  function listenRetraits() {
+    onSnapshot(query(collection(db, "retraits"), orderBy("timestamp", "desc")), async (snapshot) => {
       allRetraits = [];
       for (const snapDoc of snapshot.docs) {
         const data = snapDoc.data();
-        let userName = 'Inconnu';
-        if (data.userId) {
-          const userRef = doc(db, "users", data.userId);
-          const u = await getDoc(userRef);
-          if (u.exists()) {
-            const ud = u.data();
-            userName = ud.fullName || ud.prenom || ud.nom || 'Utilisateur';
+        let userName = data.userName || 'Inconnu';
+        if (!userName || userName === 'Inconnu') {
+          if (data.userId) {
+            const userRef = doc(db, "users", data.userId);
+            const u = await getDoc(userRef);
+            if (u.exists()) {
+              const ud = u.data();
+              userName = ud.fullName || ud.prenom || ud.nom || 'Utilisateur';
+            }
           }
         }
         allRetraits.push({
           id: snapDoc.id,
-          userName,
-          amount: data.montant || 0,
+          userId: data.userId,
+          userName: userName,
+          montant: data.montant || 0,
+          coordonnees: data.coordonnees || '',
           date: data.date,
           statut: data.statut || 'en_attente'
         });
       }
       updateUI();
+      renderRetraits();
+      renderPending();
     });
   }
 
@@ -843,7 +917,6 @@
       return;
     }
 
-    // Admin connecté
     const emailDisplay = user.email.split('@')[0] || 'Admin';
     document.getElementById('menuUsername').textContent = emailDisplay;
     document.getElementById('menuUseremail').textContent = user.email;
@@ -867,11 +940,10 @@
       console.error('Erreur vérification admin:', e);
     }
 
-    listenData();
+    listenRetraits();
   });
 
-  console.log("✅ Admin Dashboard N.I.F chargé !");
-  console.log("👤 Admin:", ADMIN_EMAIL);
+  console.log("✅ Admin Retraits N.I.F chargé !");
 </script>
 
 </body>
