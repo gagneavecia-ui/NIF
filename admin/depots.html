@@ -467,6 +467,7 @@
       <button class="menu-close-btn" id="menuCloseBtn"><i class="fas fa-times"></i></button>
     </div>
     <nav class="menu-nav">
+      <a href="../index.html" class="menu-link"><i class="fas fa-home"></i> Principal</a>
       <a href="index.html" class="menu-link"><i class="fas fa-chart-pie"></i> Tableau de bord</a>
       <a href="admin/formations.html" class="menu-link"><i class="fas fa-book"></i> Formations</a>
       <a href="users.html" class="menu-link"><i class="fas fa-users"></i> Utilisateurs</a>
@@ -523,7 +524,7 @@
     <button class="action-btn" id="showFormBtn">
       <i class="fas fa-plus-circle"></i>
       <span>➕ Effectuer un dépôt</span>
-      <span class="btn-label">Ajouter +10% commission</span>
+      <span class="btn-label">Ajouter un dépôt sans frais</span>
     </button>
   </div>
 
@@ -544,7 +545,7 @@
 
       <div class="form-group">
         <div class="commission-info">
-          💡 <strong>Commission 10%</strong> : <span class="commission-value" id="commissionDisplay">0 FCFA</span><br>
+          💡 <strong>Frais</strong> : <span class="commission-value" id="commissionDisplay">0 FCFA</span><br>
           💰 <strong>Total crédité</strong> : <span class="total-value" id="totalDisplay">0 FCFA</span>
         </div>
       </div>
@@ -579,13 +580,14 @@
         <thead>
           <th>Utilisateur</th>
           <th>Montant</th>
-          <th>Commission</th>
+          <th>Frais</th>
           <th>Total</th>
           <th>Date</th>
           <th>Statut</th>
+          <th>Actions</th>
         </thead>
         <tbody id="depotsTableBody">
-          <tr><td colspan="6" class="empty-state">Chargement...</td></tr>
+          <tr><td colspan="7" class="empty-state">Chargement...</td></tr>
         </tbody>
       </table>
     </div>
@@ -615,7 +617,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-  import { getFirestore, collection, query, orderBy, onSnapshot, doc, getDoc, setDoc, updateDoc, addDoc, where, deleteDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+  import { getFirestore, collection, query, orderBy, onSnapshot, doc, getDoc, getDocs, setDoc, updateDoc, addDoc, where, deleteDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
   // ===== CONFIG =====
   const firebaseConfig = {
@@ -738,7 +740,7 @@
     }
 
     if (filtered.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Aucun dépôt trouvé</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Aucun dépôt trouvé</td></tr>';
       return;
     }
 
@@ -746,26 +748,151 @@
     filtered.forEach(d => {
       const statusClass = d.statut === 'validé' ? 'status-active' : (d.statut === 'rejeté' ? 'status-blocked' : 'status-pending');
       const statusText = d.statut === 'validé' ? '✅ Validé' : (d.statut === 'rejeté' ? '❌ Rejeté' : '⏳ En attente');
+      // Quick actions
+      let actions = `<button class="filter-btn" data-action="fill" data-id="${d.id}" data-userid="${d.userId || ''}" data-montant="${d.montant || 0}">Remplir</button>`;
+      if (d.statut === 'en_attente') {
+        actions += ` <button class="filter-btn" data-action="validate" data-id="${d.id}">Valider</button>`;
+        actions += ` <button class="filter-btn" data-action="reject" data-id="${d.id}">Rejeter</button>`;
+      }
+
       html += `<tr>
-        <td>${d.userName}</td>
+        <td>${d.userName}${d.displayId ? ' <div style="font-size:11px;color:var(--text-dim)">ID: '+d.displayId+'</div>' : ''}</td>
         <td style="font-weight:600; color:var(--primary-light);">${formatCurrency(d.montant || 0)}</td>
         <td style="font-size:11px; color:var(--warning);">${formatCurrency(d.commission || 0)}</td>
         <td style="font-weight:600; color:var(--success);">${formatCurrency(d.total || 0)}</td>
         <td>${d.date ? new Date(d.date).toLocaleDateString('fr-FR') : '-'}</td>
         <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+        <td>${actions}</td>
       </tr>`;
     });
     tbody.innerHTML = html;
   }
 
-  // ===== CALCULER LA COMMISSION =====
+  // ===== TABLE ACTIONS (delegate) =====
+  document.getElementById('depotsTableBody').addEventListener('click', async (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const action = btn.dataset.action;
+    const id = btn.dataset.id;
+    if (action === 'fill') {
+      const userid = btn.dataset.userid || '';
+      const montant = btn.dataset.montant || '';
+      document.getElementById('userId').value = userid;
+      document.getElementById('montant').value = montant;
+      document.getElementById('commissionDisplay').textContent = formatCurrency(0);
+      document.getElementById('totalDisplay').textContent = formatCurrency(parseInt(montant) || 0);
+      document.getElementById('depotForm').classList.add('show');
+      window.scrollTo({ top: document.getElementById('depotForm').offsetTop - 20, behavior: 'smooth' });
+      return;
+    }
+    if (action === 'validate') {
+      if (!confirm('Valider ce dépôt et créditer le compte utilisateur ?')) return;
+      await validateDepot(id);
+      return;
+    }
+    if (action === 'reject') {
+      if (!confirm('Rejeter ce dépôt ?')) return;
+      await rejectDepot(id);
+      return;
+    }
+  });
+
+  async function resolveUserByInput(inputId) {
+    const normalized = inputId?.trim();
+    if (!normalized) return null;
+
+    const directRef = doc(db, 'users', normalized);
+    const directSnap = await getDoc(directRef);
+    if (directSnap.exists()) {
+      return { ref: directRef, snap: directSnap, userId: normalized };
+    }
+
+    const q = query(collection(db, 'users'), where('id', '==', normalized));
+    const qSnap = await getDocs(q);
+    if (!qSnap.empty) {
+      const match = qSnap.docs[0];
+      return { ref: doc(db, 'users', match.id), snap: match, userId: match.id };
+    }
+
+    return null;
+  }
+
+  async function validateDepot(depotId) {
+    try {
+      const depotRef = doc(db, 'depots', depotId);
+      const snap = await getDoc(depotRef);
+      if (!snap.exists()) { showToast('Dépôt introuvable', 'error'); return; }
+      const data = snap.data();
+      if (data.statut === 'validé') { showToast('Dépôt déjà validé', 'info'); return; }
+
+      const userRef = doc(db, 'users', data.userId);
+      const userSnap = await getDoc(userRef);
+      if (!userSnap.exists()) { showToast('Utilisateur introuvable', 'error'); return; }
+      const userData = userSnap.data();
+
+      const newBalance = (userData.balance || 0) + (data.total || (data.montant || 0));
+      await updateDoc(userRef, { balance: newBalance });
+
+      await updateDoc(depotRef, { statut: 'validé', validatedAt: new Date().toISOString(), validatedBy: auth.currentUser ? auth.currentUser.uid : null });
+
+      await addDoc(collection(db, 'transactions'), {
+        userId: data.userId,
+        type: 'depot',
+        montant: data.montant || 0,
+        commission: data.commission || 0,
+        total: data.total || data.montant || 0,
+        description: `Dépôt validé par admin`,
+        date: new Date().toISOString(),
+        statut: 'completé'
+      });
+
+      await addDoc(collection(db, 'notifications'), {
+        userId: data.userId,
+        title: '💰 Dépôt validé',
+        message: `Votre dépôt de ${formatCurrency(data.montant||0)} a été validé. Montant crédité: ${formatCurrency(data.total||0)}.`,
+        type: 'success',
+        read: false,
+        createdAt: new Date().toISOString()
+      });
+
+      showToast('✅ Dépôt validé et compte crédité', 'success');
+    } catch (err) {
+      console.error('Erreur validateDepot:', err);
+      showToast('❌ Erreur lors de la validation', 'error');
+    }
+  }
+
+  async function rejectDepot(depotId) {
+    try {
+      const depotRef = doc(db, 'depots', depotId);
+      const snap = await getDoc(depotRef);
+      if (!snap.exists()) { showToast('Dépôt introuvable', 'error'); return; }
+      const data = snap.data();
+      if (data.statut === 'rejeté') { showToast('Dépôt déjà rejeté', 'info'); return; }
+
+      await updateDoc(depotRef, { statut: 'rejeté', rejectedAt: new Date().toISOString(), rejectedBy: auth.currentUser ? auth.currentUser.uid : null });
+
+      await addDoc(collection(db, 'notifications'), {
+        userId: data.userId,
+        title: '❌ Dépôt rejeté',
+        message: `Votre dépôt de ${formatCurrency(data.montant||0)} a été rejeté par l'administration.`,
+        type: 'error',
+        read: false,
+        createdAt: new Date().toISOString()
+      });
+
+      showToast('Le dépôt a été rejeté', 'success');
+    } catch (err) {
+      console.error('Erreur rejectDepot:', err);
+      showToast('❌ Erreur lors du rejet', 'error');
+    }
+  }
+
+  // ===== CALCULER LE TOTAL =====
   document.getElementById('montant').addEventListener('input', function() {
     const montant = parseInt(this.value) || 0;
-    const commission = Math.round(montant * 0.1);
-    const total = montant + commission;
-
-    document.getElementById('commissionDisplay').textContent = formatCurrency(commission);
-    document.getElementById('totalDisplay').textContent = formatCurrency(total);
+    document.getElementById('commissionDisplay').textContent = formatCurrency(0);
+    document.getElementById('totalDisplay').textContent = formatCurrency(montant);
   });
 
   // ===== SOUMETTRE LE DÉPÔT =====
@@ -785,25 +912,24 @@
       return;
     }
 
-    const commission = Math.round(montant * 0.1);
-    const total = montant + commission;
+    const commission = 0;
+    const total = montant;
 
     const submitBtn = document.getElementById('submitBtn');
     submitBtn.classList.add('loading');
     submitBtn.disabled = true;
 
     try {
-      // Vérifier que l'utilisateur existe
-      const userRef = doc(db, 'users', userId);
-      const userSnap = await getDoc(userRef);
-
-      if (!userSnap.exists()) {
+      const resolvedUser = await resolveUserByInput(userId);
+      if (!resolvedUser) {
         showToast('❌ Utilisateur introuvable. Vérifiez l\'ID.', 'error');
         submitBtn.classList.remove('loading');
         submitBtn.disabled = false;
         return;
       }
 
+      const userRef = resolvedUser.ref;
+      const userSnap = resolvedUser.snap;
       const userData = userSnap.data();
 
       // Mettre à jour le solde
@@ -814,7 +940,8 @@
 
       // Enregistrer le dépôt
       await addDoc(collection(db, 'depots'), {
-        userId: userId,
+        userId: resolvedUser.userId,
+        displayId: userId,
         userName: userData.fullName || userData.prenom || userData.nom || 'Utilisateur',
         montant: montant,
         commission: commission,
@@ -832,7 +959,7 @@
         montant: montant,
         commission: commission,
         total: total,
-        description: `Dépôt administrateur (+10%)`,
+        description: `Dépôt administrateur`,
         date: new Date().toISOString(),
         statut: 'completé'
       });
@@ -841,13 +968,13 @@
       await addDoc(collection(db, 'notifications'), {
         userId: userId,
         title: '💰 Dépôt validé',
-        message: `Votre dépôt de ${formatCurrency(montant)} a été validé. Vous avez reçu ${formatCurrency(total)} (commission 10% incluse).`,
+        message: `Votre dépôt de ${formatCurrency(montant)} a été validé. Vous avez reçu ${formatCurrency(total)}.`,
         type: 'success',
         read: false,
         createdAt: new Date().toISOString()
       });
 
-      showToast(`✅ Dépôt validé ! ${formatCurrency(montant)} +10% = ${formatCurrency(total)} crédité`, 'success');
+      showToast(`✅ Dépôt validé ! ${formatCurrency(montant)} crédité`, 'success');
 
       // Réinitialiser le formulaire
       document.getElementById('userId').value = '';
@@ -916,6 +1043,8 @@
         }
         allDepots.push({
           id: snapDoc.id,
+          userId: data.userId || null,
+          displayId: data.displayId || data.userId || null,
           userName,
           montant: data.montant || 0,
           commission: data.commission || 0,

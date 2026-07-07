@@ -427,6 +427,7 @@
       <button class="menu-close-btn" id="menuCloseBtn"><i class="fas fa-times"></i></button>
     </div>
     <nav class="menu-nav">
+      <a href="../index.html" class="menu-link"><i class="fas fa-home"></i> Principal</a>
       <a href="index.html" class="menu-link"><i class="fas fa-chart-pie"></i> Tableau de bord</a>
       <a href="formations.html" class="menu-link"><i class="fas fa-book"></i> Formations</a>
       <a href="users.html" class="menu-link"><i class="fas fa-users"></i> Utilisateurs</a>
@@ -748,6 +749,24 @@
     if (!confirm(`Valider le retrait de ${formatCurrency(montant)} ?`)) return;
 
     try {
+      const userRef = doc(db, 'users', userId);
+      const userSnap = await getDoc(userRef);
+      if (!userSnap.exists()) {
+        showToast('❌ Utilisateur introuvable', 'error');
+        return;
+      }
+
+      const userData = userSnap.data();
+      const currentBalance = userData.balance || 0;
+      if (currentBalance < montant) {
+        showToast('❌ Solde insuffisant pour valider ce retrait', 'error');
+        return;
+      }
+
+      await updateDoc(userRef, {
+        balance: currentBalance - montant
+      });
+
       await updateDoc(doc(db, 'retraits', id), {
         statut: 'validé',
         dateValidation: new Date().toISOString()
@@ -757,6 +776,7 @@
         userId: userId,
         type: 'retrait',
         montant: montant,
+        frais: 0,
         description: 'Retrait validé par l\'administrateur',
         date: new Date().toISOString(),
         statut: 'completé'
