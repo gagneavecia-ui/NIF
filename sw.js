@@ -1,4 +1,6 @@
 const CACHE_NAME = 'nif-cache-v1';
+
+// Liste des fichiers à mettre en cache
 const urlsToCache = [
   '/',
   '/index.html',
@@ -12,56 +14,63 @@ const urlsToCache = [
   '/retrait.html',
   '/avis.html',
   '/vendre.html',
-  '/manifest.json',
-  '/logo.png'
+  '/manifest.json'
 ];
 
+// Installation
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('📦 Cache ouvert');
-        return cache.addAll(urlsToCache).catch(err => {
-          console.warn('⚠️ Erreur de cache pour certains fichiers:', err);
+        console.log('📦 Installation du cache...');
+        const promises = urlsToCache.map(url => {
+          return cache.add(url).catch(() => {
+            console.warn('⚠️ Fichier ignoré:', url);
+            return Promise.resolve();
+          });
         });
+        return Promise.all(promises);
       })
   );
   self.skipWaiting();
 });
 
+// 🔥 INTERCEPTION DES REQUÊTES (CORRIGÉ)
 self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+
+  // ✅ IGNORER les requêtes Firebase, Google et API externes
+  if (
+    url.hostname.includes('firestore.googleapis.com') ||
+    url.hostname.includes('firebase') ||
+    url.hostname.includes('googleapis.com') ||
+    url.hostname.includes('gstatic.com') ||
+    url.hostname.includes('fonts.googleapis.com') ||
+    url.hostname.includes('fonts.gstatic.com') ||
+    url.hostname.includes('cdnjs.cloudflare.com')
+  ) {
+    // Laisser le navigateur gérer normalement
+    return;
+  }
+
+  // ✅ Pour les autres requêtes, utiliser le cache
   event.respondWith(
     caches.match(event.request)
       .then(response => {
         if (response) {
           return response;
         }
-        return fetch(event.request).then(response => {
-          // Mettre en cache les nouvelles ressources
-          if (!response || response.status !== 200 || response.type !== 'basic') {
-            return response;
+        return fetch(event.request).catch(() => {
+          if (event.request.mode === 'navigate') {
+            return caches.match('/index.html');
           }
-          const responseToCache = response.clone();
-          caches.open(CACHE_NAME)
-            .then(cache => {
-              try {
-                cache.put(event.request, responseToCache);
-              } catch (e) {
-                // Ignorer les erreurs de mise en cache
-              }
-            });
-          return response;
+          return new Response('📡 Hors ligne', { status: 503 });
         });
-      })
-      .catch(() => {
-        // Page hors ligne
-        if (event.request.mode === 'navigate') {
-          return caches.match('/index.html');
-        }
       })
   );
 });
 
+// Activation
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
