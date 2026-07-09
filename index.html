@@ -8,8 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="N.I.F">
-  <link rel="icon" type="image/png" href="logo.png">
-  <link rel="apple-touch-icon" href="logo.png">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -842,7 +841,7 @@
       color: var(--text-dim);
     }
 
-      /* ============================================================
+    /* ============================================================
        MENU PLEIN ÉCRAN
        ============================================================ */
     .menu-overlay {
@@ -1061,6 +1060,35 @@
       margin-top: 10px;
     }
 
+    .section-link {
+      color: var(--primary);
+      font-size: 12px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: var(--transition);
+      font-weight: 500;
+    }
+
+    .section-link:hover {
+      color: var(--primary-light);
+      gap: 8px;
+    }
+
+    .section-link:active {
+      transform: scale(0.96);
+    }
+
+    .section-link i {
+      font-size: 10px;
+      transition: var(--transition);
+    }
+
+    .section-link:hover i {
+      transform: translateX(2px);
+    }
+
     /* ============================================================
        RESPONSIVE
        ============================================================ */
@@ -1073,176 +1101,117 @@
       .container { padding: 16px 14px 80px; }
     }
 
-    /* ===== TABLETTE (>= 768px) ===== */
     @media (min-width: 768px) {
       .container {
         max-width: 700px;
         padding: 30px 24px 60px;
       }
-
       .header {
         padding: 16px 5%;
       }
-
       .logo-text {
         font-size: 26px;
       }
-
       .hero-title {
         font-size: 34px;
       }
-
       .main-stat-value {
         font-size: 34px;
       }
-
       .formation-card-horizontal {
         height: 160px;
       }
-
       .formation-horiz-img-wrap {
         width: 130px;
         min-width: 130px;
       }
     }
 
-    /* ===== ORDINATEUR (>= 1024px) ===== */
     @media (min-width: 1024px) {
       .container {
         max-width: 960px;
         padding: 40px 32px 80px;
       }
-
       .features-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
       }
-
       .feature-card-horizontal {
         grid-column: span 2;
       }
-
       .formations-list-horizontal {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 16px;
       }
-
       .formation-card-horizontal {
         height: 170px;
         flex-direction: column;
       }
-
       .formation-horiz-img-wrap {
         width: 100%;
         min-width: 100%;
         height: 120px;
       }
-
       .formation-horiz-img {
         height: 120px;
       }
-
       .formation-horiz-content {
         padding: 12px 14px;
         height: auto;
       }
-
       .formation-horiz-description {
         -webkit-line-clamp: 1;
       }
-
       .testimonials-scroll {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 16px;
         overflow-x: visible;
       }
-
       .testimonial-compact {
         min-width: auto;
       }
     }
 
-    /* ===== GRAND ÉCRAN (>= 1280px) ===== */
     @media (min-width: 1280px) {
       .container {
         max-width: 1200px;
         padding: 50px 40px 100px;
       }
-
       .features-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 24px;
       }
-
       .feature-card-horizontal {
         grid-column: span 3;
       }
-
       .formations-list-horizontal {
         grid-template-columns: repeat(3, 1fr);
         gap: 20px;
       }
-
       .formation-card-horizontal {
         height: 190px;
       }
-
       .formation-horiz-img-wrap {
         height: 130px;
       }
-
       .formation-horiz-img {
         height: 130px;
       }
-
       .hero-title {
         font-size: 40px;
       }
-
       .main-stat-value {
         font-size: 40px;
       }
-
       .social-link {
         width: 40px;
         height: 40px;
         font-size: 16px;
       }
     }
-    
-    /* ===== BOUTON VOIR TOUT ===== */
-.section-link {
-  color: var(--primary);
-  font-size: 12px;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  transition: var(--transition);
-  font-weight: 500;
-}
-
-.section-link:hover {
-  color: var(--primary-light);
-  gap: 8px;
-}
-
-.section-link:active {
-  transform: scale(0.96);
-}
-
-.section-link i {
-  font-size: 10px;
-  transition: var(--transition);
-}
-
-.section-link:hover i {
-  transform: translateX(2px);
-}
-
   </style>
 </head>
 <body>
@@ -1290,6 +1259,9 @@
       </a>
       <a href="profil.html" class="menu-link">
         <i class="fas fa-user"></i> Mon Profil
+      </a>
+      <a href="ia.html" class="menu-link">
+        <i class="fas fa-robot"></i> N.I.F IA
       </a>
     </nav>
 
@@ -1344,14 +1316,14 @@
 
   <!-- SECTION FORMATIONS -->
   <div class="section-header">
-  <div class="section-header-left">
-    <div class="section-subtitle">Haute École de Finance</div>
-    <h2 class="section-title">Programmes de <span>Formation</span></h2>
+    <div class="section-header-left">
+      <div class="section-subtitle">Haute École de Finance</div>
+      <h2 class="section-title">Programmes de <span>Formation</span></h2>
+    </div>
+    <a href="formation.html" class="section-link" id="allFormationsLink">
+      Voir tout <i class="fas fa-arrow-right"></i>
+    </a>
   </div>
-  <a href="formation.html" class="section-link" id="allFormationsLink">
-    Voir tout <i class="fas fa-arrow-right"></i>
-  </a>
-</div>
 
   <div class="formations-list-horizontal">
     <a href="boutique.html" class="formation-card-horizontal formation-link">
@@ -1511,7 +1483,13 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+  import { 
+    getAuth, 
+    onAuthStateChanged, 
+    signOut,
+    setPersistence,
+    browserLocalPersistence
+  } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
   import { getFirestore, doc, getDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
   // ===== FIREBASE CONFIG =====
@@ -1527,6 +1505,9 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
+
+  // ===== PERSISTANCE - CRUCIAL POUR ÉVITER LES DÉCONNEXIONS =====
+  setPersistence(auth, browserLocalPersistence);
 
   // ===== DOM ELEMENTS =====
   const userNameEl = document.getElementById('userName');
@@ -1548,6 +1529,7 @@
   let currentUser = null;
   let userData = null;
   let unsubscribeUser = null;
+  let authTimeout = null; // Pour gérer le délai de redirection
 
   // ===== MENU =====
   function openMenu() {
@@ -1623,12 +1605,16 @@
     }
   }
 
-  // ===== AUTH =====
+  // ===== AUTH - VERSION CORRIGÉE AVEC DÉLAI DE 6 SECONDES =====
   onAuthStateChanged(auth, (user) => {
+    // Nettoyer le timeout précédent
+    clearTimeout(authTimeout);
+
     if (user) {
+      // ✅ Utilisateur connecté
       currentUser = user;
       localStorage.setItem('NIF_current_user', user.uid);
-
+      
       checkAdminButton(user);
 
       const userRef = doc(db, 'users', user.uid);
@@ -1655,14 +1641,22 @@
       });
 
     } else {
+      // ❌ Utilisateur déconnecté
       const savedUid = localStorage.getItem('NIF_current_user');
+      
       if (savedUid) {
-        setTimeout(() => {
+        // On a une session sauvegardée, on attend 6 secondes pour laisser le temps au rafraîchissement
+        authTimeout = setTimeout(() => {
           if (!auth.currentUser) {
+            // Le token n'a pas pu être rafraîchi → redirection vers login
+            console.log('⏳ Délai écoulé, redirection vers login...');
+            localStorage.removeItem('NIF_current_user');
+            localStorage.removeItem('NIF_user_name');
             window.location.href = 'login.html';
           }
-        }, 2000);
+        }, 6000); // Délai porté à 6 secondes
       } else {
+        // Pas de session sauvegardée → redirection immédiate
         window.location.href = 'login.html';
       }
     }
@@ -1695,7 +1689,7 @@
     });
   }
 
-  console.log("✅ Index N.I.F chargé !");
+  console.log("✅ Index N.I.F chargé - Gestion de session améliorée (délai 6s) !");
 </script>
 
 </body>

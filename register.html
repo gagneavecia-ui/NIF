@@ -643,28 +643,6 @@
       font-family: monospace;
     }
 
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 480px) {
-      .register-card {
-        padding: 24px 18px;
-      }
-
-      .row-2cols {
-        grid-template-columns: 1fr;
-        gap: 0;
-      }
-
-      .register-title {
-        font-size: 22px;
-      }
-
-      .country-modal {
-        max-width: 100%;
-        margin: 10px;
-        border-radius: 20px;
-      }
-    }
-
     /* ===== FOOTER SITE ===== */
     .site-footer {
       text-align: center;
@@ -677,255 +655,224 @@
       color: var(--text-dim);
       font-size: 11px;
     }
-    
+
     /* ============================================================
-   RESPONSIVE - À AJOUTER À LA FIN DU FICHIER
-   ============================================================ */
+       RESPONSIVE
+       ============================================================ */
 
-/* ===== TABLETTE (>= 768px) ===== */
-@media (min-width: 768px) {
-  .container {
-    max-width: 700px;
-    padding: 30px 24px 60px;
-  }
+    @media (max-width: 480px) {
+      .register-card {
+        padding: 24px 18px;
+      }
+      .row-2cols {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      .register-title {
+        font-size: 22px;
+      }
+      .country-modal {
+        max-width: 100%;
+        margin: 10px;
+        border-radius: 20px;
+      }
+    }
 
-  .register-card {
-    padding: 40px 36px;
-    border-radius: 32px;
-  }
+    @media (min-width: 768px) {
+      .container {
+        max-width: 700px;
+        padding: 30px 24px 60px;
+      }
+      .register-card {
+        padding: 40px 36px;
+        border-radius: 32px;
+      }
+      .register-title {
+        font-size: 30px;
+      }
+      .row-2cols {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .row-2cols .form-group {
+        margin-bottom: 0;
+      }
+      .country-modal {
+        max-width: 420px;
+      }
+      .header {
+        padding: 16px 5%;
+      }
+      .logo-text {
+        font-size: 26px;
+      }
+      .login-link {
+        font-size: 14px;
+        padding: 10px 20px;
+      }
+      .submit-btn {
+        padding: 16px;
+        font-size: 16px;
+      }
+    }
 
-  .register-title {
-    font-size: 30px;
-  }
+    @media (min-width: 1024px) {
+      .container {
+        max-width: 900px;
+        padding: 40px 32px 80px;
+      }
+      .register-card {
+        padding: 48px 44px;
+        border-radius: 36px;
+      }
+      .register-title {
+        font-size: 34px;
+      }
+      .register-subtitle {
+        font-size: 15px;
+      }
+      .row-2cols {
+        gap: 20px;
+      }
+      .form-group label {
+        font-size: 12px;
+      }
+      .input-wrapper input,
+      .country-selector,
+      .phone-wrapper {
+        padding: 14px 16px 14px 46px;
+        font-size: 15px;
+        border-radius: 14px;
+      }
+      .input-wrapper .input-icon {
+        left: 16px;
+        font-size: 15px;
+      }
+      .phone-indicatif {
+        padding: 14px 0 14px 16px;
+        font-size: 15px;
+        min-width: 60px;
+      }
+      .phone-wrapper input {
+        padding: 14px 16px;
+        font-size: 15px;
+      }
+      .country-selector-display .flag {
+        font-size: 26px;
+      }
+      .country-selector-display .name {
+        font-size: 15px;
+      }
+      .checkbox-group label {
+        font-size: 13px;
+      }
+      .submit-btn {
+        padding: 18px;
+        font-size: 17px;
+        border-radius: 16px;
+        margin-top: 12px;
+      }
+      .login-footer {
+        font-size: 14px;
+        margin-top: 28px;
+      }
+      .country-modal {
+        max-width: 460px;
+        border-radius: 32px;
+      }
+      .country-modal-header h3 {
+        font-size: 20px;
+      }
+      .country-option {
+        padding: 14px 18px;
+      }
+      .country-option-name {
+        font-size: 15px;
+      }
+      .site-footer p {
+        font-size: 12px;
+      }
+    }
 
-  .row-2cols {
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
+    @media (min-width: 1280px) {
+      .container {
+        max-width: 1100px;
+        padding: 50px 40px 100px;
+      }
+      .register-card {
+        padding: 56px 52px;
+        border-radius: 40px;
+      }
+      .register-title {
+        font-size: 38px;
+      }
+      .row-2cols {
+        gap: 24px;
+      }
+      .input-wrapper input,
+      .country-selector,
+      .phone-wrapper {
+        padding: 16px 18px 16px 50px;
+        font-size: 16px;
+      }
+      .input-wrapper .input-icon {
+        left: 18px;
+        font-size: 16px;
+      }
+    }
 
-  .row-2cols .form-group {
-    margin-bottom: 0;
-  }
-
-  .country-modal {
-    max-width: 420px;
-  }
-
-  .header {
-    padding: 16px 5%;
-  }
-
-  .logo-text {
-    font-size: 26px;
-  }
-
-  .login-link {
-    font-size: 14px;
-    padding: 10px 20px;
-  }
-
-  .submit-btn {
-    padding: 16px;
-    font-size: 16px;
-  }
-}
-
-/* ===== ORDINATEUR (>= 1024px) ===== */
-@media (min-width: 1024px) {
-  .container {
-    max-width: 900px;
-    padding: 40px 32px 80px;
-  }
-
-  .register-card {
-    padding: 48px 44px;
-    border-radius: 36px;
-  }
-
-  .register-title {
-    font-size: 34px;
-  }
-
-  .register-subtitle {
-    font-size: 15px;
-  }
-
-  .row-2cols {
-    gap: 20px;
-  }
-
-  .form-group label {
-    font-size: 12px;
-  }
-
-  .input-wrapper input,
-  .country-selector,
-  .phone-wrapper {
-    padding: 14px 16px 14px 46px;
-    font-size: 15px;
-    border-radius: 14px;
-  }
-
-  .input-wrapper .input-icon {
-    left: 16px;
-    font-size: 15px;
-  }
-
-  .phone-indicatif {
-    padding: 14px 0 14px 16px;
-    font-size: 15px;
-    min-width: 60px;
-  }
-
-  .phone-wrapper input {
-    padding: 14px 16px;
-    font-size: 15px;
-  }
-
-  .country-selector-display .flag {
-    font-size: 26px;
-  }
-
-  .country-selector-display .name {
-    font-size: 15px;
-  }
-
-  .checkbox-group label {
-    font-size: 13px;
-  }
-
-  .submit-btn {
-    padding: 18px;
-    font-size: 17px;
-    border-radius: 16px;
-    margin-top: 12px;
-  }
-
-  .login-footer {
-    font-size: 14px;
-    margin-top: 28px;
-  }
-
-  .country-modal {
-    max-width: 460px;
-    border-radius: 32px;
-  }
-
-  .country-modal-header h3 {
-    font-size: 20px;
-  }
-
-  .country-option {
-    padding: 14px 18px;
-  }
-
-  .country-option-name {
-    font-size: 15px;
-  }
-
-  .site-footer p {
-    font-size: 12px;
-  }
-}
-
-/* ===== GRAND ÉCRAN (>= 1280px) ===== */
-@media (min-width: 1280px) {
-  .container {
-    max-width: 1100px;
-    padding: 50px 40px 100px;
-  }
-
-  .register-card {
-    padding: 56px 52px;
-    border-radius: 40px;
-  }
-
-  .register-title {
-    font-size: 38px;
-  }
-
-  .row-2cols {
-    gap: 24px;
-  }
-
-  .input-wrapper input,
-  .country-selector,
-  .phone-wrapper {
-    padding: 16px 18px 16px 50px;
-    font-size: 16px;
-  }
-
-  .input-wrapper .input-icon {
-    left: 18px;
-    font-size: 16px;
-  }
-}
-
-/* ===== PETIT TÉLÉPHONE (< 400px) ===== */
-@media (max-width: 399px) {
-  .register-card {
-    padding: 20px 14px;
-    border-radius: 20px;
-  }
-
-  .register-title {
-    font-size: 20px;
-  }
-
-  .register-subtitle {
-    font-size: 12px;
-  }
-
-  .input-wrapper input,
-  .country-selector,
-  .phone-wrapper {
-    padding: 10px 12px 10px 36px;
-    font-size: 13px;
-  }
-
-  .input-wrapper .input-icon {
-    left: 10px;
-    font-size: 12px;
-  }
-
-  .phone-indicatif {
-    padding: 10px 0 10px 10px;
-    font-size: 13px;
-    min-width: 48px;
-  }
-
-  .phone-wrapper input {
-    padding: 10px 12px;
-    font-size: 13px;
-  }
-
-  .country-selector-display .flag {
-    font-size: 18px;
-  }
-
-  .country-selector-display .name {
-    font-size: 13px;
-  }
-
-  .submit-btn {
-    padding: 12px;
-    font-size: 14px;
-  }
-
-  .login-footer {
-    font-size: 12px;
-  }
-
-  .checkbox-group label {
-    font-size: 11px;
-  }
-
-  .checkbox-group input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    min-width: 16px;
-  }
-}login.html
+    @media (max-width: 399px) {
+      .register-card {
+        padding: 20px 14px;
+        border-radius: 20px;
+      }
+      .register-title {
+        font-size: 20px;
+      }
+      .register-subtitle {
+        font-size: 12px;
+      }
+      .input-wrapper input,
+      .country-selector,
+      .phone-wrapper {
+        padding: 10px 12px 10px 36px;
+        font-size: 13px;
+      }
+      .input-wrapper .input-icon {
+        left: 10px;
+        font-size: 12px;
+      }
+      .phone-indicatif {
+        padding: 10px 0 10px 10px;
+        font-size: 13px;
+        min-width: 48px;
+      }
+      .phone-wrapper input {
+        padding: 10px 12px;
+        font-size: 13px;
+      }
+      .country-selector-display .flag {
+        font-size: 18px;
+      }
+      .country-selector-display .name {
+        font-size: 13px;
+      }
+      .submit-btn {
+        padding: 12px;
+        font-size: 14px;
+      }
+      .login-footer {
+        font-size: 12px;
+      }
+      .checkbox-group label {
+        font-size: 11px;
+      }
+      .checkbox-group input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        min-width: 16px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1095,7 +1042,13 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+  import { 
+    getAuth, 
+    createUserWithEmailAndPassword, 
+    setPersistence, 
+    browserLocalPersistence,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
   import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
   // ===== FIREBASE CONFIG =====
@@ -1111,6 +1064,8 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
+
+  // ===== PERSISTANCE - CRUCIAL POUR ÉVITER LES DÉCONNEXIONS =====
   setPersistence(auth, browserLocalPersistence);
 
   // ===== PAYS =====
@@ -1157,6 +1112,8 @@
   const closeCountryModalBtn = document.getElementById('closeCountryModalBtn');
   const countrySearch = document.getElementById('countrySearch');
   const countryList = document.getElementById('countryList');
+
+  let authTimeout = null;
 
   // ===== TOGGLE PASSWORD =====
   togglePassword.addEventListener('click', () => {
@@ -1315,8 +1272,11 @@
       const now = new Date().toISOString();
 
       // 2. Création du document utilisateur
+      const generatedId = String((user.uid.length * 97 + user.uid.charCodeAt(0)) % 900000000 + 100000000).slice(0, 10);
       const userData = {
         uid: user.uid,
+        id: generatedId,
+        customerId: generatedId,
         nom: nom,
         prenom: prenom,
         fullName: `${prenom} ${nom}`,
@@ -1376,6 +1336,30 @@
     }
   });
 
+  // ===== AUTH - VERSION CORRIGÉE AVEC DÉLAI DE 6 SECONDES =====
+  // Vérifier si déjà connecté pour rediriger vers l'accueil
+  onAuthStateChanged(auth, (user) => {
+    clearTimeout(authTimeout);
+    
+    if (user) {
+      // Déjà connecté → rediriger vers l'accueil
+      localStorage.setItem('NIF_current_user', user.uid);
+      window.location.href = 'index.html';
+    } else {
+      // Pas connecté → rester sur la page d'inscription
+      const savedUid = localStorage.getItem('NIF_current_user');
+      if (savedUid) {
+        // Attendre 6 secondes pour laisser le temps au rafraîchissement
+        authTimeout = setTimeout(() => {
+          if (!auth.currentUser) {
+            localStorage.removeItem('NIF_current_user');
+            // Rester sur la page d'inscription
+          }
+        }, 6000);
+      }
+    }
+  });
+
   // ===== CHARGEMENT RAPIDE DU NOM DEPUIS LOCALSTORAGE =====
   const savedName = localStorage.getItem('NIF_user_name');
   if (savedName) {
@@ -1383,7 +1367,7 @@
     window.location.href = 'index.html';
   }
 
-  console.log("✅ Page d'inscription N.I.F chargée !");
+  console.log("✅ Page d'inscription N.I.F chargée - Gestion de session améliorée !");
 </script>
 
 </body>
