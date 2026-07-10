@@ -487,6 +487,21 @@ body {
 
 .message.ia .msg-strong { color: var(--primary-light); }
 
+.message .msg-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 10px 16px;
+  background: #25D366;
+  color: #08210F;
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: var(--border-radius-md);
+  text-decoration: none;
+}
+.message .msg-link:active { transform: scale(0.97); }
+
 /* ============================================================
    TYPING INDICATOR
    ============================================================ */
@@ -875,6 +890,9 @@ body {
       <div class="chat-input-area">
         <input type="text" id="chatInput" placeholder="Écrivez votre message..." autocomplete="off" aria-label="Saisir votre message">
         <div class="btn-group">
+          <button class="btn-icon attach-btn" id="attachBtn" title="Joindre un fichier" aria-label="Joindre un fichier" style="display:none;">
+            <i class="fas fa-paperclip" aria-hidden="true"></i>
+          </button>
           <button class="btn-icon mic-btn" id="micBtn" title="Note vocale" aria-label="Dictée vocale">
             <i class="fas fa-microphone" aria-hidden="true"></i>
           </button>
@@ -882,6 +900,7 @@ body {
             <i class="fas fa-paper-plane" aria-hidden="true"></i>
           </button>
         </div>
+        <input type="file" id="agentFileInput" style="display:none;">
       </div>
     </div>
 
@@ -899,7 +918,8 @@ body {
     "imports": {
       "firebase/app": "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js",
       "firebase/auth": "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js",
-      "firebase/firestore": "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js"
+      "firebase/firestore": "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js",
+      "firebase/storage": "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js"
     }
   }
 </script>
@@ -918,14 +938,24 @@ body {
     collection, 
     doc, 
     getDoc, 
+    getDocs,
     setDoc, 
     updateDoc, 
     deleteDoc, 
+    addDoc,
     query, 
     where, 
     onSnapshot,
-    serverTimestamp
+    serverTimestamp,
+    arrayUnion,
+    increment
   } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+  import {
+    getStorage,
+    ref as storageRef,
+    uploadBytes,
+    getDownloadURL
+  } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDEjj2oAg7ZL8HvdkSWliShxydgq_BPxzs",
@@ -939,6 +969,10 @@ body {
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
+  const storage = getStorage(app);
+
+  // Numéro WhatsApp de NIF pour les demandes de recharge/retrait
+  const WHATSAPP_NUMBER = '22798064667';
 
   // ============================================================
   // PERSISTANCE
@@ -963,8 +997,11 @@ body {
   const searchInput = document.getElementById('searchInput');
   const toast = document.getElementById('toast');
   const headerUserName = document.getElementById('headerUserName');
+  const attachBtn = document.getElementById('attachBtn');
+  const agentFileInput = document.getElementById('agentFileInput');
 
   let currentUser = null;
+  let userData = null;
   let currentChatId = null;
   let allChats = [];
   let touchStartX = 0;
@@ -975,6 +1012,9 @@ body {
   let isListening = false;
   let authTimeout = null;
   let scrollTimeout = null;
+  let agentFlow = null; // { type, step, data } — pilote les conversations guidées (recharge, retrait, formations...)
+  const FORMATION_CATEGORIES = ['Finance', 'Marketing', 'Entrepreneuriat', 'Stratégie'];
+  const OPERATEURS = ['Wave', 'Orange Money', 'Moov Money', 'Airtel Money', 'Mynita', 'Amanata'];
 
   // ============================================================
   // RECONNAISSANCE VOCALE
@@ -1090,6 +1130,414 @@ body {
     }
     
     return "🤔 Je n'ai pas encore de réponse pour cela. Je suis en phase d'apprentissage. Tu peux poser une autre question ou utiliser les suggestions ci-dessous.";
+  }
+
+  // ============================================================
+  // AGENT — CONVERSATIONS GUIDÉES
+  // (recharge, retrait, formations, statistiques boutique, vente)
+  // ============================================================
+  function formatFCFA(n) {
+    return (n || 0).toLocaleString('fr-FR') + ' FCFA';
+  }
+
+  function resetAgentFlow() {
+    agentFlow = null;
+    if (attachBtn) attachBtn.style.display = 'none';
+  }
+
+  function cancelWords(lower) {
+    return /^(annule|annuler|stop|non merci|abandonner)$/i.test(lower.trim());
+  }
+
+  function isYes(lower) {
+    return /^(oui|ok|d'accord|daccord|confirme|confirmer|yes|vas-y|c'est bon)/i.test(lower.trim());
+  }
+
+  function isNo(lower) {
+    return /^(non|annule|annuler|stop)/i.test(lower.trim());
+  }
+
+  // ---------- INTENTION ----------
+  async function getAgentResponse(text) {
+    const lower = text.toLowerCase().trim();
+
+    if (agentFlow) {
+      return await continueAgentFlow(text, lower);
+    }
+
+    if (/recharg/.test(lower)) return startRechargeFlow();
+    if (/(retrait|retirer)/.test(lower)) return startRetraitFlow();
+    if (/(mes formations|liste.*formation|voir.*formation|quelles formations|formations disponibles|catalogue)/.test(lower)) return await listFormationsFlow();
+    if (/(statistique|combien de formation|meilleure vente|plus vendu|plus aim)/.test(lower) && !/vendre/.test(lower)) return await boutiqueStatsFlow();
+    if (/(vendre une formation|créer une formation|creer une formation|publier une formation|ajouter une formation|nouvelle formation|je veux vendre)/.test(lower)) return startVendreFlow();
+
+    return getResponse(text);
+  }
+
+  // ---------- RECHARGE ----------
+  function startRechargeFlow() {
+    agentFlow = { type: 'recharge', step: 'montant', data: {} };
+    return "💰 Parfait, on va recharger ton compte NIF.\n\nCombien veux-tu recharger, en FCFA ? (minimum 100 FCFA)";
+  }
+
+  async function finalizeRecharge() {
+    const { montant, phone } = agentFlow.data;
+    const commission = Math.round(montant * 0.1);
+    const total = montant + commission;
+    const displayId = userData?.id || userData?.customerId || currentUser.uid.substring(0, 8);
+
+    try {
+      await addDoc(collection(db, 'depots'), {
+        userId: currentUser.uid,
+        displayId,
+        userName: userData?.fullName || userData?.prenom || userData?.nom || 'Utilisateur',
+        montant,
+        commission,
+        total,
+        phone,
+        date: new Date().toISOString().split('T')[0],
+        timestamp: new Date().toISOString(),
+        statut: 'en_attente',
+        type: 'recharge',
+        source: 'ia_chat',
+        paymentMethod: 'whatsapp'
+      });
+
+      const message = `Bonjour NIF, je souhaite recharger mon compte de ${montant.toLocaleString('fr-FR')} FCFA depuis le numéro ${phone}. Mon ID est : ${displayId}`;
+      const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+      resetAgentFlow();
+      return `✅ Demande enregistrée : ${formatFCFA(montant)} + ${formatFCFA(commission)} de frais = ${formatFCFA(total)} à envoyer.\n\nAppuie ci-dessous pour finaliser sur WhatsApp 👇\n\n[[WA:${waUrl}]]`;
+    } catch (error) {
+      console.error('Erreur recharge:', error);
+      resetAgentFlow();
+      return "❌ Une erreur est survenue pendant l'enregistrement de ta demande. Réessaie dans un instant.";
+    }
+  }
+
+  // ---------- RETRAIT ----------
+  function startRetraitFlow() {
+    agentFlow = { type: 'retrait', step: 'operateur', data: {} };
+    return `💸 D'accord, on prépare ton retrait.\n\nQuel opérateur veux-tu utiliser ?\n${OPERATEURS.map(o => `• ${o}`).join('\n')}`;
+  }
+
+  async function finalizeRetrait() {
+    const { operateur, phone, montant } = agentFlow.data;
+    const frais = Math.round(montant * 0.15);
+    const net = montant - frais;
+
+    try {
+      await addDoc(collection(db, 'retraits'), {
+        userId: currentUser.uid,
+        userName: userData?.fullName || userData?.prenom || userData?.nom || 'Utilisateur',
+        userEmail: userData?.email || currentUser.email || '',
+        montant,
+        frais,
+        net,
+        operateur,
+        phone,
+        date: new Date().toISOString().split('T')[0],
+        timestamp: new Date().toISOString(),
+        statut: 'en_attente',
+        source: 'ia_chat'
+      });
+
+      await addDoc(collection(db, 'transactions'), {
+        userId: currentUser.uid,
+        type: 'retrait_demande',
+        montant,
+        frais,
+        net,
+        description: `Demande de retrait via ${operateur} (assistant IA)`,
+        date: new Date().toISOString(),
+        statut: 'en_attente'
+      });
+
+      const message = `Bonjour NIF, je souhaite retirer ${montant.toLocaleString('fr-FR')} FCFA via ${operateur} sur le numéro ${phone}.`;
+      const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+      resetAgentFlow();
+      return `✅ Demande de retrait envoyée pour validation : ${formatFCFA(montant)} (frais ${formatFCFA(frais)}, tu recevras ${formatFCFA(net)}).\n\nElle apparaît déjà dans l'espace admin. Tu peux aussi prévenir NIF directement sur WhatsApp 👇\n\n[[WA:${waUrl}]]`;
+    } catch (error) {
+      console.error('Erreur retrait:', error);
+      resetAgentFlow();
+      return "❌ Une erreur est survenue pendant l'enregistrement de ta demande. Réessaie dans un instant.";
+    }
+  }
+
+  // ---------- FORMATIONS : LISTE ----------
+  async function listFormationsFlow() {
+    try {
+      const q = query(collection(db, 'formations'), where('statut', '==', 'publie'));
+      const snap = await getDocs(q);
+      if (snap.empty) return "📚 Il n'y a aucune formation publiée pour le moment.";
+
+      const items = [];
+      snap.forEach(d => items.push(d.data()));
+      items.sort((a, b) => (b.nbAcheteurs || 0) - (a.nbAcheteurs || 0));
+
+      const lines = items.slice(0, 15).map(f =>
+        `• **${f.titre || 'Sans titre'}** — ${formatFCFA(f.prix)} · ⭐ ${(f.note || f.noteMoyenne || 0).toFixed ? (f.note || f.noteMoyenne || 0).toFixed(1) : (f.note || 0)} · ${f.nbAcheteurs || 0} acheteurs`
+      );
+      return `📚 Voici tes formations publiées (${items.length}) :\n\n${lines.join('\n')}`;
+    } catch (error) {
+      console.error('Erreur liste formations:', error);
+      return "❌ Je n'ai pas pu récupérer la liste des formations pour le moment.";
+    }
+  }
+
+  // ---------- BOUTIQUE : STATISTIQUES ----------
+  async function boutiqueStatsFlow() {
+    try {
+      const snap = await getDocs(collection(db, 'formations'));
+      if (snap.empty) return "📊 Aucune formation n'existe encore dans la boutique.";
+
+      const items = [];
+      snap.forEach(d => items.push(d.data()));
+
+      const totalFormations = items.length;
+      const totalAcheteurs = items.reduce((sum, f) => sum + (f.nbAcheteurs || 0), 0);
+      const notes = items.map(f => f.note || f.noteMoyenne || 0).filter(n => n > 0);
+      const avgNote = notes.length ? (notes.reduce((a, b) => a + b, 0) / notes.length) : 0;
+
+      const plusVendue = [...items].sort((a, b) => (b.nbAcheteurs || 0) - (a.nbAcheteurs || 0))[0];
+      const plusAimee = [...items].sort((a, b) => (b.note || b.noteMoyenne || 0) - (a.note || a.noteMoyenne || 0))[0];
+
+      return `📊 **Statistiques de ta boutique**\n\n` +
+        `• Formations en ligne : ${totalFormations}\n` +
+        `• Acheteurs cumulés : ${totalAcheteurs}\n` +
+        `• Note moyenne : ⭐ ${avgNote.toFixed(1)}\n\n` +
+        `🏆 Plus vendue : **${plusVendue?.titre || '—'}** (${plusVendue?.nbAcheteurs || 0} acheteurs)\n` +
+        `❤️ Plus aimée : **${plusAimee?.titre || '—'}** (⭐ ${(plusAimee?.note || plusAimee?.noteMoyenne || 0)})`;
+    } catch (error) {
+      console.error('Erreur stats boutique:', error);
+      return "❌ Je n'ai pas pu récupérer les statistiques pour le moment.";
+    }
+  }
+
+  // ---------- VENDRE / CRÉER UNE FORMATION ----------
+  function startVendreFlow() {
+    agentFlow = { type: 'vendre', step: 'titre', data: {} };
+    return "🚀 Super, créons une nouvelle formation à vendre !\n\nQuel est le titre de la formation ?";
+  }
+
+  function askForCover() {
+    agentFlow.step = 'cover';
+    agentFlow.waitingForFile = 'cover';
+    if (attachBtn) attachBtn.style.display = 'flex';
+    return "🖼️ Il me faut maintenant l'image de couverture.\n\nAppuie sur le trombone 📎 à côté du champ de texte pour l'envoyer.";
+  }
+
+  function askForPdf() {
+    agentFlow.step = 'pdf';
+    agentFlow.waitingForFile = 'pdf';
+    if (attachBtn) attachBtn.style.display = 'flex';
+    return "📄 Merci ! Envoie-moi maintenant le fichier PDF de la formation avec le trombone 📎.";
+  }
+
+  function recapVendre() {
+    const d = agentFlow.data;
+    agentFlow.step = 'confirm';
+    if (attachBtn) attachBtn.style.display = 'none';
+    return `📝 **Récapitulatif de la formation**\n\n` +
+      `• Titre : ${d.titre}\n` +
+      `• Description : ${d.description}\n` +
+      `• Prix : ${formatFCFA(d.prix)}\n` +
+      `• Catégorie : ${d.categorie}\n` +
+      `• Couverture et PDF reçus ✅\n\n` +
+      `Je publie cette formation dans ta boutique ? (oui/non)`;
+  }
+
+  async function finalizeVendre() {
+    const d = agentFlow.data;
+    try {
+      await addDoc(collection(db, 'formations'), {
+        titre: d.titre,
+        description: d.description,
+        prix: d.prix,
+        categorie: d.categorie,
+        vues: 0,
+        views: 0,
+        nbAcheteurs: 0,
+        note: 0,
+        noteMoyenne: 0,
+        pages: d.pages || 10,
+        vendeurNom: userData?.fullName || userData?.prenom || userData?.nom || 'NIF',
+        vendeurId: currentUser.uid,
+        image: d.imageUrl,
+        pdfUrl: d.pdfUrl,
+        statut: 'publie',
+        dateCreation: new Date().toISOString()
+      });
+      resetAgentFlow();
+      return "🎉 Ta formation est publiée dans la boutique ! Elle est désormais visible et achetable par les utilisateurs.";
+    } catch (error) {
+      console.error('Erreur publication formation:', error);
+      resetAgentFlow();
+      return "❌ Une erreur est survenue pendant la publication. Réessaie dans un instant.";
+    }
+  }
+
+  async function uploadAgentFile(file) {
+    const kind = agentFlow?.waitingForFile;
+    if (!kind || !file) return;
+
+    const isCover = kind === 'cover';
+    if (isCover && !file.type.startsWith('image/')) {
+      addMessage("⚠️ Ce fichier n'est pas une image. Envoie une image (JPG, PNG...) pour la couverture.", 'ia', new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
+      return;
+    }
+    if (!isCover && file.type !== 'application/pdf') {
+      addMessage("⚠️ Ce fichier n'est pas un PDF. Envoie le PDF de ta formation.", 'ia', new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
+      return;
+    }
+
+    if (typingIndicator) typingIndicator.classList.add('show');
+    try {
+      const path = `${isCover ? 'formations_covers' : 'formations_pdfs'}/${currentUser.uid}_${Date.now()}_${file.name}`;
+      const fileRef = storageRef(storage, path);
+      await uploadBytes(fileRef, file);
+      const url = await getDownloadURL(fileRef);
+
+      if (isCover) {
+        agentFlow.data.imageUrl = url;
+      } else {
+        agentFlow.data.pdfUrl = url;
+      }
+
+      if (typingIndicator) typingIndicator.classList.remove('show');
+      const timeStr = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+      addMessage(isCover ? "✅ Image de couverture reçue !" : "✅ PDF reçu !", 'user', timeStr);
+
+      const response = isCover ? askForPdf() : recapVendre();
+      addMessage(response, 'ia', timeStr);
+    } catch (error) {
+      console.error('Erreur upload fichier:', error);
+      if (typingIndicator) typingIndicator.classList.remove('show');
+      addMessage("❌ Erreur lors de l'envoi du fichier. Réessaie.", 'ia', new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
+    }
+  }
+
+  if (attachBtn) {
+    attachBtn.addEventListener('click', () => {
+      if (!agentFlow?.waitingForFile || !agentFileInput) return;
+      agentFileInput.accept = agentFlow.waitingForFile === 'cover' ? 'image/*' : 'application/pdf';
+      agentFileInput.click();
+    });
+  }
+
+  if (agentFileInput) {
+    agentFileInput.addEventListener('change', () => {
+      const file = agentFileInput.files?.[0];
+      if (file) uploadAgentFile(file);
+      agentFileInput.value = '';
+    });
+  }
+
+  // ---------- MOTEUR DES ÉTAPES ----------
+  async function continueAgentFlow(text, lower) {
+    if (cancelWords(lower)) {
+      resetAgentFlow();
+      return "D'accord, j'annule la demande en cours. Dis-moi si tu as besoin d'autre chose 🙂";
+    }
+
+    const { type, step } = agentFlow;
+
+    // ----- RECHARGE -----
+    if (type === 'recharge') {
+      if (step === 'montant') {
+        const montant = parseInt(text.replace(/\D/g, ''), 10);
+        if (!montant || montant < 100) return "⚠️ Indique un montant valide, au moins 100 FCFA.";
+        agentFlow.data.montant = montant;
+        agentFlow.step = 'phone';
+        return "📱 Sur quel numéro de téléphone vas-tu effectuer le paiement (Wave, Orange Money, Moov...) ?";
+      }
+      if (step === 'phone') {
+        const phone = text.trim().replace(/\s/g, '');
+        if (phone.length < 8) return "⚠️ Ce numéro semble trop court. Indique un numéro de téléphone valide.";
+        agentFlow.data.phone = phone;
+        agentFlow.step = 'confirm';
+        const { montant } = agentFlow.data;
+        const commission = Math.round(montant * 0.1);
+        return `📝 Récapitulatif : recharge de ${formatFCFA(montant)} depuis le ${phone} (+ ${formatFCFA(commission)} de frais).\n\nJe confirme ? (oui/non)`;
+      }
+      if (step === 'confirm') {
+        if (isYes(lower)) return await finalizeRecharge();
+        if (isNo(lower)) { resetAgentFlow(); return "D'accord, j'annule la demande de recharge."; }
+        return "Réponds simplement par « oui » pour confirmer ou « non » pour annuler.";
+      }
+    }
+
+    // ----- RETRAIT -----
+    if (type === 'retrait') {
+      if (step === 'operateur') {
+        const match = OPERATEURS.find(o => lower.includes(o.toLowerCase()));
+        if (!match) return `⚠️ Choisis un opérateur parmi : ${OPERATEURS.join(', ')}.`;
+        agentFlow.data.operateur = match;
+        agentFlow.step = 'phone';
+        return "📱 Sur quel numéro de téléphone dois-je envoyer les FCFA ?";
+      }
+      if (step === 'phone') {
+        const phone = text.trim().replace(/\s/g, '');
+        if (phone.length < 8) return "⚠️ Ce numéro semble trop court. Indique un numéro de téléphone valide.";
+        agentFlow.data.phone = phone;
+        agentFlow.step = 'montant';
+        return "💰 Quel montant veux-tu retirer ? (entre 1 000 et 50 000 FCFA)";
+      }
+      if (step === 'montant') {
+        const montant = parseInt(text.replace(/\D/g, ''), 10);
+        if (!montant || montant < 1000 || montant > 50000) return "⚠️ Le montant doit être compris entre 1 000 et 50 000 FCFA.";
+        if (userData && (userData.balance || 0) < montant) return `⚠️ Solde insuffisant. Ton solde actuel est de ${formatFCFA(userData.balance || 0)}.`;
+        agentFlow.data.montant = montant;
+        agentFlow.step = 'confirm';
+        const frais = Math.round(montant * 0.15);
+        const net = montant - frais;
+        return `📝 Récapitulatif : retrait de ${formatFCFA(montant)} via ${agentFlow.data.operateur} sur le ${agentFlow.data.phone}. Frais : ${formatFCFA(frais)} → tu recevras ${formatFCFA(net)}.\n\nJe confirme ? (oui/non)`;
+      }
+      if (step === 'confirm') {
+        if (isYes(lower)) return await finalizeRetrait();
+        if (isNo(lower)) { resetAgentFlow(); return "D'accord, j'annule la demande de retrait."; }
+        return "Réponds simplement par « oui » pour confirmer ou « non » pour annuler.";
+      }
+    }
+
+    // ----- VENDRE UNE FORMATION -----
+    if (type === 'vendre') {
+      if (step === 'titre') {
+        if (!text.trim()) return "⚠️ Indique un titre pour ta formation.";
+        agentFlow.data.titre = text.trim();
+        agentFlow.step = 'description';
+        return "✏️ Décris rapidement cette formation en quelques phrases.";
+      }
+      if (step === 'description') {
+        if (!text.trim()) return "⚠️ Indique une courte description.";
+        agentFlow.data.description = text.trim();
+        agentFlow.step = 'prix';
+        return "💰 Quel est le prix de la formation, en FCFA ?";
+      }
+      if (step === 'prix') {
+        const prix = parseInt(text.replace(/\D/g, ''), 10);
+        if (!prix || prix <= 0) return "⚠️ Indique un prix valide en FCFA.";
+        agentFlow.data.prix = prix;
+        agentFlow.step = 'categorie';
+        return `📂 Dans quelle catégorie ? ${FORMATION_CATEGORIES.join(', ')}`;
+      }
+      if (step === 'categorie') {
+        const match = FORMATION_CATEGORIES.find(c => lower.includes(c.toLowerCase()));
+        if (!match) return `⚠️ Choisis une catégorie parmi : ${FORMATION_CATEGORIES.join(', ')}.`;
+        agentFlow.data.categorie = match;
+        return askForCover();
+      }
+      if (step === 'cover' || step === 'pdf') {
+        return "📎 Utilise le bouton trombone à côté du champ de texte pour envoyer le fichier demandé.";
+      }
+      if (step === 'confirm') {
+        if (isYes(lower)) return await finalizeVendre();
+        if (isNo(lower)) { resetAgentFlow(); return "D'accord, j'annule la publication de cette formation."; }
+        return "Réponds simplement par « oui » pour publier ou « non » pour annuler.";
+      }
+    }
+
+    resetAgentFlow();
+    return "Désolé, j'ai perdu le fil 😅 Peux-tu reformuler ta demande ?";
   }
 
   // ============================================================
@@ -1274,7 +1722,8 @@ body {
     div.className = `message ${sender}`;
     const formattedText = text
       .replace(/\n/g, '<br>')
-      .replace(/\*\*(.*?)\*\*/g, '<strong class="msg-strong">$1</strong>');
+      .replace(/\*\*(.*?)\*\*/g, '<strong class="msg-strong">$1</strong>')
+      .replace(/\[\[WA:(.*?)\]\]/g, '<a class="msg-link" href="$1" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> Ouvrir WhatsApp</a>');
     div.innerHTML = `${formattedText}<span class="msg-time">${time || 'Maintenant'}</span>`;
     chatMessages.appendChild(div);
     
@@ -1346,7 +1795,7 @@ body {
     setTimeout(async () => {
       if (typingIndicator) typingIndicator.classList.remove('show');
       
-      const response = getResponse(text);
+      const response = await getAgentResponse(text);
       const responseTime = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 
       addMessage(response, 'ia', responseTime);
@@ -1530,7 +1979,8 @@ body {
         const userRef = doc(db, 'users', user.uid);
         const userSnap = await getDoc(userRef);
         if (userSnap.exists()) {
-          updateHeader(userSnap.data());
+          userData = userSnap.data();
+          updateHeader(userData);
         }
       } catch (error) {
         console.error('Erreur récupération utilisateur:', error);
