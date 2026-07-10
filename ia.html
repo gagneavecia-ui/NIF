@@ -7,22 +7,6 @@
   <meta name="description" content="N.I.F - Assistant IA">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <script>
-    // Corrige le bug de hauteur mobile (barre de saisie qui "s'enfonce")
-    // en recalculant la vraie hauteur visible à chaque reprise de la page.
-    function setRealVh() {
-      const vh = (window.visualViewport ? window.visualViewport.height : window.innerHeight) * 0.01;
-      document.documentElement.style.setProperty('--vh', vh + 'px');
-    }
-    setRealVh();
-    window.addEventListener('resize', setRealVh);
-    window.addEventListener('orientationchange', setRealVh);
-    window.addEventListener('pageshow', setRealVh);
-    document.addEventListener('visibilitychange', () => { if (!document.hidden) setRealVh(); });
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', setRealVh);
-    }
-  </script>
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -64,7 +48,6 @@
 
 html, body {
   height: 100%;
-  overflow: hidden;
 }
 
 body {
@@ -73,8 +56,9 @@ body {
   color: var(--text-light);
   font-size: 16px;
   line-height: 1.5;
-  min-height: calc(var(--vh, 1vh) * 100);
-  min-height: 100dvh;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
   display: flex;
   touch-action: pan-y;
   -webkit-font-smoothing: antialiased;
@@ -416,8 +400,7 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: calc(var(--vh, 1vh) * 100);
-  height: 100dvh;
+  height: 100%;
   max-width: var(--max-content-width);
   margin: 0 auto;
   width: 100%;
@@ -722,19 +705,6 @@ body {
 }
 
 /* ============================================================
-   SWIPE AREA
-   ============================================================ */
-.swipe-area {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 30px;
-  height: 100%;
-  z-index: 50;
-  cursor: pointer;
-}
-
-/* ============================================================
    RESPONSIVE - Mobile First
    ============================================================ */
 
@@ -812,7 +782,7 @@ body {
 <!-- ============================================================
      SWIPE AREA
      ============================================================ -->
-<div class="swipe-area" id="swipeArea" aria-label="Glisser pour ouvrir le menu"></div>
+
 
 <!-- ============================================================
      OVERLAY
@@ -981,7 +951,6 @@ body {
   const sidebar = document.getElementById('sidebar');
   const sidebarOverlay = document.getElementById('sidebarOverlay');
   const menuToggle = document.getElementById('menuToggle');
-  const swipeArea = document.getElementById('swipeArea');
   const chatMessages = document.getElementById('chatMessages');
   const chatInput = document.getElementById('chatInput');
   const sendBtn = document.getElementById('sendBtn');
@@ -1435,19 +1404,36 @@ body {
     sidebarOverlay.addEventListener('touchstart', closeMenu);
   }
 
-  // Swipe pour ouvrir le menu
-  if (isMobile) {
-    document.addEventListener('touchstart', (e) => {
-      touchStartX = e.touches[0].clientX;
-    }, { passive: true });
+  // Swipe pour ouvrir/fermer le menu — fonctionne depuis n'importe où sur l'écran
+  let touchStartY = 0;
+  let touchTracking = false;
 
-    document.addEventListener('touchend', (e) => {
-      const touchEndX = e.changedTouches[0].clientX;
-      if (touchEndX - touchStartX > 50 && touchStartX < 30) {
-        openMenu();
-      }
-    }, { passive: true });
-  }
+  document.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    touchTracking = true;
+  }, { passive: true });
+
+  document.addEventListener('touchend', (e) => {
+    if (!touchTracking) return;
+    touchTracking = false;
+
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = touchEndY - touchStartY;
+
+    // Ignorer les gestes surtout verticaux (scroll normal du chat)
+    if (Math.abs(deltaX) < Math.abs(deltaY)) return;
+
+    const isOpen = sidebar?.classList.contains('open');
+
+    if (!isOpen && deltaX > 60) {
+      openMenu();
+    } else if (isOpen && deltaX < -60) {
+      closeMenu();
+    }
+  }, { passive: true });
 
   // ============================================================
   // RECHERCHE
