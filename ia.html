@@ -5,6 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes, viewport-fit=cover">
   <meta name="theme-color" content="#0A1128">
   <meta name="description" content="N.I.F - Assistant IA">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <script>
+    // Corrige le bug de hauteur mobile (barre de saisie qui "s'enfonce")
+    // en recalculant la vraie hauteur visible à chaque reprise de la page.
+    function setRealVh() {
+      const vh = (window.visualViewport ? window.visualViewport.height : window.innerHeight) * 0.01;
+      document.documentElement.style.setProperty('--vh', vh + 'px');
+    }
+    setRealVh();
+    window.addEventListener('resize', setRealVh);
+    window.addEventListener('orientationchange', setRealVh);
+    window.addEventListener('pageshow', setRealVh);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) setRealVh(); });
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', setRealVh);
+    }
+  </script>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
   
@@ -53,7 +73,8 @@ body {
   color: var(--text-light);
   font-size: 16px;
   line-height: 1.5;
-  min-height: 100vh;
+  min-height: calc(var(--vh, 1vh) * 100);
+  min-height: 100dvh;
   display: flex;
   touch-action: pan-y;
   -webkit-font-smoothing: antialiased;
@@ -395,7 +416,8 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  height: 100dvh;
   max-width: var(--max-content-width);
   margin: 0 auto;
   width: 100%;
@@ -408,6 +430,7 @@ body {
    ============================================================ */
 .chat-container {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   padding-top: calc(var(--header-height) + var(--spacing-md));
@@ -415,7 +438,6 @@ body {
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
-  height: 100vh;
   overflow: hidden;
 }
 
